@@ -1,0 +1,43 @@
+{
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ],
+      "@/shadcn/*": [
+        "src/shadcn/*"
+      ],
+      "@/shadcn/components/*": [
+        "src/shadcn/components/*"
+      ],
+      "@/shadcn/blocks/*": [
+        "src/shadcn/blocks/*"
+      ],
+      "@/shadcn/hooks/*": [
+        "src/shadcn/hooks/*"
+      ],
+      "@/custom/*": [
+        "src/custom/*"
+      ],
+      "@/custom/blocks/*": [
+        "src/custom/blocks/*"
+      ],
+      "@/custom/hooks/*": [
+        "src/custom/hooks/*"
+      ],
+      "@/custom/components/*": [
+        "src/custom/components/*"
+      ]
+    }
+  }
+}
