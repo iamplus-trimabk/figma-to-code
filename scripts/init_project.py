@@ -338,6 +338,9 @@ class ProjectInitializer:
         if self.options.get("dashboard"):
             self.create_dashboard_structure()
 
+        # Generate templates
+        self.generate_templates()
+
         self.log_completion_message()
 
     def create_dashboard_structure(self):
@@ -1016,6 +1019,101 @@ export const useTheme = () => {
 
   return context
 }'''
+
+    def generate_templates(self):
+        """Generate templates from template directory"""
+        if self.options.get("dashboard"):
+            self.log("📝 Generating dashboard templates...", Colors.YELLOW)
+
+            # Look for templates in multiple locations
+            template_locations = [
+                self.templates_dir,  # Default location
+                Path(__file__).parent.parent / "templates",  # Parent directory
+                Path.cwd().parent / "templates",  # Current working directory parent
+            ]
+
+            templates_found = False
+            for templates_dir in template_locations:
+                if templates_dir.exists():
+                    self.log(f"📁 Found templates in: {templates_dir}", Colors.YELLOW)
+                    self.copy_templates(templates_dir)
+                    templates_found = True
+                    break
+
+            if not templates_found:
+                self.log("⚠️  Templates directory not found, skipping template generation", Colors.YELLOW)
+                self.log("💡 Create templates directory to enable template generation", Colors.YELLOW)
+
+    def copy_templates(self, templates_dir: Path):
+        """Copy templates to project directory"""
+        import shutil
+
+        # Copy component templates
+        components_src = templates_dir / "components"
+        components_dest = Path("src/components")
+        if components_src.exists():
+            for template_file in components_src.rglob("*.tsx"):
+                relative_path = template_file.relative_to(components_src)
+                dest_path = components_dest / relative_path
+                dest_path.parent.mkdir(parents=True, exist_ok=True)
+
+                # Process template with variable substitution
+                template_content = template_file.read_text()
+                processed_content = self.process_template(template_content)
+                dest_path.write_text(processed_content)
+
+        # Copy hook templates
+        hooks_src = templates_dir / "hooks"
+        hooks_dest = Path("src/hooks")
+        if hooks_src.exists():
+            for template_file in hooks_src.rglob("*.ts"):
+                relative_path = template_file.relative_to(hooks_src)
+                dest_path = hooks_dest / relative_path
+                dest_path.parent.mkdir(parents=True, exist_ok=True)
+
+                template_content = template_file.read_text()
+                processed_content = self.process_template(template_content)
+                dest_path.write_text(processed_content)
+
+        # Copy config templates
+        config_src = templates_dir / "config"
+        config_dest = Path("src/config")
+        if config_src.exists():
+            for template_file in config_src.rglob("*.ts"):
+                relative_path = template_file.relative_to(config_src)
+                dest_path = config_dest / relative_path
+                dest_path.parent.mkdir(parents=True, exist_ok=True)
+
+                template_content = template_file.read_text()
+                processed_content = self.process_template(template_content)
+                dest_path.write_text(processed_content)
+
+        # Copy type templates
+        types_src = templates_dir / "types"
+        types_dest = Path("src/types")
+        if types_src.exists():
+            for template_file in types_src.rglob("*.ts"):
+                relative_path = template_file.relative_to(types_src)
+                dest_path = types_dest / relative_path
+                dest_path.parent.mkdir(parents=True, exist_ok=True)
+
+                template_content = template_file.read_text()
+                processed_content = self.process_template(template_content)
+                dest_path.write_text(processed_content)
+
+    def process_template(self, content: str) -> str:
+        """Process template content with variable substitution"""
+        # Replace project-specific variables
+        replacements = {
+            "{{PROJECT_NAME}}": self.project_name,
+            "{{BRAND_NAME}}": self.options.get("brand", "MyCompany"),
+            "{{CURRENT_YEAR}}": "2025",
+        }
+
+        for placeholder, value in replacements.items():
+            content = content.replace(placeholder, value)
+
+        return content
 
     def create_test_configs(self):
         """Create test configuration files (already handled in separate methods)"""
