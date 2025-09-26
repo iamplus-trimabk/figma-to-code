@@ -37,37 +37,106 @@ class ShadCNProjectInitializer:
         """Log colored message to console"""
         print(f"{color}{message}{Colors.NC}")
 
-    def run_command(self, command: List[str], cwd: Optional[Path] = None, check: bool = True) -> subprocess.CompletedProcess:
-        """Run command with error handling"""
+    def run_command(self, command: List[str], cwd: Optional[Path] = None, check: bool = True, timeout: int = 300) -> subprocess.CompletedProcess:
+        """Run command with enhanced error handling"""
         try:
+            self.log(f"  Running: {' '.join(command)}", Colors.CYAN)
             result = subprocess.run(
                 command,
                 cwd=cwd or self.project_path,
                 check=check,
                 capture_output=True,
-                text=True
+                text=True,
+                timeout=timeout
             )
+
+            # Log successful command output if verbose
+            if result.returncode == 0 and result.stdout.strip():
+                self.log(f"  ✅ Command completed successfully", Colors.GREEN)
+
             return result
+
+        except subprocess.TimeoutExpired:
+            self.log(f"❌ Command timed out after {timeout}s: {' '.join(command)}", Colors.RED)
+            if check:
+                raise
+            # Return a fake result indicating timeout
+            return subprocess.CompletedProcess(command, 124, "", "Command timed out")
+
         except subprocess.CalledProcessError as e:
             self.log(f"❌ Command failed: {' '.join(command)}", Colors.RED)
-            self.log(f"Error: {e.stderr}", Colors.RED)
+            if e.stderr and e.stderr.strip():
+                self.log(f"  Error: {e.stderr.strip()}", Colors.RED)
+            if e.stdout and e.stdout.strip():
+                self.log(f"  Output: {e.stdout.strip()}", Colors.YELLOW)
             if check:
                 raise
             return e
 
-    def check_node_version(self):
-        """Check if Node.js version is compatible"""
+        except FileNotFoundError:
+            self.log(f"❌ Command not found: {command[0]}", Colors.RED)
+            self.log("  Please ensure the command is available in your PATH", Colors.YELLOW)
+            if check:
+                raise
+            # Return a fake result indicating command not found
+            return subprocess.CompletedProcess(command, 127, "", "Command not found")
+
+        except Exception as e:
+            self.log(f"❌ Unexpected error running command: {' '.join(command)}", Colors.RED)
+            self.log(f"  Error: {str(e)}", Colors.RED)
+            if check:
+                raise
+            # Return a fake result indicating unexpected error
+            return subprocess.CompletedProcess(command, 1, "", f"Unexpected error: {str(e)}")
+
+    def check_prerequisites(self):
+        """Check if all prerequisites are met"""
+        self.log("🔍 Checking prerequisites...", Colors.YELLOW)
+
+        # Check Node.js
         try:
             result = self.run_command(["node", "--version"], cwd=Path.cwd(), check=False)
             if result.returncode == 0:
                 version = result.stdout.strip()
-                self.log(f"✅ Node.js version: {version}", Colors.GREEN)
+                version_num = version.replace('v', '').split('.')[0]
+                if int(version_num) >= 18:
+                    self.log(f"✅ Node.js version: {version}", Colors.GREEN)
+                else:
+                    self.log(f"❌ Node.js version {version} is too old. Please install Node.js 18+.", Colors.RED)
+                    sys.exit(1)
             else:
                 self.log("❌ Node.js not found. Please install Node.js 18+.", Colors.RED)
                 sys.exit(1)
         except FileNotFoundError:
             self.log("❌ Node.js not found. Please install Node.js 18+.", Colors.RED)
             sys.exit(1)
+
+        # Check npm
+        try:
+            result = self.run_command(["npm", "--version"], cwd=Path.cwd(), check=False)
+            if result.returncode == 0:
+                self.log(f"✅ npm version: {result.stdout.strip()}", Colors.GREEN)
+            else:
+                self.log("❌ npm not found. Please install npm.", Colors.RED)
+                sys.exit(1)
+        except FileNotFoundError:
+            self.log("❌ npm not found. Please install npm.", Colors.RED)
+            sys.exit(1)
+
+        # Check available disk space (at least 100MB)
+        try:
+            import shutil
+            disk_usage = shutil.disk_usage(self.project_path.parent)
+            free_mb = disk_usage.free // (1024 * 1024)
+            if free_mb >= 100:
+                self.log(f"✅ Available disk space: {free_mb}MB", Colors.GREEN)
+            else:
+                self.log(f"❌ Insufficient disk space: {free_mb}MB (min 100MB required)", Colors.RED)
+                sys.exit(1)
+        except Exception as e:
+            self.log(f"⚠️  Could not check disk space: {e}", Colors.YELLOW)
+
+        self.log("✅ All prerequisites checked", Colors.GREEN)
 
     def create_project_directory(self):
         """Create project directory"""
@@ -481,6 +550,188 @@ The `src/custom/` directory is intentionally empty initially. Only add custom im
 
         self.log("✅ Functionality analysis completed", Colors.GREEN)
 
+    def create_basic_templates(self):
+        """Create basic templates for non-dashboard projects"""
+        self.log("📝 Creating basic templates...", Colors.YELLOW)
+
+        # Create a basic App.tsx template
+        app_template = """import { useState } from 'react'
+import { Button } from '@/shadcn/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shadcn/components/ui/card'
+import { Input } from '@/shadcn/components/ui/input'
+import { Label } from '@/shadcn/components/ui/label'
+
+function App() {
+  const [count, setCount] = useState(0)
+
+  return (
+    <div className=\"min-h-screen bg-background text-foreground p-8\">
+      <div className=\"max-w-4xl mx-auto space-y-8\">
+        <header className=\"text-center space-y-4\">
+          <h1 className=\"text-4xl font-bold tracking-tight\">Welcome to Your App</h1>
+          <p className=\"text-xl text-muted-foreground\">
+            Built with ShadCN components and Tailwind CSS
+          </p>
+        </header>
+
+        <div className=\"grid gap-6 md:grid-cols-2\">
+          <Card>
+            <CardHeader>
+              <CardTitle>Counter Demo</CardTitle>
+              <CardDescription>
+                Basic state management with ShadCN components
+              </CardDescription>
+            </CardHeader>
+            <CardContent className=\"space-y-4\">
+              <div className=\"text-center\">
+                <p className=\"text-2xl font-semibold\">{count}</p>
+                <div className=\"flex gap-2 justify-center mt-4\">
+                  <Button
+                    onClick={() => setCount(c => c + 1)}
+                    variant=\"default\"
+                  >
+                    Increment
+                  </Button>
+                  <Button
+                    onClick={() => setCount(c => Math.max(0, c - 1))}
+                    variant=\"outline\"
+                  >
+                    Decrement
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Form Demo</CardTitle>
+              <CardDescription>
+                Basic form with ShadCN input components
+              </CardDescription>
+            </CardHeader>
+            <CardContent className=\"space-y-4\">
+              <div className=\"space-y-2\">
+                <Label htmlFor=\"name\">Name</Label>
+                <Input id=\"name\" placeholder=\"Enter your name\" />
+              </div>
+              <div className=\"space-y-2\">
+                <Label htmlFor=\"email\">Email</Label>
+                <Input id=\"email\" type=\"email\" placeholder=\"Enter your email\" />
+              </div>
+              <Button className=\"w-full\">Submit</Button>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Getting Started</CardTitle>
+            <CardDescription>
+              Your project is ready for development
+            </CardDescription>
+          </CardHeader>
+          <CardContent className=\"space-y-4\">
+            <div className=\"grid gap-4 text-sm\">
+              <div>
+                <strong>✅ ShadCN Components:</strong> Button, Card, Input, Label, and more
+              </div>
+              <div>
+                <strong>✅ Styling:</strong> Tailwind CSS with custom design tokens
+              </div>
+              <div>
+                <strong>✅ Type Safety:</strong> Full TypeScript support
+              </div>
+              <div>
+                <strong>✅ Development:</strong> Hot reload and fast refresh
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  )
+}
+
+export default App
+"""
+
+        # Create a basic custom component template
+        component_template = """import React from 'react'
+import { cn } from '@/shadcn/lib/utils'
+
+export interface CustomComponentProps {
+  className?: string
+  children?: React.ReactNode
+}
+
+export function CustomComponent({ className, children }: CustomComponentProps) {
+  return (
+    <div className={cn('p-4 border rounded-lg bg-card', className)}>
+      {children}
+    </div>
+  )
+}
+"""
+
+        # Create a basic custom hook template
+        hook_template = """import { useState, useEffect } from 'react'
+
+export function useCustomHook(initialValue: any) {
+  const [value, setValue] = useState(initialValue)
+
+  useEffect(() => {
+    // Add your side effect logic here
+  }, [value])
+
+  return [value, setValue]
+}
+"""
+
+        # Write templates to files
+        templates_dir = self.project_path / "src" / "custom" / "templates"
+        templates_dir.mkdir(parents=True, exist_ok=True)
+
+        # Update App.tsx with template
+        app_path = self.project_path / "src" / "App.tsx"
+        if app_path.exists():
+            with open(app_path, 'w') as f:
+                f.write(app_template)
+
+        # Create component template
+        with open(templates_dir / "CustomComponent.tsx", 'w') as f:
+            f.write(component_template)
+
+        # Create hook template
+        with open(templates_dir / "useCustomHook.ts", 'w') as f:
+            f.write(hook_template)
+
+        # Create templates README
+        templates_readme = """# Custom Templates
+
+This directory contains custom templates and components for your application.
+
+## Files
+- `CustomComponent.tsx` - Basic component template with TypeScript support
+- `useCustomHook.ts` - Basic hook template with state management
+
+## Usage
+```tsx
+import { CustomComponent } from '@/custom/templates/CustomComponent'
+import { useCustomHook } from '@/custom/templates/useCustomHook'
+```
+
+## Next Steps
+1. Copy and rename these templates for your specific needs
+2. Remove this directory once you have your own components
+3. Add your custom components to the `src/custom/components/` directory
+"""
+
+        with open(templates_dir / "README.md", 'w') as f:
+            f.write(templates_readme)
+
+        self.log("✅ Basic templates created", Colors.GREEN)
+
     def log_completion_message(self):
         """Log project completion message"""
         self.log("🎉 Project initialization complete!", Colors.GREEN)
@@ -488,8 +739,13 @@ The `src/custom/` directory is intentionally empty initially. Only add custom im
         self.log("📋 Next steps:", Colors.BLUE)
         self.log(f"1. cd {self.project_name}", Colors.YELLOW)
         self.log("2. npm run dev", Colors.YELLOW)
-        self.log("3. Explore the Dashboard-01 block structure", Colors.YELLOW)
-        self.log("4. Review SHADCN_ANALYSIS.md for functionality gaps", Colors.YELLOW)
+
+        if self.options.get('dashboard', True):
+            self.log("3. Explore the Dashboard-01 block structure", Colors.YELLOW)
+            self.log("4. Review SHADCN_ANALYSIS.md for functionality gaps", Colors.YELLOW)
+        else:
+            self.log("3. Start building your application with essential components", Colors.YELLOW)
+            self.log("4. Review SHADCN_ANALYSIS.md for available functionality", Colors.YELLOW)
         self.log("", Colors.NC)
         self.log("🚀 Available commands:", Colors.BLUE)
         self.log("• npm run dev          - Start development server", Colors.YELLOW)
@@ -504,7 +760,12 @@ The `src/custom/` directory is intentionally empty initially. Only add custom im
         self.log("• SHADCN_ANALYSIS.md  - Functionality analysis", Colors.YELLOW)
         self.log("", Colors.NC)
         self.log("🎯 Key files to explore:", Colors.BLUE)
-        self.log("• src/shadcn/blocks/dashboard-01/ - Main app shell", Colors.YELLOW)
+
+        if self.options.get('dashboard', True):
+            self.log("• src/shadcn/blocks/dashboard-01/ - Main app shell", Colors.YELLOW)
+        else:
+            self.log("• src/App.tsx        - Main application entry point", Colors.YELLOW)
+
         self.log("• components.json     - ShadCN configuration", Colors.YELLOW)
         self.log("• tailwind.config.js  - Tailwind configuration", Colors.YELLOW)
         self.log("", Colors.NC)
@@ -514,34 +775,51 @@ The `src/custom/` directory is intentionally empty initially. Only add custom im
         """Main initialization method"""
         self.log(f"🚀 Initializing ShadCN-first project: {self.project_name}", Colors.BLUE)
 
-        # Check Node.js version
-        self.check_node_version()
+        try:
+            # Check all prerequisites
+            self.check_prerequisites()
 
-        # Create project directory
-        self.create_project_directory()
+            # Create project directory
+            self.create_project_directory()
 
-        # Setup basic project
-        self.setup_vite_project()
-        self.install_dependencies()
+            # Setup basic project
+            self.setup_vite_project()
+            self.install_dependencies()
 
-        # Setup Tailwind CSS
-        self.setup_tailwind()
+            # Setup Tailwind CSS
+            self.setup_tailwind()
 
-        # Setup ShadCN with custom structure
-        self.setup_shadcn()
-        self.create_directory_structure()
+            # Setup ShadCN with custom structure
+            self.setup_shadcn()
+            self.create_directory_structure()
 
-        # Install ShadCN components with organized structure
-        self.install_dashboard_block()
-        self.install_essential_components()
-        self.install_useful_hooks()
-        self.install_additional_blocks()
+            # Install ShadCN components based on project type
+            if self.options.get('dashboard', True):
+                self.install_dashboard_block()
+                self.install_additional_blocks()
 
-        # Create documentation
-        self.create_documentation()
-        self.analyze_installed_functionality()
+            self.install_essential_components()
+            self.install_useful_hooks()
 
-        self.log_completion_message()
+            # Create documentation
+            self.create_documentation()
+
+            # Create basic templates for non-dashboard projects
+            if not self.options.get('dashboard', True):
+                self.create_basic_templates()
+
+            self.analyze_installed_functionality()
+
+            self.log_completion_message()
+
+        except KeyboardInterrupt:
+            self.log("\n❌ Project initialization cancelled by user", Colors.RED)
+            sys.exit(1)
+        except Exception as e:
+            self.log(f"\n❌ Project initialization failed: {str(e)}", Colors.RED)
+            self.log("💡 You can try running the script again with the same command", Colors.YELLOW)
+            self.log("🔍 If the problem persists, check the error messages above for details", Colors.YELLOW)
+            sys.exit(1)
 
 
 def parse_arguments():
@@ -552,6 +830,7 @@ def parse_arguments():
 
     parser.add_argument("project_name", help="Name of the project to create")
     parser.add_argument("--additional-blocks", help="Additional blocks to install (comma-separated)")
+    parser.add_argument("--no-dashboard", action="store_true", help="Skip dashboard block installation (basic setup only)")
 
     return parser.parse_args()
 
@@ -561,7 +840,8 @@ def main():
     args = parse_arguments()
 
     options = {
-        "additional_blocks": args.additional_blocks
+        "additional_blocks": args.additional_blocks,
+        "dashboard": not args.no_dashboard
     }
 
     # Initialize project
