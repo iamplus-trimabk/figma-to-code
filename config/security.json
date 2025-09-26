@@ -1,0 +1,45 @@
+{
+  "features": {
+    "csp": {
+      "name": "Content Security Policy",
+      "description": "CSP headers for security",
+      "install_command": "npm install -D helmet-csp",
+      "config_files": ["src/middleware.ts", "src/lib/security/csp.ts"],
+      "enabled": true
+    },
+    "helmet": {
+      "name": "Helmet.js",
+      "description": "Security headers middleware",
+      "install_command": "npm install -D helmet",
+      "config_files": ["src/middleware.ts"],
+      "enabled": true
+    },
+    "rate_limit": {
+      "name": "Rate Limiting",
+      "description": "API rate limiting",
+      "install_command": "npm install express-rate-limit",
+      "config_files": ["src/lib/security/rate-limit.ts"],
+      "enabled": false
+    }
+  },
+  "compliance": {
+    "gdpr": {
+      "name": "GDPR Compliance",
+      "description": "General Data Protection Regulation",
+      "features": ["consent_management", "data_portability", "right_to_be_forgotten"],
+      "config_files": ["src/components/ui/cookie-consent.tsx", "src/lib/compliance/gdpr.ts"]
+    },
+    "ccpa": {
+      "name": "CCPA Compliance",
+      "description": "California Consumer Privacy Act",
+      "features": ["privacy_policy", "data_sale_opt_out"],
+      "config_files": ["src/components/ui/privacy-notice.tsx", "src/lib/compliance/ccpa.ts"]
+    }
+  },
+  "audit": {
+    "enable_logging": true,
+    "log_level": "info",
+    "retention_days": 90,
+    "sensitive_data_masking": true
+  }
+}

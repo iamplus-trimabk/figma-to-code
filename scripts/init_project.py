@@ -34,7 +34,7 @@ class ProjectInitializer:
         self.options = options
         self.project_path = Path.cwd() / project_name
         self.templates_dir = Path(__file__).parent / "templates"
-        self.config_dir = Path(__file__).parent / "config"
+        self.config_dir = Path(__file__).parent.parent / "config"
 
     def log(self, message: str, color: str = Colors.NC):
         """Log colored message to console"""
@@ -340,6 +340,9 @@ class ProjectInitializer:
 
         # Generate templates
         self.generate_templates()
+
+        # Setup enterprise features
+        self.setup_enterprise_features()
 
         self.log_completion_message()
 
@@ -1115,6 +1118,351 @@ export const useTheme = () => {
 
         return content
 
+    def setup_enterprise_features(self):
+        """Setup enterprise features based on configuration"""
+        if self.options.get("analytics"):
+            self.setup_analytics()
+
+        if self.options.get("security"):
+            self.setup_security()
+
+        if self.options.get("performance"):
+            self.setup_performance()
+
+        if self.options.get("deployment"):
+            self.setup_deployment()
+
+    def setup_analytics(self):
+        """Setup analytics integration"""
+        self.log("📊 Setting up analytics integration...", Colors.YELLOW)
+
+        analytics_config = self.load_config("analytics.json")
+        if not analytics_config:
+            return
+
+        analytics_providers = self.options.get("analytics", [])
+
+        for provider in analytics_providers:
+            provider = provider.strip()
+            if provider in analytics_config["providers"]:
+                self.setup_analytics_provider(provider, analytics_config["providers"][provider])
+
+    def setup_analytics_provider(self, provider: str, config: dict):
+        """Setup specific analytics provider"""
+        self.log(f"  📈 Setting up {config['name']}...", Colors.YELLOW)
+
+        if config.get("install_command"):
+            try:
+                self.run_command(config["install_command"].split())
+            except subprocess.CalledProcessError:
+                self.log(f"  ⚠️  Failed to install {provider} dependencies", Colors.YELLOW)
+
+        # Create analytics lib directory
+        Path("src/lib/analytics").mkdir(parents=True, exist_ok=True)
+
+        # Create provider-specific config file
+        if provider == "google":
+            self.create_google_analytics_config()
+        elif provider == "plausible":
+            self.create_plausible_analytics_config()
+        elif provider == "custom":
+            self.create_custom_analytics_config()
+
+    def setup_security(self):
+        """Setup security features"""
+        self.log("🔒 Setting up security features...", Colors.YELLOW)
+
+        security_config = self.load_config("security.json")
+        if not security_config:
+            return
+
+        security_features = self.options.get("security", [])
+
+        for feature in security_features:
+            feature = feature.strip()
+            if feature in security_config["features"]:
+                self.setup_security_feature(feature, security_config["features"][feature])
+
+    def setup_security_feature(self, feature: str, config: dict):
+        """Setup specific security feature"""
+        self.log(f"  🔒 Setting up {config['name']}...", Colors.YELLOW)
+
+        if config.get("install_command"):
+            try:
+                self.run_command(config["install_command"].split())
+            except subprocess.CalledProcessError:
+                self.log(f"  ⚠️  Failed to install {feature} dependencies", Colors.YELLOW)
+
+    def setup_performance(self):
+        """Setup performance optimizations"""
+        self.log("⚡ Setting up performance optimizations...", Colors.YELLOW)
+
+        performance_config = self.load_config("performance.json")
+        if not performance_config:
+            return
+
+        performance_features = self.options.get("performance", [])
+
+        for feature in performance_features:
+            feature = feature.strip()
+            if feature in performance_config["optimizations"]:
+                self.setup_performance_feature(feature, performance_config["optimizations"][feature])
+
+    def setup_performance_feature(self, feature: str, config: dict):
+        """Setup specific performance feature"""
+        self.log(f"  ⚡ Setting up {config['name']}...", Colors.YELLOW)
+
+        if config.get("install_command"):
+            try:
+                self.run_command(config["install_command"].split())
+            except subprocess.CalledProcessError:
+                self.log(f"  ⚠️  Failed to install {feature} dependencies", Colors.YELLOW)
+
+    def setup_deployment(self):
+        """Setup deployment configuration"""
+        self.log("🚀 Setting up deployment configuration...", Colors.YELLOW)
+
+        deployment_config = self.load_config("deployment.json")
+        if not deployment_config:
+            return
+
+        deployment_platforms = self.options.get("deployment", [])
+
+        for platform in deployment_platforms:
+            platform = platform.strip()
+            if platform in deployment_config["platforms"]:
+                self.setup_deployment_platform(platform, deployment_config["platforms"][platform])
+
+    def setup_deployment_platform(self, platform: str, config: dict):
+        """Setup specific deployment platform"""
+        self.log(f"  🚀 Setting up {config['name']}...", Colors.YELLOW)
+
+        if config.get("install_command"):
+            try:
+                self.run_command(config["install_command"].split())
+            except subprocess.CalledProcessError:
+                self.log(f"  ⚠️  Failed to install {platform} CLI", Colors.YELLOW)
+
+        # Create deployment config files
+        if platform == "vercel":
+            self.create_vercel_config()
+        elif platform == "netlify":
+            self.create_netlify_config()
+        elif platform == "docker":
+            self.create_docker_config()
+
+    def load_config(self, config_file: str) -> dict:
+        """Load configuration from JSON file"""
+        config_path = self.config_dir / config_file
+        if config_path.exists():
+            try:
+                with open(config_path, 'r') as f:
+                    return json.load(f)
+            except (json.JSONDecodeError, IOError) as e:
+                self.log(f"⚠️  Failed to load config {config_file}: {e}", Colors.YELLOW)
+        else:
+            self.log(f"⚠️  Config file not found: {config_path}", Colors.YELLOW)
+        return {}
+
+    def create_google_analytics_config(self):
+        """Create Google Analytics configuration"""
+        analytics_content = '''import { useEffect } from 'react'
+
+export function initGoogleAnalytics(measurementId: string) {
+  if (typeof window !== 'undefined') {
+    // Load Google Analytics script
+    const script = document.createElement('script')
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`
+    script.async = true
+    document.head.appendChild(script)
+
+    // Configure gtag
+    window.dataLayer = window.dataLayer || []
+    function gtag(...args: any[]) {
+      window.dataLayer.push(args)
+    }
+    gtag('js', new Date())
+    gtag('config', measurementId)
+
+    // Make gtag available globally
+    (window as any).gtag = gtag
+  }
+}
+
+export function trackEvent(eventName: string, eventParams?: Record<string, any>) {
+  if (typeof window !== 'undefined' && (window as any).gtag) {
+    (window as any).gtag('event', eventName, eventParams)
+  }
+}
+
+export function trackPageView(path: string) {
+  if (typeof window !== 'undefined' && (window as any).gtag) {
+    (window as any).gtag('config', import.meta.env.VITE_GA_MEASUREMENT_ID, {
+      page_path: path,
+    })
+  }
+}'''
+
+        with open("src/lib/analytics/google.ts", "w") as f:
+            f.write(analytics_content)
+
+    def create_plausible_analytics_config(self):
+        """Create Plausible Analytics configuration"""
+        analytics_content = '''import Plausible from 'plausible-tracker'
+
+export const plausible = Plausible({
+  domain: import.meta.env.VITE_PLAUSIBLE_DOMAIN,
+})
+
+export function trackPageView(path: string) {
+  plausible.trackPageview({
+    url: window.location.origin + path,
+  })
+}
+
+export function trackEvent(eventName: string, props?: Record<string, any>) {
+  plausible.trackEvent(eventName, { props })
+}'''
+
+        with open("src/lib/analytics/plausible.ts", "w") as f:
+            f.write(analytics_content)
+
+    def create_custom_analytics_config(self):
+        """Create custom analytics configuration"""
+        analytics_content = '''// Custom analytics implementation
+export interface AnalyticsEvent {
+  event: string
+  properties?: Record<string, any>
+  timestamp: string
+}
+
+export function trackEvent(event: string, properties?: Record<string, any>) {
+  const analyticsEvent: AnalyticsEvent = {
+    event,
+    properties,
+    timestamp: new Date().toISOString(),
+  }
+
+  // Send to your custom analytics endpoint
+  if (typeof window !== 'undefined') {
+    fetch('/api/analytics', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(analyticsEvent),
+    }).catch(console.error)
+  }
+}
+
+export function trackPageView(path: string) {
+  trackEvent('page_view', { path })
+}'''
+
+        with open("src/lib/analytics/custom.ts", "w") as f:
+            f.write(analytics_content)
+
+    def create_vercel_config(self):
+        """Create Vercel configuration"""
+        vercel_config = {
+            "buildCommand": "npm run build",
+            "outputDirectory": "dist",
+            "installCommand": "npm install",
+            "devCommand": "npm run dev",
+            "framework": "vite"
+        }
+
+        with open("vercel.json", "w") as f:
+            json.dump(vercel_config, f, indent=2)
+
+    def create_netlify_config(self):
+        """Create Netlify configuration"""
+        netlify_config = '''[build]
+  command = "npm run build"
+  publish = "dist"
+
+[dev]
+  command = "npm run dev"
+  port = 5173
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200'''
+
+        with open("netlify.toml", "w") as f:
+            f.write(netlify_config)
+
+    def create_docker_config(self):
+        """Create Docker configuration"""
+        dockerfile = '''FROM node:18-alpine AS base
+
+# Install dependencies only when needed
+FROM base AS deps
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
+
+# Install dependencies based on the preferred package manager
+COPY package.json package-lock.json* ./
+RUN npm ci
+
+# Rebuild the source code only when needed
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+# Build the application
+RUN npm run build
+
+# Production image, copy all the files and run next
+FROM base AS runner
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+COPY --from=builder /app/public ./public
+
+# Set the correct permission for prerender cache
+RUN mkdir .next
+RUN chown nextjs:nodejs .next
+
+# Automatically leverage output traces to reduce image size
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+USER nextjs
+
+EXPOSE 3000
+
+ENV PORT=3000
+
+CMD ["node", "server.js"]'''
+
+        with open("Dockerfile", "w") as f:
+            f.write(dockerfile)
+
+        dockerignore = '''node_modules
+npm-debug.log
+Dockerfile
+.dockerignore
+.git
+.gitignore
+README.md
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.next
+.vercel'''
+
+        with open(".dockerignore", "w") as f:
+            f.write(dockerignore)
+
     def create_test_configs(self):
         """Create test configuration files (already handled in separate methods)"""
         pass
@@ -1131,6 +1479,10 @@ def parse_arguments():
     parser.add_argument("--colors", help="Brand colors (comma-separated hex values)")
     parser.add_argument("--themes", help="Theme options (comma-separated)")
     parser.add_argument("--default-theme", help="Default theme", default="system")
+    parser.add_argument("--analytics", help="Analytics providers (comma-separated: google,plausible,custom)")
+    parser.add_argument("--security", help="Security features (comma-separated: csp,helmet,rate-limit)")
+    parser.add_argument("--performance", help="Performance optimizations (comma-separated: bundle-analyzer,lazy-loading,image-optimization)")
+    parser.add_argument("--deployment", help="Deployment platforms (comma-separated: vercel,netlify,aws,docker)")
 
     return parser.parse_args()
 
@@ -1145,7 +1497,11 @@ def main():
         "brand": args.brand,
         "colors": args.colors.split(",") if args.colors else None,
         "themes": args.themes,
-        "default_theme": args.default_theme
+        "default_theme": args.default_theme,
+        "analytics": args.analytics.split(",") if args.analytics else None,
+        "security": args.security.split(",") if args.security else None,
+        "performance": args.performance.split(",") if args.performance else None,
+        "deployment": args.deployment.split(",") if args.deployment else None
     }
 
     # Initialize project

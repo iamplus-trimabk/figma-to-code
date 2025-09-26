@@ -1,0 +1,65 @@
+{
+  "platforms": {
+    "vercel": {
+      "name": "Vercel",
+      "description": "Serverless deployment platform",
+      "config_files": ["vercel.json", ".env.example"],
+      "build_command": "npm run build",
+      "install_command": "npm i -g vercel",
+      "env_vars": ["VERCEL_ENV", "VERCEL_URL"]
+    },
+    "netlify": {
+      "name": "Netlify",
+      "description": "Jamstack deployment platform",
+      "config_files": ["netlify.toml", ".env.example"],
+      "build_command": "npm run build",
+      "install_command": "npm i -g netlify-cli",
+      "env_vars": ["NETLIFY_ENV", "NETLIFY_URL"]
+    },
+    "aws": {
+      "name": "AWS",
+      "description": "Amazon Web Services deployment",
+      "config_files": ["Dockerfile", "aws amplify.yml"],
+      "build_command": "npm run build",
+      "install_command": "npm i -g @aws-amplify/cli",
+      "env_vars": ["AWS_REGION", "AWS_S3_BUCKET"]
+    },
+    "docker": {
+      "name": "Docker",
+      "description": "Container-based deployment",
+      "config_files": ["Dockerfile", "docker-compose.yml", ".dockerignore"],
+      "build_command": "docker build -t my-app .",
+      "install_command": "",
+      "env_vars": ["PORT", "NODE_ENV"]
+    }
+  },
+  "environments": {
+    "development": {
+      "name": "Development",
+      "config_file": ".env.development",
+      "features": ["hot_reload", "debug_tools", "mock_api"]
+    },
+    "staging": {
+      "name": "Staging",
+      "config_file": ".env.staging",
+      "features": ["analytics", "monitoring", "staging_db"]
+    },
+    "production": {
+      "name": "Production",
+      "config_file": ".env.production",
+      "features": ["full_analytics", "security_headers", "performance_optimization"]
+    }
+  },
+  "ci_cd": {
+    "github_actions": {
+      "name": "GitHub Actions",
+      "config_files": [".github/workflows/deploy.yml"],
+      "enabled": true
+    },
+    "gitlab_ci": {
+      "name": "GitLab CI",
+      "config_files": [".gitlab-ci.yml"],
+      "enabled": false
+    }
+  }
+}
