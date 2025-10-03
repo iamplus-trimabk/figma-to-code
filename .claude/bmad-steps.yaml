@@ -1,0 +1,118 @@
+Phase 1: Setup & Planning (Web UI - Recommended)
+1. Choose Your Environment
+    - Web UI (Recommended for planning): Use ChatGPT, Claude, or Gemini
+    - Upload the team-fullstack.txt file from BMad's dist/teams/ folder
+    - Start with: "Your critical operating instructions are attached, do not break character as directed"
+
+2. Start Planning Workflow
+    /workflows
+    - Then select: greenfield-fullstack workflow for your new school ERP project
+
+3. Market Analysis & Requirements (Optional but Recommended)
+    /analyst
+    - Research existing school ERP solutions
+    - Analyze admission workflow requirements
+    - Identify key stakeholders (students, parents, admin, teachers)
+
+4. Create Product Requirements Document
+    /pm
+    - *create-doc prd
+    - This will help you define:
+
+    Student admission workflows
+    - Parent/guardian management
+    - Document verification processes
+    - Fee management
+Notification systems
+    - Reporting requirements
+
+5. UX/UI Specification
+    /ux-expert
+    - *create-doc front-end-spec
+    - Design the user experience for:
+
+    - Student admission portal
+    - Admin dashboard
+    - Parent interface
+    - Mobile responsiveness
+
+6. Technical Architecture
+    /architect
+    - *create-doc architecture
+    - Define:
+
+    - Database schema for student/admission data
+    - API design for admission workflows
+    - Security considerations
+    - Integration points
+    - Technology stack recommendations
+
+7. Validation & Quality Check
+    /po
+    - *po-master-checklist
+    - Ensure all documents are consistent and complete
+
+Phase 2: Development (IDE Environment)
+8. Switch to IDE
+    - Install BMad in your preferred IDE:
+    - bashnpx bmad-method install
+    - Supported IDEs: Cursor, Claude Code, Windsurf, Trae, Cline, Roo Code
+
+9. Document Sharding (Critical Step)
+    - Copy your PRD and Architecture documents to docs/ folder
+    - Shard the documents for development:
+
+    - @bmad-master please shard my docs/prd.md and docs/architecture.md
+
+10. Development Loop
+    - For each feature (admission form, document upload, approval workflow, etc.):
+    - a) Create Story:
+        - /sm
+        - *create-next-story
+    - b) Implement Story:
+        - /dev
+        - Implement the admission workflow components
+        - c) Quality Assurance: 
+        - /qa
+    - Review and refactor the code
+
+11. Key Admission Workflow Features to Implement
+    - Student Registration
+
+    - Online admission form
+    - Document upload system
+    - Application tracking
+
+    - Admin Management
+    - Application review dashboard
+    - Approval/rejection workflows
+    - Bulk operations
+
+    - Communication System
+    - Email/SMS notifications
+    - Status updates
+    - Interview scheduling
+
+
+    - Payment Integration
+    - Fee calculation
+    - Payment gateway integration
+    - Receipt generation
+
+
+    - Reporting & Analytics
+    - Admission statistics
+    - Application status reports
+    - Performance metrics
+
+
+
+12. Quick Start Command
+    - If you want to begin immediately:
+    - /quick-start
+    - *quick-start-command
+
+13. Final Notes
+    - This guide provides a comprehensive framework for developing a school ERP system.
+    - Use BMad's tools to streamline your development process.
+    - Always validate your work with the PO master checklist.

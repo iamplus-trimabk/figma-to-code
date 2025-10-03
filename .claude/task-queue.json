@@ -1,0 +1,50 @@
+{
+  "execution_order": [
+    {
+      "task_id": "PH0-007",
+      "priority": "pending",
+      "parallel_group": null,
+      "reason": "Task with status: pending"
+    }
+  ],
+  "parallel_groups": {},
+  "task_registry": {
+    "PH0-007": {
+      "id": "PH0-007",
+      "title": "Implementation Roadmap & Development Strategy",
+      "description": "Detailed implementation roadmap with development phases and milestones",
+      "priority": "high",
+      "estimated_hours": 12,
+      "story_points": 6,
+      "bmad_agents": [
+        "project-manager"
+      ],
+      "dependencies": [
+        "PH0-004",
+        "PH0-005",
+        "PH0-006"
+      ],
+      "acceptance_criteria": [
+        "Phased implementation roadmap created",
+        "Development milestones and timelines defined",
+        "Resource allocation and team structure planned",
+        "Risk assessment and mitigation strategies",
+        "Quality assurance and testing strategy outlined"
+      ],
+      "status": "pending",
+      "files": [
+        "implementation-roadmap.md",
+        "development-phases.md",
+        "risk-assessment.md",
+        "qa-strategy.md"
+      ],
+      "story_reference": "PH0-007",
+      "phase": "Discovery & Architecture Phase",
+      "phase_index": 0,
+      "task_index": 6
+    }
+  },
+  "queue_version": 2,
+  "created_at": "2025-08-23T14:19:30.518514",
+  "roadmap_checksum": "c6c9704fd088dd5e8fc1036a4b400ead"
+}

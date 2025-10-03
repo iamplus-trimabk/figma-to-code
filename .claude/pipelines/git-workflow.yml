@@ -1,0 +1,88 @@
+# Git Workflow Pipeline
+name: git-workflow
+description: Complete git workflow from add to push with validation
+author: system
+version: 1.0.0
+
+parameters:
+  commit_message:
+    type: string
+    required: false
+    default: "feat: implement Phase 2 & 3 slash commands"
+  
+  branch:
+    type: string
+    required: false
+    default: current
+
+steps:
+  - id: status
+    name: Check Git Status
+    command: |
+      git status --short
+    description: Show what files will be committed
+    
+  - id: add
+    name: Stage Changes
+    command: |
+      git add .claude/commands/
+      git add .claude/pipelines/
+      git add proposed_slash_commands.md
+    description: Stage all command files
+    
+  - id: review
+    name: Review Changes
+    command: |
+      git diff --cached --stat
+      echo "---"
+      echo "Files to be committed:"
+      git diff --cached --name-only | wc -l
+      echo "files changed"
+    description: Review what will be committed
+    
+  - id: commit
+    name: Create Commit
+    command: |
+      git commit -m "${commit_message}
+
+      Implemented Phase 2 (Advanced Git & Review) and Phase 3 (Pipeline Automation):
+      
+      Phase 2 - Advanced Git & Review (8 commands):
+      - git-review-pr: Comprehensive PR review
+      - git-test-pr: Local PR testing  
+      - git-request-review: Review requests with context
+      - git-cherry-pick: Smart cherry-pick
+      - git-hotfix: Hotfix workflow
+      - test: Intelligent test execution
+      - debug: Systematic debugging
+      - refactor: Guided refactoring
+      
+      Phase 3 - Pipeline Automation (4 commands):
+      - pipe: Chain commands with context
+      - workflow: Predefined workflows
+      - pipeline-create: Pipeline creation wizard
+      - pipeline-run: Pipeline execution
+      
+      Total: 21 slash commands ready for use"
+    description: Commit with comprehensive message
+    
+  - id: verify
+    name: Verify Commit
+    command: |
+      git log --oneline -1
+      echo "---"
+      git status
+    description: Verify commit was created
+    
+  - id: push
+    name: Push to Remote
+    command: |
+      git push origin HEAD
+    description: Push commits to remote
+    continue_on_error: true  # In case no remote is set
+
+on_success:
+  message: "✅ Git workflow complete! Changes committed and pushed."
+
+on_failure:
+  message: "❌ Git workflow failed. Check the errors above."

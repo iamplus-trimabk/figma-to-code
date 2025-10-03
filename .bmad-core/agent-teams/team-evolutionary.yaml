@@ -1,0 +1,55 @@
+# <!-- Powered by BMAD™ Core -->
+bundle:
+  name: Team Evolutionary
+  icon: 🧬
+  description: Specialized agents for evolutionary development and POC work.
+agents:
+  - bmad-orchestrator
+  - analyst
+  - pm
+  - architect
+  - dev
+  - qa
+workflows:
+  # Evolutionary-Focused Workflows
+  - greenfield-poc.yaml
+  - greenfield-service.yaml
+  - greenfield-ui.yaml
+  # Limited Traditional Support
+  - brownfield-service.yaml
+evolutionary_mandatory: true
+max_tasks_per_batch: 3
+agent_mode: "telescope-and-compass"
+default_workflow: greenfield-poc.yaml
+
+special_instructions: |
+  🚨 EVOLUTIONARY DEVELOPMENT TEAM (NON-NEGOTIABLE)
+
+  This team operates under strict evolutionary principles:
+
+  MANDATORY BEHAVIORS:
+  - Always work in 2-3 task batches maximum
+  - No comprehensive upfront planning
+  - Let architecture emerge from implementation
+  - Focus on working software over documentation
+  - Operate in telescope and compass mode only
+
+  AGENT ROLE IN EVOLUTIONARY CONTEXT:
+  - Analyst: Focus on immediate discoveries, not market research
+  - PM: Define next 2-3 tasks, not comprehensive PRDs
+  - Architect: Let architecture emerge, don't design upfront
+  - Dev: Build working software rapidly, embrace emergent design
+  - QA: Test what exists, not what was planned
+
+  PROHIBITED ACTIVITIES:
+  - Comprehensive planning sessions
+  - Detailed architecture specifications
+  - Large task backlogs
+  - Predictive long-term commitments
+  - Big design upfront (BDUF)
+
+  SUCCESS METRICS:
+  - Working software delivered frequently
+  - Small batch sizes maintained
+  - Architecture emerges naturally
+  - Learning drives next steps

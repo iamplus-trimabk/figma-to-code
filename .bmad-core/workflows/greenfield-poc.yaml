@@ -1,0 +1,212 @@
+# <!-- Powered by BMAD™ Core -->
+workflow:
+  id: greenfield-poc-rapid
+  name: Greenfield POC Development (Rapid Evolutionary)
+  description: >-
+    Ultra-rapid evolutionary workflow for proof-of-concept development.
+    Maximum speed, minimal planning, immediate feedback. Built for discovering
+    what's possible through rapid iteration and experimentation.
+  type: greenfield
+  project_types:
+    - poc
+    - prototype
+    - experiment
+    - proof-of-concept
+    - spike
+    - rapid-validation
+    - minimum-viable-experiment
+
+  evolutionary_principles:
+    max_tasks_per_batch: 2
+    no_upfront_planning: true
+    emergent_design: true
+    rapid_feedback: true
+    experimental_mindset: true
+    learning_over_delivery: true
+
+  sequence:
+    - poc_start:
+        action: identify_core_hypothesis
+        notes: |
+          POC EVOLUTIONARY APPROACH: Start with a core hypothesis to test
+          - What are we trying to prove is possible?
+          - What's the minimal functionality needed to validate this?
+          - Choose 1-2 tasks that directly test the core hypothesis
+          - No planning beyond proving the concept works
+
+    - agent: rapid_developer
+      action: build_minimum_viable_experiment
+      creates: working_prototype
+      requires: core_hypothesis
+      notes: |
+        Build the absolute minimum to test the hypothesis:
+        - Focus only on proving the core concept
+        - Skip anything not essential for validation
+        - Embrace technical debt - this is disposable code
+        - Get something working in hours, not days
+        - Fail fast if the approach won't work
+
+    - agent: rapid_tester
+      action: validate_hypothesis
+      creates: validation_results
+      requires: working_prototype
+      notes: |
+        Test the core hypothesis immediately:
+        - Does the prototype prove the concept?
+        - What worked? What didn't work?
+        - What should we try differently?
+        - Is this worth pursuing further?
+        - Document findings briefly
+
+    - poc_decision_point:
+        action: evaluate_and_decide
+        notes: |
+          CRITICAL DECISION: Based on validation results
+          ✅ **Hypothesis Validated**: Continue evolving the POC
+          ❌ **Hypothesis Invalidated**: Stop or pivot dramatically
+          🤔 **Partial Validation**: Refine hypothesis and test again
+
+    - continue_evolution:
+        condition: hypothesis_validated
+        action: evolve_poc
+        notes: |
+          If hypothesis is validated, continue evolutionary development:
+          - What 1-2 tasks should we tackle next?
+          - What enhancements would provide the most value?
+          - What new hypotheses should we test?
+          - Continue rapid iterations until POC goals are met
+
+    - pivot_or_stop:
+        condition: hypothesis_invalidated
+        action: decide_next_action
+        notes: |
+          If hypothesis is invalidated, choose next action:
+          - Pivot: Test different approach with new hypothesis
+          - Stop: Concept isn't viable, document learnings
+          - Refine: Adjust hypothesis and test again
+
+    - poc_complete:
+        condition: poc_goals_met
+        action: poc_successful
+        notes: |
+          POC is complete when:
+          - Core hypotheses have been validated
+          - Concept has been proven viable
+          - Enough learning has been gathered
+          - Ready for decision: build, pivot, or shelve
+
+  decision_guidance:
+    when_to_use:
+      - Testing if a technical approach is feasible
+      - Validating user interest in a concept
+      - Exploring new technologies or frameworks
+      - Proving business value before major investment
+      - Rapid experimentation and learning
+      - When speed is more important than perfection
+      - High-risk, high-reward initiatives
+
+    poc_vs_full_development:
+      "Use this POC workflow when:
+       - You need to prove something is possible
+       - Requirements are unclear or likely to change
+       - Technical feasibility is uncertain
+       - User validation is needed
+       - Speed is critical
+       - You're prepared to throw away the code
+
+       Use full development workflows when:
+       - Requirements are well-understood
+       - Building production-ready systems
+       - Long-term maintenance is expected
+       - Comprehensive planning is required"
+
+  agent_instructions:
+    poc_mindset:
+      "POC agents MUST embrace these principles:
+
+      SPEED OVER PERFECTION:
+       - Get something working in hours, not days
+       - Skip anything not essential for validation
+       - Embrace quick and dirty solutions
+       - Technical debt is acceptable in POCs
+
+      EXPERIMENTATION MINDSET:
+       - Test hypotheses, not build features
+       - Be prepared to fail fast and pivot
+       - Learn what doesn't work as much as what does
+       - Document findings, not comprehensive specs
+
+      RAPID FEEDBACK:
+       - Validate assumptions immediately
+       - Get something in users' hands quickly
+       - Iterate based on real feedback
+       - Adapt approach based on discoveries"
+
+    disposable_code_mentality:
+      "POC code is disposable:
+       - Don't optimize for maintainability
+       - Don't build comprehensive architectures
+       - Don't worry about scaling or production readiness
+       - Focus entirely on proving the concept
+       - Be willing to throw it all away and start over"
+
+  flow_diagram: |
+    ```mermaid
+    graph TD
+        A[Start: Core Hypothesis] --> B[Build Minimum Experiment]
+        B --> C[Working Prototype]
+        C --> D[Validate Hypothesis]
+        D --> E{Hypothesis Validated?}
+        E -->|Yes| F[Continue Evolution]
+        E -->|No| G[Pivot or Stop]
+        F --> H{POC Goals Met?}
+        H -->|No| I[Choose Next 1-2 Tasks]
+        H -->|Yes| J[POC Complete]
+        I --> B
+        G --> K[Document Learnings]
+
+        style A fill:#FF6B6B
+        style B fill:#4ECDC4
+        style C fill:#45B7D1
+        style D fill:#96CEB4
+        style F fill:#FECA57
+        style I fill:#FF6B6B
+        style J fill:#90EE90
+        style K fill:#DDA0DD
+    ```
+
+  examples:
+    poc_hypotheses:
+      - "Can we build a real-time chat feature in under 4 hours?"
+      - "Will users prefer voice commands over buttons?"
+      - "Can we integrate with external API X reliably?"
+      - "Is this new framework suitable for our needs?"
+      - "Can we achieve sub-second response times?"
+
+    poc_task_batches:
+      - Batch 1: "Basic connection to API, test one endpoint"
+      - Batch 2: "Add error handling, test edge cases"
+      - Batch 3: "Performance testing, validate requirements"
+
+  handoff_prompts:
+    start_poc: "Starting POC: What core hypothesis are we testing? What's the minimum we need to build to validate this?"
+    prototype_ready: "Minimum viable prototype ready. Let's test our core hypothesis: does this actually work/prove our concept?"
+    hypothesis_validated: "Hypothesis validated! What 1-2 enhancements would provide the most value for our next iteration?"
+    hypothesis_failed: "Hypothesis not validated. Should we pivot our approach, refine our hypothesis, or stop this experiment?"
+    poc_complete: "POC successfully validated core concepts. Ready for decision: build production version, pivot, or document learnings?"
+
+  success_criteria:
+    poc_success:
+      - ✅ Core hypothesis validated or invalidated
+      - ✅ Learning and insights gathered
+      - ✅ Decision made: build, pivot, or shelve
+      - ✅ Minimal time investment for maximum learning
+      - ✅ Rapid iterations (hours/days, not weeks)
+      - ✅ Clear path forward or decision point
+
+    poc_failure_indicators:
+      - ❌ Spending too much time on architecture/planning
+      - ❌ Building production-quality code in POC phase
+      - ❌ Not validating the core hypothesis
+      - ❌ No clear decision or learning outcome
+      - ❌ Treating POC as final product

@@ -1,0 +1,76 @@
+{
+  "name": "simflo",
+  "type": "real-time-messaging-platform",
+  "tech_stack": [
+    "Express.js",
+    "Socket.IO",
+    "TypeScript",
+    "MongoDB",
+    "Commander.js",
+    "Axios",
+    "Zod"
+  ],
+  "testing_frameworks": [
+    "Vitest",
+    "node-pty",
+    "E2E-CLI"
+  ],
+  "architecture": [
+    "Backend",
+    "SDK",
+    "CLI",
+    "Testing"
+  ],
+  "components": {
+    "backend": {
+      "path": "simflo-backend",
+      "description": "Express.js + Socket.IO server with JWT auth",
+      "tech": ["Express.js", "Socket.IO", "JWT", "MongoDB", "TypeScript"]
+    },
+    "sdk": {
+      "path": "simflo-sdk", 
+      "description": "TypeScript client library for integrations",
+      "tech": ["TypeScript", "Socket.IO Client", "Axios", "Zod"]
+    },
+    "cli": {
+      "path": "simflo-client/cli",
+      "description": "Interactive command-line interface",
+      "tech": ["Commander.js", "Inquirer.js", "Readline", "Chalk"]
+    }
+  },
+  "mcp_servers": [
+    "filesystem",
+    "git", 
+    "sqlite",
+    "sequential-thinking",
+    "notion",
+    "puppeteer",
+    "browser"
+  ],
+  "agents": [
+    "github-agent",
+    "pm-strategic", 
+    "pm-user-advocate",
+    "developer",
+    "qa"
+  ],
+  "features": [
+    "Real-time messaging",
+    "JWT authentication",
+    "Session management", 
+    "Interactive CLI",
+    "SDK integration",
+    "E2E testing"
+  ],
+  "deployment_ready": {
+    "backend": true,
+    "sdk": true,
+    "cli": true,
+    "tests": true,
+    "documentation": true
+  },
+  "last_initialized": "2025-08-16T00:55:00Z",
+  "git_origin": "https://github.com/iamplus-trimabk/claude-faq.git",
+  "active_profile": "trimabk",
+  "created": "2025-08-16T00:55:00Z"
+}

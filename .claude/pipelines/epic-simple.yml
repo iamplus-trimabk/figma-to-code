@@ -1,0 +1,151 @@
+# Simplified Epic Pipeline for Testing
+name: epic-simple
+description: Simplified epic creation with branches and worktrees
+version: 1.0.0
+
+parameters:
+  epic_name:
+    type: string
+    required: true
+    default: "User Authentication System"
+
+steps:
+  - id: setup
+    name: Setup Epic Environment
+    command: |
+      echo "🚀 Starting Epic: ${epic_name}"
+      echo "Current branch: $(git branch --show-current)"
+      echo "Working directory: $(pwd)"
+      
+      # Generate Epic ID
+      EPIC_NUM=$(ls -la docs/epics 2>/dev/null | wc -l || echo "001")
+      EPIC_ID="EPIC-$(printf "%03d" $EPIC_NUM)"
+      echo "Generated Epic ID: $EPIC_ID"
+      
+      # Store in output
+      echo "$EPIC_ID" > /tmp/epic_id.txt
+    outputs:
+      - epic_id: $EPIC_ID
+
+  - id: create_branch
+    name: Create Epic Branch
+    command: |
+      EPIC_ID=$(cat /tmp/epic_id.txt)
+      BRANCH="epic/$EPIC_ID/planning"
+      
+      echo "Creating branch: $BRANCH"
+      
+      # Create and checkout branch
+      git checkout -b "$BRANCH" 2>/dev/null || git checkout "$BRANCH"
+      
+      echo "✅ On branch: $(git branch --show-current)"
+    outputs:
+      - branch_name: epic/$EPIC_ID/planning
+
+  - id: create_structure
+    name: Create Epic Documentation Structure
+    command: |
+      EPIC_ID=$(cat /tmp/epic_id.txt)
+      
+      echo "📁 Creating epic documentation structure"
+      
+      # Create directories
+      mkdir -p docs/epics/$EPIC_ID/{sprints,stories,handoffs}
+      mkdir -p .claude/epics/$EPIC_ID
+      
+      # Create initial files
+      cat > docs/epics/$EPIC_ID/README.md << EOF
+# $EPIC_ID: ${epic_name}
+
+## Overview
+Epic for implementing ${epic_name}
+
+## Status
+- Created: $(date)
+- Branch: epic/$EPIC_ID/planning
+- Status: Planning
+
+## Sprints
+- [ ] Sprint 1: Core Features
+- [ ] Sprint 2: Testing & Polish
+
+## Team
+- Architect: trimabk
+- Developer: sarthak
+EOF
+      
+      echo "✅ Documentation structure created"
+      ls -la docs/epics/$EPIC_ID/
+
+  - id: create_worktree
+    name: Setup Git Worktree
+    command: |
+      EPIC_ID=$(cat /tmp/epic_id.txt)
+      WORKTREE_PATH="./worktrees/epic-$EPIC_ID"
+      
+      echo "🌳 Setting up worktree at: $WORKTREE_PATH"
+      
+      # Create worktree directory
+      mkdir -p ./worktrees
+      
+      # Add worktree (if not exists)
+      if [ ! -d "$WORKTREE_PATH" ]; then
+        git worktree add "$WORKTREE_PATH" "epic/$EPIC_ID/planning" 2>/dev/null || echo "Worktree setup skipped (branch might not be pushed)"
+      fi
+      
+      # List worktrees
+      echo "Current worktrees:"
+      git worktree list
+    outputs:
+      - worktree_path: ./worktrees/epic-$EPIC_ID
+
+  - id: sprint_setup
+    name: Create Sprint Branches
+    command: |
+      EPIC_ID=$(cat /tmp/epic_id.txt)
+      
+      echo "🏃 Creating sprint branches"
+      
+      # Sprint 1
+      git checkout -b "epic/$EPIC_ID/sprint-001/planning" 2>/dev/null || echo "Sprint 1 branch exists"
+      
+      # Sprint 2  
+      git checkout "epic/$EPIC_ID/planning" 2>/dev/null
+      git checkout -b "epic/$EPIC_ID/sprint-002/planning" 2>/dev/null || echo "Sprint 2 branch exists"
+      
+      # Return to epic branch
+      git checkout "epic/$EPIC_ID/planning"
+      
+      echo "✅ Sprint branches created"
+      git branch | grep "$EPIC_ID"
+
+  - id: summary
+    name: Pipeline Summary
+    command: |
+      EPIC_ID=$(cat /tmp/epic_id.txt)
+      
+      echo "="
+      echo "📊 EPIC CREATION SUMMARY"
+      echo "="
+      echo ""
+      echo "Epic ID: $EPIC_ID"
+      echo "Epic Name: ${epic_name}"
+      echo ""
+      echo "Branches Created:"
+      git branch | grep "$EPIC_ID" || echo "- epic/$EPIC_ID/planning"
+      echo ""
+      echo "Documentation: docs/epics/$EPIC_ID/"
+      echo "Worktree: ./worktrees/epic-$EPIC_ID/"
+      echo ""
+      echo "Next Steps:"
+      echo "1. Run: cd ./worktrees/epic-$EPIC_ID"
+      echo "2. Run: /sprint 'Sprint 1 - Core Features' under $EPIC_ID"
+      echo "3. Run: /story 'User login' in SPRINT-001"
+      echo ""
+      echo "✅ Epic pipeline complete!"
+
+on_success:
+  message: "✅ Epic created successfully! Check the summary above for next steps."
+
+on_failure:
+  message: "❌ Epic creation failed. Check errors above."

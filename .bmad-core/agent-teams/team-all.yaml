@@ -1,0 +1,20 @@
+# <!-- Powered by BMAD™ Core -->
+bundle:
+  name: Team All
+  icon: 👥
+  description: Includes every core system agent with evolutionary priority.
+agents:
+  - bmad-orchestrator
+  - "*"
+workflows:
+  # Evolutionary Workflows (Priority for POC and Greenfield)
+  - greenfield-poc.yaml
+  - greenfield-service.yaml
+  - greenfield-ui.yaml
+  # Traditional Workflows (Use only when required)
+  - greenfield-fullstack.yaml
+  - brownfield-service.yaml
+  - brownfield-ui.yaml
+  - brownfield-fullstack.yaml
+evolutionary_priority: true
+default_workflow: greenfield-poc.yaml

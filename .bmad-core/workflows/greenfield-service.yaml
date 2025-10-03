@@ -1,0 +1,179 @@
+# <!-- Powered by BMAD™ Core -->
+workflow:
+  id: greenfield-service-evolutionary
+  name: Greenfield Service/API Development (Evolutionary)
+  description: >-
+    Evolutionary agent workflow for building backend services using emergent development.
+    Focus on working software through 2-3 task iterations with emergent design.
+    No comprehensive upfront planning - architecture and requirements emerge naturally.
+  type: greenfield
+  project_types:
+    - rest-api
+    - graphql-api
+    - microservice
+    - backend-service
+    - api-prototype
+    - simple-service
+    - poc
+
+  evolutionary_principles:
+    max_tasks_per_batch: 3
+    no_upfront_planning: true
+    emergent_design: true
+    feedback_driven: true
+    working_software_over_documentation: true
+
+  sequence:
+    - evolutionary_start:
+        action: choose_initial_tasks
+        notes: |
+          EVOLUTIONARY APPROACH: Start with 2-3 concrete tasks
+          - No project brief, PRD, or comprehensive architecture
+          - Choose immediate, achievable tasks based on current needs
+          - Focus on getting something working quickly
+          - Let architecture emerge from implementation
+
+    - agent: any_development_agent
+      action: implement_task_batch
+      creates: working_software
+      requires: chosen_tasks
+      repeats: for_task_batch
+      notes: |
+        Implement 2-3 tasks maximum:
+        - Build working software, not documents
+        - Focus on concrete functionality
+        - Let architecture emerge naturally
+        - Discover requirements through implementation
+        - Update task status as you complete each one
+
+    - agent: any_development_agent
+      action: learn_and_adapt
+      creates: next_tasks
+      requires: working_software
+      notes: |
+        LEARNING CYCLE: Discover what's next
+        - What did you learn from implementation?
+        - What works well? What needs improvement?
+        - What should be the next 2-3 tasks?
+        - What direction should we pursue?
+        - Any warnings about wrong approaches?
+
+    - evolutionary_repeat:
+        action: continue_evolutionary_cycle
+        notes: |
+          Repeat the cycle: Choose 2-3 tasks → Implement → Learn → Adapt
+          Continue until the service meets the immediate need
+          Let the final architecture emerge naturally from iterations
+
+    - evolutionary_complete:
+        action: service_ready
+        notes: |
+          Service is ready when:
+          - Core functionality works as needed
+          - Architecture has emerged from implementation
+          - No more immediate tasks are apparent
+          - Ready for user feedback or next evolution
+
+  decision_guidance:
+    when_to_use:
+      - Building new services from scratch
+      - POC development and rapid prototyping
+      - When requirements are unclear or evolving
+      - When you want to discover architecture through building
+      - Lean, iterative development preferred
+      - Startup or experimental projects
+
+    evolutionary_vs_traditional:
+      "Use this evolutionary workflow when you want to:
+       - Start building immediately without extensive planning
+       - Let the architecture emerge from actual implementation
+       - Adapt quickly to discoveries and changing requirements
+       - Focus on working software over comprehensive documentation
+       - Develop in small, manageable batches
+
+       Use traditional greenfield workflows only when:
+       - Comprehensive upfront planning is absolutely required
+       - All requirements are known and stable upfront
+       - Large team coordination demands extensive documentation
+       - Regulatory compliance requires detailed planning artifacts"
+
+  agent_instructions:
+    telescope_and_compass_mode:
+      "All agents MUST operate in telescope and compass mode:
+
+       TELESCOPE (Focus):
+       - Focus only on immediate 2-3 tasks
+       - Never plan beyond current iteration
+       - Build concrete, working functionality
+       - Emphasize tangible progress over comprehensive plans
+
+       COMPASS (Guidance):
+       - Warn if approach seems wrong or inefficient
+       - Suggest better directions based on discoveries
+       - Help foresee near-future implications (1-2 steps ahead)
+       - Provide course correction, not long-term roadmaps
+
+       PROHIBITED:
+       - Comprehensive upfront planning
+       - Detailed architecture specifications
+       - Large task batches (more than 3 tasks)
+       - Predictive long-term commitments
+       - Big design upfront (BDUF)"
+
+    emergent_design_principles:
+      "Architecture emerges from implementation:
+       - Build something that works first
+       - Let patterns reveal themselves through usage
+       - Refactor based on discoveries, not predictions
+       - Evolve structure from actual needs, not theories
+       - Document what emerged, not what was planned"
+
+  flow_diagram: |
+    ```mermaid
+    graph TD
+        A[Start: Choose 2-3 Tasks] --> B[Implement Tasks]
+        B --> C[Working Software]
+        C --> D[Learn & Discover]
+        D --> E{More work needed?}
+        E -->|Yes| F[Choose Next 2-3 Tasks]
+        E -->|No| G[Service Complete]
+        F --> B
+
+        style A fill:#90EE90
+        style B fill:#ADD8E6
+        style C fill:#90EE90
+        style D fill:#FFE4B5
+        style F fill:#90EE90
+        style G fill:#90EE90
+    ```
+
+  examples:
+    evolutionary_task_batches:
+      - Batch 1: "Basic API endpoint, simple data model, basic auth"
+      - Batch 2: "Add validation, error handling, logging"
+      - Batch 3: "Performance optimization, tests, documentation"
+      - Next: "Based on usage - maybe caching, new endpoints, etc."
+
+    emergent_architecture:
+      "Architecture emerges like this:
+       Iteration 1: Simple monolith with basic routes
+       Iteration 2: Discover need for separation → extract service layer
+       Iteration 3: Discover scaling needs → add caching layer
+       Iteration 4: Discover complexity → modular design emerges
+
+       Instead of: Design comprehensive microservices upfront"
+
+  handoff_prompts:
+    start_evolutionary: "Starting evolutionary service development. Choose 2-3 concrete tasks to implement first. No comprehensive planning - let's build and discover."
+    task_batch_complete: "Task batch complete. What did we learn? What should be the next 2-3 tasks based on these discoveries?"
+    next_iteration: "Ready for next evolutionary iteration. Based on what we've built and learned, what 2-3 tasks should we tackle next?"
+    service_emerging: "Service architecture is emerging naturally. Current structure works well for our needs. Should we continue evolving or is this ready for use?"
+
+  success_criteria:
+    evolutionary_success:
+      - ✅ Working software delivered in each iteration
+      - ✅ Architecture emerged naturally from implementation
+      - ✅ Requirements discovered through building
+      - ✅ Small batch sizes maintained (2-3 tasks max)
+      - ✅ Minimal documentation overhead
+      - ✅ Adaptable to changing needs and discoveries

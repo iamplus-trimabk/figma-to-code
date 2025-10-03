@@ -1,0 +1,205 @@
+# Epic to Production Pipeline
+name: epic-to-production
+description: Complete epic lifecycle from planning to production deployment
+author: system
+version: 1.0.0
+
+parameters:
+  epic_name:
+    type: string
+    required: true
+    description: Epic name/description
+  
+  epic_id:
+    type: string  
+    required: false
+    default: auto
+    description: Epic ID (auto-generated if not provided)
+
+env:
+  EPIC_ID: ${epic_id}
+  EPIC_NAME: ${epic_name}
+  MAIN_BRANCH: main
+  WORKTREE_BASE: ./worktrees
+
+steps:
+  # Phase 1: Epic Creation and Planning
+  - id: create_epic
+    name: Create Epic Structure
+    description: Create epic with documentation and git structure
+    command: |
+      echo "📋 Creating epic: ${epic_name}"
+      
+      # Generate epic ID if needed
+      if [ "${epic_id}" = "auto" ]; then
+        EPIC_ID="EPIC-$(date +%03d)"
+      fi
+      
+      # Create epic branch
+      git checkout -b epic/${EPIC_ID}/planning
+      
+      # Create worktree for epic
+      mkdir -p ${WORKTREE_BASE}
+      git worktree add ${WORKTREE_BASE}/epic-${EPIC_ID} epic/${EPIC_ID}/planning
+      
+      echo "✅ Epic branch and worktree created"
+    outputs:
+      - epic_id: ${EPIC_ID}
+      - epic_branch: epic/${EPIC_ID}/planning
+      - worktree_path: ${WORKTREE_BASE}/epic-${EPIC_ID}
+  
+  - id: epic_documentation
+    name: Generate Epic Documentation
+    command: |
+      /epic ${epic_name}
+    description: Create comprehensive epic documentation
+    working_directory: ${outputs.create_epic.worktree_path}
+  
+  # Phase 2: Sprint Planning
+  - id: create_sprints
+    name: Create Sprint Structure
+    command: |
+      echo "🏃 Creating sprints for ${EPIC_ID}"
+      
+      # Create Sprint 1
+      git checkout -b epic/${EPIC_ID}/sprint-001/planning
+      git worktree add ${WORKTREE_BASE}/sprint-001 epic/${EPIC_ID}/sprint-001/planning
+      
+      # Create Sprint 2  
+      git checkout -b epic/${EPIC_ID}/sprint-002/planning
+      git worktree add ${WORKTREE_BASE}/sprint-002 epic/${EPIC_ID}/sprint-002/planning
+      
+      /sprint "Sprint 1 - Core Features" under ${EPIC_ID}
+      /sprint "Sprint 2 - Polish & Testing" under ${EPIC_ID}
+    outputs:
+      - sprint_1_branch: epic/${EPIC_ID}/sprint-001/planning
+      - sprint_2_branch: epic/${EPIC_ID}/sprint-002/planning
+  
+  # Phase 3: Story Creation
+  - id: create_stories
+    name: Create User Stories
+    command: |
+      echo "📖 Creating user stories"
+      
+      # Sprint 1 stories
+      cd ${WORKTREE_BASE}/sprint-001
+      /story "As a user I want to authenticate" in SPRINT-001
+      /story "As a user I want to reset password" in SPRINT-001
+      /story "As a user I want 2FA support" in SPRINT-001
+      
+      # Sprint 2 stories
+      cd ${WORKTREE_BASE}/sprint-002
+      /story "As a user I want SSO login" in SPRINT-002
+      /story "As a user I want session management" in SPRINT-002
+    description: Create user stories for each sprint
+  
+  # Phase 4: Development Handoff
+  - id: planning_handoff
+    name: Handoff to Development
+    command: |
+      /handoff planning-to-implementation ${EPIC_ID}
+    description: Create handoff documentation for development team
+  
+  # Phase 5: Implementation
+  - id: switch_to_implementation
+    name: Switch to Implementation Branch
+    command: |
+      # Create implementation branches
+      git checkout -b epic/${EPIC_ID}/sprint-001/implementation
+      git worktree add ${WORKTREE_BASE}/sprint-001-impl epic/${EPIC_ID}/sprint-001/implementation
+      
+      echo "🔧 Ready for implementation"
+    outputs:
+      - impl_branch: epic/${EPIC_ID}/sprint-001/implementation
+      - impl_worktree: ${WORKTREE_BASE}/sprint-001-impl
+  
+  # Phase 6: Development Work (Simulated)
+  - id: implement_features
+    name: Implement Features
+    command: |
+      echo "💻 Implementing features..."
+      echo "This is where actual development happens"
+      echo "Using worktree: ${outputs.switch_to_implementation.impl_worktree}"
+    working_directory: ${outputs.switch_to_implementation.impl_worktree}
+  
+  # Phase 7: Testing
+  - id: run_tests
+    name: Execute Test Suite
+    command: |
+      /test --all
+    description: Run comprehensive test suite
+    continue_on_error: false
+  
+  # Phase 8: Code Review
+  - id: code_review
+    name: Code Review
+    command: |
+      /review ${outputs.switch_to_implementation.impl_branch}
+    description: Perform comprehensive code review
+  
+  # Phase 9: Git Operations
+  - id: commit_changes
+    name: Commit Implementation
+    command: |
+      /git-commit
+    description: Smart commit with context
+    working_directory: ${outputs.switch_to_implementation.impl_worktree}
+  
+  # Phase 10: PR Creation
+  - id: create_pr
+    name: Create Pull Request
+    command: |
+      echo "🔀 Creating pull request"
+      git push -u origin ${outputs.switch_to_implementation.impl_branch}
+      
+      # gh pr create would go here
+      echo "PR created for review"
+    description: Push changes and create PR
+  
+  # Phase 11: Staging Deployment
+  - id: deploy_staging
+    name: Deploy to Staging
+    command: |
+      echo "🚀 Deploying to staging environment"
+      echo "Branch: ${outputs.switch_to_implementation.impl_branch}"
+      # Actual deployment commands would go here
+    description: Deploy to staging for testing
+  
+  # Phase 12: Production Readiness
+  - id: production_checks
+    name: Production Readiness Checks
+    command: |
+      echo "✅ Running production readiness checks"
+      /test --e2e
+      /test --performance
+      /test --security
+    description: Final validation before production
+  
+  # Phase 13: Production Deployment
+  - id: deploy_production
+    name: Deploy to Production
+    command: |
+      echo "🎯 Deploying to production"
+      # Production deployment would happen here
+      echo "Successfully deployed to production!"
+    description: Final production deployment
+    requires_approval: true
+
+# Cleanup worktrees on completion
+on_success:
+  - command: |
+      echo "🧹 Cleaning up worktrees"
+      git worktree list
+      # Cleanup commands would go here
+  - message: "✅ Epic ${EPIC_ID} successfully deployed to production!"
+
+on_failure:
+  - message: "❌ Pipeline failed. Worktrees preserved for debugging."
+  - command: |
+      echo "Worktrees available at:"
+      ls -la ${WORKTREE_BASE}/
+
+artifacts:
+  - ${WORKTREE_BASE}/*/docs/
+  - ${WORKTREE_BASE}/*/test-results/
+  - ${WORKTREE_BASE}/*/coverage/
