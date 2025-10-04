@@ -15,9 +15,7 @@ We have adopted a REST API-first strategy for extracting design data from Figma,
 ## Research Files
 
 ### Core API Research
-- **[figma-rest-api-research.md](./figma-rest-api-research.md)** - Comprehensive analysis of the Figma REST API specification, architecture, and capabilities
-- **[figma-official-api-research.md](./figma-official-api-research.md)** - Official API documentation research covering authentication, endpoints, and best practices
-- **[figma-api-demo-research.md](./figma-api-demo-research.md)** - Analysis of the official figma-to-react demo project and patterns
+- **[rest_api_guide.md](./rest_api_guide.md)** - **COMPREHENSIVE GUIDE**: Complete consolidation of all API research including implementation patterns, code examples, and production-ready patterns
 
 ## Key Findings
 
