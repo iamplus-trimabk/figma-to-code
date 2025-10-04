@@ -23,7 +23,7 @@ Figma File → REST API → JSON Cache → Design Tokens → React Components
 interface FigmaAPIConfig {
   baseURL: 'https://api.figma.com/v1';
   version: '1.0';
-  authentication: 'OAuth2' | 'Personal Access Token';
+  authentication: 'Personal Access Token';
   rateLimit: {
     requestsPerHour: 3600; // Standard tier
     requestsPerMinute: 60;
@@ -31,9 +31,9 @@ interface FigmaAPIConfig {
 }
 ```
 
-### Authentication Methods
+### Authentication
 
-#### Personal Access Token (Development)
+#### Personal Access Token
 ```typescript
 class PersonalTokenAuth {
   constructor(private accessToken: string) {}
@@ -58,51 +58,23 @@ class PersonalTokenAuth {
 }
 ```
 
-#### OAuth2 (Production)
-```typescript
-class FigmaOAuth2 {
-  getAuthorizationUrl(state?: string): string {
-    const params = new URLSearchParams({
-      client_id: this.config.clientId,
-      redirect_uri: this.config.redirectUri,
-      response_type: 'code',
-      scope: this.config.scopes.join(' '),
-      state: state || this.generateState()
-    });
+#### Personal Access Token Best Practices
 
-    return `https://www.figma.com/oauth?${params.toString()}`;
-  }
+1. **Token Generation**: Create tokens in Figma Settings → Account → Personal Access Tokens
+2. **Scopes**: Only request necessary permissions for your use case
+3. **Security**:
+   - Never commit tokens to version control
+   - Store tokens securely using environment variables or secret management
+   - Use different tokens for different environments
+   - Rotate tokens regularly
+4. **Rate Limits**: Standard accounts have 3600 requests/hour
+5. **Validation**: Always validate tokens before use
 
-  async exchangeCodeForToken(code: string, state: string): Promise<OAuth2Token> {
-    // Validate state to prevent CSRF
-    const storedState = await this.tokenStorage.getState();
-    if (state !== storedState) {
-      throw new Error('Invalid state parameter');
-    }
-
-    const response = await fetch('https://www.figma.com/api/oauth/token', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      body: new URLSearchParams({
-        client_id: this.config.clientId,
-        client_secret: this.config.clientSecret,
-        code,
-        redirect_uri: this.config.redirectUri,
-        grant_type: 'authorization_code'
-      })
-    });
-
-    if (!response.ok) {
-      throw new Error('Token exchange failed');
-    }
-
-    const token = await response.json();
-    await this.tokenStorage.saveToken(token);
-    return token;
-  }
-}
+Example usage:
+```python
+# Python example (like our simple_figma_cache.py)
+ACCESS_TOKEN = os.getenv('FIGMA_ACCESS_TOKEN')  # Use environment variables
+headers = {'X-Figma-Token': ACCESS_TOKEN}
 ```
 
 ## 2. Core API Endpoints
@@ -888,10 +860,9 @@ class DesignSystemExtractor {
 
 ### Security Considerations
 - Store access tokens securely
-- Implement proper OAuth2 flow for production
 - Use HTTPS for all API communications
 - Validate and sanitize all API responses
-- Implement proper scope management
+- Keep access tokens private and never commit them to version control
 
 ### Monitoring & Observability
 - Track API usage and rate limits
@@ -948,7 +919,7 @@ async function completeWorkflow(fileKey: string, accessToken: string): Promise<v
 - **Rate Limiting**: 3600 requests/hour for standard tier
 - **File Size**: Large files may require batch processing
 - **Real-time Updates**: No real-time change notifications
-- **Write Access**: Limited write capabilities (requires OAuth2)
+- **Write Access**: Limited write capabilities
 
 ### Data Constraints
 - **Vector Data**: Must be explicitly requested with `geometry: 'paths'`
@@ -990,7 +961,7 @@ For the most up-to-date and comprehensive information, refer to these official s
 - **Main REST API Documentation**: https://developers.figma.com/docs/rest-api/
 - **API Specification**: https://github.com/figma/rest-api-spec
 - **Official Demo Project**: https://github.com/figma/figma-api-demo/tree/master/figma-to-react
-- **Authentication Guide**: https://developers.figma.com/docs/rest-api/authentication/
+- **Personal Access Token Guide**: https://developers.figma.com/docs/rest-api/authentication/
 - **Rate Limiting**: https://developers.figma.com/docs/rest-api/rate-limits/
 
 *This guide consolidates research from multiple sources and provides practical implementation patterns for production-ready design system extraction.*
