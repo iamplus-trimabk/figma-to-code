@@ -1,0 +1,55 @@
+============================================================
+STAGE 2 CONVERSION VALIDATION REPORT
+============================================================
+
+Overall Status: ❌ FAILED
+
+Summary:
+  - Errors: 18
+  - Warnings: 4
+  - Accessibility Issues: 3
+
+Quality Metrics:
+  🟢 token_completeness: 100.0%
+  🟢 interface_quality: 100.0%
+  🟡 config_completeness: 60.0%
+  🟡 accessibility_score: 70.0%
+  🟢 overall_quality: 86.0%
+
+Errors:
+  ❌ Color gray is missing shades: 50, 100, 200, 300, 400, 600, 700, 800, 900, 950
+  ❌ Color facebook is missing shades: 50, 100, 200, 300, 400, 600, 700, 800, 900, 950
+  ❌ Color brand-1 is missing shades: 50, 100, 200, 300, 400, 600, 700, 800, 900, 950
+  ❌ Color brand-2 is missing shades: 50, 100, 200, 300, 400, 600, 700, 800, 900, 950
+  ❌ Color brand-3 is missing shades: 50, 100, 200, 300, 400, 600, 700, 800, 900, 950
+  ❌ Color brand-4 is missing shades: 50, 100, 200, 300, 400, 600, 700, 800, 900, 950
+  ❌ Color brand-5 is missing shades: 50, 100, 200, 300, 400, 600, 700, 800, 900, 950
+  ❌ Color brand-6 is missing shades: 50, 100, 200, 300, 400, 600, 700, 800, 900, 950
+  ❌ Color brand-7 is missing shades: 50, 100, 200, 300, 400, 600, 700, 800, 900, 950
+  ❌ Color brand-8 is missing shades: 50, 100, 200, 300, 400, 600, 700, 800, 900, 950
+  ❌ Color brand-9 is missing shades: 50, 100, 200, 300, 400, 600, 700, 800, 900, 950
+  ❌ Color brand-10 is missing shades: 50, 100, 200, 300, 400, 600, 700, 800, 900, 950
+  ❌ Color brand-11 is missing shades: 50, 100, 200, 300, 400, 600, 700, 800, 900, 950
+  ❌ Color brand-12 is missing shades: 50, 100, 200, 300, 400, 600, 700, 800, 900, 950
+  ❌ Color brand-13 is missing shades: 50, 100, 200, 300, 400, 600, 700, 800, 900, 950
+  ❌ Color brand-14 is missing shades: 50, 100, 200, 300, 400, 600, 700, 800, 900, 950
+  ❌ Color brand-15 is missing shades: 50, 100, 200, 300, 400, 600, 700, 800, 900, 950
+  ❌ Missing font weights: 100, 200, 300, 500, 600, 700, 800
+
+Warnings:
+  ⚠️  Tailwind: Missing semantic colors: secondary, error, info
+  ⚠️  Tailwind: Gray scale missing shades: 600, 700
+  ⚠️  NativeWind: Missing semantic colors: secondary, error, info
+  ⚠️  NativeWind: Gray scale missing shades: 600, 700
+
+Accessibility Issues:
+  ♿ Font size caption (12.0px) is below recommended minimum
+  ♿ Font size leading-140 (1.4px) is below recommended minimum
+  ♿ Font size xs (12.0px) is below recommended minimum
+
+Recommendations:
+  💡 Fix all errors before proceeding to Stage 3
+  💡 Address warnings to improve design system quality
+  💡 Resolve accessibility issues for better inclusivity
+  💡 Complete configuration sections for better platform support
+  💡 Improve accessibility compliance with better contrast and sizing

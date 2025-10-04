@@ -1,0 +1,1010 @@
+[
+  {
+    "name": "Bg",
+    "description": "bg - Visual component for displaying content",
+    "props": {
+      "width": "string | number",
+      "height": "string | number",
+      "position": "{ x?: number; y?: number }",
+      "backgroundColor": "string",
+      "backgroundOpacity": "number",
+      "borderRadius": "string | number",
+      "className": "string",
+      "style": "React.CSSProperties",
+      "children": "React.ReactNode",
+      "id": "string",
+      "testId": "string",
+      "display": "block | inline | inline-block | flex | grid | none",
+      "overflow": "visible | hidden | scroll | auto",
+      "opacity": "number"
+    },
+    "variants": [
+      {
+        "name": "width",
+        "type": "width: 788.0",
+        "description": "Variant property for width"
+      },
+      {
+        "name": "name",
+        "type": "name: 'bg'",
+        "description": "Variant property for name"
+      },
+      {
+        "name": "height",
+        "type": "height: 940.0",
+        "description": "Variant property for height"
+      },
+      {
+        "name": "x",
+        "type": "x: -8850.0",
+        "description": "Variant property for x"
+      },
+      {
+        "name": "cornerRadius",
+        "type": "cornerRadius: 8.0",
+        "description": "Variant property for cornerRadius"
+      },
+      {
+        "name": "type",
+        "type": "type: 'rectangle'",
+        "description": "Variant property for type"
+      },
+      {
+        "name": "y",
+        "type": "y: -6976.0",
+        "description": "Variant property for y"
+      }
+    ],
+    "extends": [
+      "React.HTMLAttributes<HTMLElement>"
+    ],
+    "generics": []
+  },
+  {
+    "name": "Angle",
+    "description": "angle - Visual component for displaying content",
+    "props": {
+      "width": "string | number",
+      "height": "string | number",
+      "position": "{ x?: number; y?: number }",
+      "backgroundColor": "string",
+      "backgroundOpacity": "number",
+      "borderRadius": "string | number",
+      "className": "string",
+      "style": "React.CSSProperties",
+      "children": "React.ReactNode",
+      "id": "string",
+      "testId": "string",
+      "display": "block | inline | inline-block | flex | grid | none",
+      "overflow": "visible | hidden | scroll | auto",
+      "opacity": "number"
+    },
+    "variants": [
+      {
+        "name": "width",
+        "type": "width: 681.0",
+        "description": "Variant property for width"
+      },
+      {
+        "name": "name",
+        "type": "name: 'Rectangle 2'",
+        "description": "Variant property for name"
+      },
+      {
+        "name": "height",
+        "type": "height: 78.0",
+        "description": "Variant property for height"
+      },
+      {
+        "name": "x",
+        "type": "x: -8786.0",
+        "description": "Variant property for x"
+      },
+      {
+        "name": "cornerRadius",
+        "type": "cornerRadius: 8.0",
+        "description": "Variant property for cornerRadius"
+      },
+      {
+        "name": "type",
+        "type": "type: 'rectangle'",
+        "description": "Variant property for type"
+      },
+      {
+        "name": "y",
+        "type": "y: -6781.0",
+        "description": "Variant property for y"
+      }
+    ],
+    "extends": [
+      "React.HTMLAttributes<HTMLElement>"
+    ],
+    "generics": []
+  },
+  {
+    "name": "Search",
+    "description": "search - Interactive UI component with user interactions",
+    "props": {
+      "width": "string | number",
+      "height": "string | number",
+      "position": "{ x?: number; y?: number }",
+      "backgroundColor": "string",
+      "backgroundOpacity": "number",
+      "className": "string",
+      "style": "React.CSSProperties",
+      "children": "React.ReactNode",
+      "id": "string",
+      "testId": "string",
+      "interactive": "boolean",
+      "hover": "boolean",
+      "focus": "boolean",
+      "active": "boolean",
+      "onPress": "() => void",
+      "onHover": "(hovering: boolean) => void"
+    },
+    "variants": [
+      {
+        "name": "width",
+        "type": "width: 32.0",
+        "description": "Variant property for width"
+      },
+      {
+        "name": "name",
+        "type": "name: 'search 1'",
+        "description": "Variant property for name"
+      },
+      {
+        "name": "height",
+        "type": "height: 32.0",
+        "description": "Variant property for height"
+      },
+      {
+        "name": "x",
+        "type": "x: -8541.0",
+        "description": "Variant property for x"
+      },
+      {
+        "name": "type",
+        "type": "type: 'frame'",
+        "description": "Variant property for type"
+      },
+      {
+        "name": "y",
+        "type": "y: -6756.0",
+        "description": "Variant property for y"
+      }
+    ],
+    "extends": [
+      "React.HTMLAttributes<HTMLElement>",
+      "InteractiveProps"
+    ],
+    "generics": []
+  },
+  {
+    "name": "ForgotPassword",
+    "description": "forgot-password? - Interactive UI component with user interactions",
+    "props": {
+      "width": "string | number",
+      "height": "string | number",
+      "position": "{ x?: number; y?: number }",
+      "backgroundColor": "string",
+      "backgroundOpacity": "number",
+      "fontFamily": "string",
+      "fontSize": "string | number",
+      "fontWeight": "string | number",
+      "text": "string",
+      "textAlign": "left | center | right | justify",
+      "className": "string",
+      "style": "React.CSSProperties",
+      "children": "React.ReactNode",
+      "id": "string",
+      "testId": "string",
+      "interactive": "boolean",
+      "hover": "boolean",
+      "focus": "boolean",
+      "active": "boolean",
+      "onPress": "() => void",
+      "onHover": "(hovering: boolean) => void"
+    },
+    "variants": [
+      {
+        "name": "width",
+        "type": "width: 141.0",
+        "description": "Variant property for width"
+      },
+      {
+        "name": "name",
+        "type": "name: 'Forgot Password?'",
+        "description": "Variant property for name"
+      },
+      {
+        "name": "height",
+        "type": "height: 22.0",
+        "description": "Variant property for height"
+      },
+      {
+        "name": "text",
+        "type": "text: 'Forgot Password?'",
+        "description": "Variant property for text"
+      },
+      {
+        "name": "x",
+        "type": "x: -8251.0",
+        "description": "Variant property for x"
+      },
+      {
+        "name": "font_family",
+        "type": "font_family: 'Poppins'",
+        "description": "Variant property for font_family"
+      },
+      {
+        "name": "font_size",
+        "type": "font_size: 16.0",
+        "description": "Variant property for font_size"
+      },
+      {
+        "name": "font_weight",
+        "type": "font_weight: 400",
+        "description": "Variant property for font_weight"
+      },
+      {
+        "name": "text_align",
+        "type": "text_align: 'left'",
+        "description": "Variant property for text_align"
+      },
+      {
+        "name": "type",
+        "type": "type: 'text'",
+        "description": "Variant property for type"
+      },
+      {
+        "name": "y",
+        "type": "y: -6306.0",
+        "description": "Variant property for y"
+      },
+      {
+        "name": "letter_spacing",
+        "type": "letter_spacing: 0",
+        "description": "Variant property for letter_spacing"
+      }
+    ],
+    "extends": [
+      "React.HTMLAttributes<HTMLElement>",
+      "InteractiveProps"
+    ],
+    "generics": []
+  },
+  {
+    "name": "Email",
+    "description": "email - Interactive UI component with user interactions",
+    "props": {
+      "width": "string | number",
+      "height": "string | number",
+      "position": "{ x?: number; y?: number }",
+      "backgroundColor": "string",
+      "backgroundOpacity": "number",
+      "fontFamily": "string",
+      "fontSize": "string | number",
+      "fontWeight": "string | number",
+      "text": "string",
+      "textAlign": "left | center | right | justify",
+      "className": "string",
+      "style": "React.CSSProperties",
+      "children": "React.ReactNode",
+      "id": "string",
+      "testId": "string",
+      "interactive": "boolean",
+      "hover": "boolean",
+      "focus": "boolean",
+      "active": "boolean",
+      "onPress": "() => void",
+      "onHover": "(hovering: boolean) => void"
+    },
+    "variants": [
+      {
+        "name": "width",
+        "type": "width: 33.0",
+        "description": "Variant property for width"
+      },
+      {
+        "name": "name",
+        "type": "name: 'Email'",
+        "description": "Variant property for name"
+      },
+      {
+        "name": "height",
+        "type": "height: 16.0",
+        "description": "Variant property for height"
+      },
+      {
+        "name": "text",
+        "type": "text: 'Email'",
+        "description": "Variant property for text"
+      },
+      {
+        "name": "x",
+        "type": "x: -8694.0",
+        "description": "Variant property for x"
+      },
+      {
+        "name": "font_family",
+        "type": "font_family: 'Poppins'",
+        "description": "Variant property for font_family"
+      },
+      {
+        "name": "font_size",
+        "type": "font_size: 12.0",
+        "description": "Variant property for font_size"
+      },
+      {
+        "name": "font_weight",
+        "type": "font_weight: 400",
+        "description": "Variant property for font_weight"
+      },
+      {
+        "name": "text_align",
+        "type": "text_align: 'left'",
+        "description": "Variant property for text_align"
+      },
+      {
+        "name": "type",
+        "type": "type: 'text'",
+        "description": "Variant property for type"
+      },
+      {
+        "name": "y",
+        "type": "y: -6489.0",
+        "description": "Variant property for y"
+      },
+      {
+        "name": "letter_spacing",
+        "type": "letter_spacing: 0",
+        "description": "Variant property for letter_spacing"
+      }
+    ],
+    "extends": [
+      "React.HTMLAttributes<HTMLElement>",
+      "InteractiveProps"
+    ],
+    "generics": []
+  },
+  {
+    "name": "Angle4",
+    "description": "angle-4 - Visual component for displaying content",
+    "props": {
+      "width": "string | number",
+      "height": "string | number",
+      "position": "{ x?: number; y?: number }",
+      "backgroundColor": "string",
+      "backgroundOpacity": "number",
+      "borderRadius": "string | number",
+      "className": "string",
+      "style": "React.CSSProperties",
+      "children": "React.ReactNode",
+      "id": "string",
+      "testId": "string",
+      "display": "block | inline | inline-block | flex | grid | none",
+      "overflow": "visible | hidden | scroll | auto",
+      "opacity": "number"
+    },
+    "variants": [
+      {
+        "name": "width",
+        "type": "width: 671.0",
+        "description": "Variant property for width"
+      },
+      {
+        "name": "name",
+        "type": "name: 'Rectangle 4'",
+        "description": "Variant property for name"
+      },
+      {
+        "name": "height",
+        "type": "height: 77.0",
+        "description": "Variant property for height"
+      },
+      {
+        "name": "x",
+        "type": "x: -8776.0",
+        "description": "Variant property for x"
+      },
+      {
+        "name": "cornerRadius",
+        "type": "cornerRadius: 8.0",
+        "description": "Variant property for cornerRadius"
+      },
+      {
+        "name": "type",
+        "type": "type: 'rectangle'",
+        "description": "Variant property for type"
+      },
+      {
+        "name": "y",
+        "type": "y: -6504.0",
+        "description": "Variant property for y"
+      }
+    ],
+    "extends": [
+      "React.HTMLAttributes<HTMLElement>"
+    ],
+    "generics": []
+  },
+  {
+    "name": "Password",
+    "description": "password - Interactive UI component with user interactions",
+    "props": {
+      "width": "string | number",
+      "height": "string | number",
+      "position": "{ x?: number; y?: number }",
+      "backgroundColor": "string",
+      "backgroundOpacity": "number",
+      "fontFamily": "string",
+      "fontSize": "string | number",
+      "fontWeight": "string | number",
+      "text": "string",
+      "textAlign": "left | center | right | justify",
+      "className": "string",
+      "style": "React.CSSProperties",
+      "children": "React.ReactNode",
+      "id": "string",
+      "testId": "string",
+      "interactive": "boolean",
+      "hover": "boolean",
+      "focus": "boolean",
+      "active": "boolean",
+      "onPress": "() => void",
+      "onHover": "(hovering: boolean) => void"
+    },
+    "variants": [
+      {
+        "name": "width",
+        "type": "width: 58.0",
+        "description": "Variant property for width"
+      },
+      {
+        "name": "name",
+        "type": "name: 'Password'",
+        "description": "Variant property for name"
+      },
+      {
+        "name": "height",
+        "type": "height: 16.0",
+        "description": "Variant property for height"
+      },
+      {
+        "name": "text",
+        "type": "text: 'Password'",
+        "description": "Variant property for text"
+      },
+      {
+        "name": "x",
+        "type": "x: -8694.0",
+        "description": "Variant property for x"
+      },
+      {
+        "name": "font_family",
+        "type": "font_family: 'Poppins'",
+        "description": "Variant property for font_family"
+      },
+      {
+        "name": "font_size",
+        "type": "font_size: 12.0",
+        "description": "Variant property for font_size"
+      },
+      {
+        "name": "font_weight",
+        "type": "font_weight: 400",
+        "description": "Variant property for font_weight"
+      },
+      {
+        "name": "text_align",
+        "type": "text_align: 'left'",
+        "description": "Variant property for text_align"
+      },
+      {
+        "name": "type",
+        "type": "type: 'text'",
+        "description": "Variant property for type"
+      },
+      {
+        "name": "y",
+        "type": "y: -6392.0",
+        "description": "Variant property for y"
+      },
+      {
+        "name": "letter_spacing",
+        "type": "letter_spacing: 0",
+        "description": "Variant property for letter_spacing"
+      }
+    ],
+    "extends": [
+      "React.HTMLAttributes<HTMLElement>",
+      "InteractiveProps"
+    ],
+    "generics": []
+  },
+  {
+    "name": "Angle5",
+    "description": "angle-5 - Visual component for displaying content",
+    "props": {
+      "width": "string | number",
+      "height": "string | number",
+      "position": "{ x?: number; y?: number }",
+      "backgroundColor": "string",
+      "backgroundOpacity": "number",
+      "borderRadius": "string | number",
+      "className": "string",
+      "style": "React.CSSProperties",
+      "children": "React.ReactNode",
+      "id": "string",
+      "testId": "string",
+      "display": "block | inline | inline-block | flex | grid | none",
+      "overflow": "visible | hidden | scroll | auto",
+      "opacity": "number"
+    },
+    "variants": [
+      {
+        "name": "width",
+        "type": "width: 671.0",
+        "description": "Variant property for width"
+      },
+      {
+        "name": "name",
+        "type": "name: 'Rectangle 5'",
+        "description": "Variant property for name"
+      },
+      {
+        "name": "height",
+        "type": "height: 77.0",
+        "description": "Variant property for height"
+      },
+      {
+        "name": "x",
+        "type": "x: -8776.0",
+        "description": "Variant property for x"
+      },
+      {
+        "name": "cornerRadius",
+        "type": "cornerRadius: 8.0",
+        "description": "Variant property for cornerRadius"
+      },
+      {
+        "name": "type",
+        "type": "type: 'rectangle'",
+        "description": "Variant property for type"
+      },
+      {
+        "name": "y",
+        "type": "y: -6407.0",
+        "description": "Variant property for y"
+      }
+    ],
+    "extends": [
+      "React.HTMLAttributes<HTMLElement>"
+    ],
+    "generics": []
+  },
+  {
+    "name": "Button",
+    "description": "button - Interactive UI component with user interactions",
+    "props": {
+      "width": "string | number",
+      "height": "string | number",
+      "position": "{ x?: number; y?: number }",
+      "borderRadius": "string | number",
+      "className": "string",
+      "style": "React.CSSProperties",
+      "children": "React.ReactNode",
+      "id": "string",
+      "testId": "string",
+      "variant": "primary | secondary | outline | ghost",
+      "size": "sm | md | lg",
+      "disabled": "boolean",
+      "loading": "boolean",
+      "onClick": "(event: React.MouseEvent) => void",
+      "type": "'button' | 'submit' | 'reset'"
+    },
+    "variants": [
+      {
+        "name": "width",
+        "type": "width: 671.0",
+        "description": "Variant property for width"
+      },
+      {
+        "name": "name",
+        "type": "name: 'button'",
+        "description": "Variant property for name"
+      },
+      {
+        "name": "height",
+        "type": "height: 77.0",
+        "description": "Variant property for height"
+      },
+      {
+        "name": "x",
+        "type": "x: -8776.0",
+        "description": "Variant property for x"
+      },
+      {
+        "name": "cornerRadius",
+        "type": "cornerRadius: 8.0",
+        "description": "Variant property for cornerRadius"
+      },
+      {
+        "name": "type",
+        "type": "type: 'group'",
+        "description": "Variant property for type"
+      },
+      {
+        "name": "y",
+        "type": "y: -6260.0",
+        "description": "Variant property for y"
+      }
+    ],
+    "extends": [
+      "React.HTMLAttributes<HTMLElement>",
+      "ButtonProps"
+    ],
+    "generics": []
+  },
+  {
+    "name": "Angle6",
+    "description": "angle-6 - Visual component for displaying content",
+    "props": {
+      "width": "string | number",
+      "height": "string | number",
+      "position": "{ x?: number; y?: number }",
+      "backgroundColor": "string",
+      "backgroundOpacity": "number",
+      "borderRadius": "string | number",
+      "className": "string",
+      "style": "React.CSSProperties",
+      "children": "React.ReactNode",
+      "id": "string",
+      "testId": "string",
+      "display": "block | inline | inline-block | flex | grid | none",
+      "overflow": "visible | hidden | scroll | auto",
+      "opacity": "number"
+    },
+    "variants": [
+      {
+        "name": "width",
+        "type": "width: 671.0",
+        "description": "Variant property for width"
+      },
+      {
+        "name": "name",
+        "type": "name: 'Rectangle 6'",
+        "description": "Variant property for name"
+      },
+      {
+        "name": "height",
+        "type": "height: 77.0",
+        "description": "Variant property for height"
+      },
+      {
+        "name": "x",
+        "type": "x: -8776.0",
+        "description": "Variant property for x"
+      },
+      {
+        "name": "cornerRadius",
+        "type": "cornerRadius: 8.0",
+        "description": "Variant property for cornerRadius"
+      },
+      {
+        "name": "type",
+        "type": "type: 'rectangle'",
+        "description": "Variant property for type"
+      },
+      {
+        "name": "y",
+        "type": "y: -6260.0",
+        "description": "Variant property for y"
+      }
+    ],
+    "extends": [
+      "React.HTMLAttributes<HTMLElement>"
+    ],
+    "generics": []
+  },
+  {
+    "name": "RememberMe",
+    "description": "remember-me - Visual component for displaying content",
+    "props": {
+      "width": "string | number",
+      "height": "string | number",
+      "position": "{ x?: number; y?: number }",
+      "borderRadius": "string | number",
+      "className": "string",
+      "style": "React.CSSProperties",
+      "children": "React.ReactNode",
+      "id": "string",
+      "testId": "string",
+      "display": "block | inline | inline-block | flex | grid | none",
+      "overflow": "visible | hidden | scroll | auto",
+      "opacity": "number"
+    },
+    "variants": [
+      {
+        "name": "width",
+        "type": "width: 153.0",
+        "description": "Variant property for width"
+      },
+      {
+        "name": "name",
+        "type": "name: 'Remember me'",
+        "description": "Variant property for name"
+      },
+      {
+        "name": "height",
+        "type": "height: 22.0",
+        "description": "Variant property for height"
+      },
+      {
+        "name": "x",
+        "type": "x: -8774.0",
+        "description": "Variant property for x"
+      },
+      {
+        "name": "cornerRadius",
+        "type": "cornerRadius: 4.0",
+        "description": "Variant property for cornerRadius"
+      },
+      {
+        "name": "type",
+        "type": "type: 'group'",
+        "description": "Variant property for type"
+      },
+      {
+        "name": "y",
+        "type": "y: -6306.0",
+        "description": "Variant property for y"
+      }
+    ],
+    "extends": [
+      "React.HTMLAttributes<HTMLElement>"
+    ],
+    "generics": []
+  },
+  {
+    "name": "Check",
+    "description": "check - Visual component for displaying content",
+    "props": {
+      "width": "string | number",
+      "height": "string | number",
+      "position": "{ x?: number; y?: number }",
+      "backgroundColor": "string",
+      "backgroundOpacity": "number",
+      "borderColor": "string",
+      "borderWidth": "number",
+      "borderRadius": "string | number",
+      "className": "string",
+      "style": "React.CSSProperties",
+      "children": "React.ReactNode",
+      "id": "string",
+      "testId": "string",
+      "display": "block | inline | inline-block | flex | grid | none",
+      "overflow": "visible | hidden | scroll | auto",
+      "opacity": "number"
+    },
+    "variants": [
+      {
+        "name": "width",
+        "type": "width: 18.0",
+        "description": "Variant property for width"
+      },
+      {
+        "name": "name",
+        "type": "name: 'check'",
+        "description": "Variant property for name"
+      },
+      {
+        "name": "height",
+        "type": "height: 18.0",
+        "description": "Variant property for height"
+      },
+      {
+        "name": "x",
+        "type": "x: -8774.0",
+        "description": "Variant property for x"
+      },
+      {
+        "name": "cornerRadius",
+        "type": "cornerRadius: 4.0",
+        "description": "Variant property for cornerRadius"
+      },
+      {
+        "name": "type",
+        "type": "type: 'rectangle'",
+        "description": "Variant property for type"
+      },
+      {
+        "name": "y",
+        "type": "y: -6304.0",
+        "description": "Variant property for y"
+      }
+    ],
+    "extends": [
+      "React.HTMLAttributes<HTMLElement>"
+    ],
+    "generics": []
+  },
+  {
+    "name": "Angle7",
+    "description": "angle-7 - Visual component for displaying content",
+    "props": {
+      "width": "string | number",
+      "height": "string | number",
+      "position": "{ x?: number; y?: number }",
+      "borderColor": "string",
+      "borderWidth": "number",
+      "borderRadius": "string | number",
+      "className": "string",
+      "style": "React.CSSProperties",
+      "children": "React.ReactNode",
+      "id": "string",
+      "testId": "string",
+      "display": "block | inline | inline-block | flex | grid | none",
+      "overflow": "visible | hidden | scroll | auto",
+      "opacity": "number"
+    },
+    "variants": [
+      {
+        "name": "width",
+        "type": "width: 958.0",
+        "description": "Variant property for width"
+      },
+      {
+        "name": "name",
+        "type": "name: 'Rectangle 7'",
+        "description": "Variant property for name"
+      },
+      {
+        "name": "height",
+        "type": "height: 524.0",
+        "description": "Variant property for height"
+      },
+      {
+        "name": "x",
+        "type": "x: -9600.0",
+        "description": "Variant property for x"
+      },
+      {
+        "name": "cornerRadius",
+        "type": "cornerRadius: 25.0",
+        "description": "Variant property for cornerRadius"
+      },
+      {
+        "name": "type",
+        "type": "type: 'rectangle'",
+        "description": "Variant property for type"
+      },
+      {
+        "name": "y",
+        "type": "y: -8088.0",
+        "description": "Variant property for y"
+      }
+    ],
+    "extends": [
+      "React.HTMLAttributes<HTMLElement>"
+    ],
+    "generics": []
+  },
+  {
+    "name": "Login",
+    "description": "login - Visual component for displaying content",
+    "props": {
+      "width": "string | number",
+      "height": "string | number",
+      "position": "{ x?: number; y?: number }",
+      "backgroundColor": "string",
+      "backgroundOpacity": "number",
+      "borderRadius": "string | number",
+      "className": "string",
+      "style": "React.CSSProperties",
+      "children": "React.ReactNode",
+      "id": "string",
+      "testId": "string",
+      "display": "block | inline | inline-block | flex | grid | none",
+      "overflow": "visible | hidden | scroll | auto",
+      "opacity": "number"
+    },
+    "variants": [
+      {
+        "name": "width",
+        "type": "width: 934.0",
+        "description": "Variant property for width"
+      },
+      {
+        "name": "name",
+        "type": "name: 'Login 1'",
+        "description": "Variant property for name"
+      },
+      {
+        "name": "height",
+        "type": "height: 498.0",
+        "description": "Variant property for height"
+      },
+      {
+        "name": "x",
+        "type": "x: -9587.0",
+        "description": "Variant property for x"
+      },
+      {
+        "name": "cornerRadius",
+        "type": "cornerRadius: 22.0",
+        "description": "Variant property for cornerRadius"
+      },
+      {
+        "name": "type",
+        "type": "type: 'rectangle'",
+        "description": "Variant property for type"
+      },
+      {
+        "name": "y",
+        "type": "y: -8075.0",
+        "description": "Variant property for y"
+      }
+    ],
+    "extends": [
+      "React.HTMLAttributes<HTMLElement>"
+    ],
+    "generics": []
+  },
+  {
+    "name": "Image",
+    "description": "image - Visual component for displaying content",
+    "props": {
+      "width": "string | number",
+      "height": "string | number",
+      "position": "{ x?: number; y?: number }",
+      "backgroundColor": "string",
+      "backgroundOpacity": "number",
+      "className": "string",
+      "style": "React.CSSProperties",
+      "children": "React.ReactNode",
+      "id": "string",
+      "testId": "string",
+      "display": "block | inline | inline-block | flex | grid | none",
+      "overflow": "visible | hidden | scroll | auto",
+      "opacity": "number"
+    },
+    "variants": [
+      {
+        "name": "width",
+        "type": "width: 50.0",
+        "description": "Variant property for width"
+      },
+      {
+        "name": "name",
+        "type": "name: 'image 1'",
+        "description": "Variant property for name"
+      },
+      {
+        "name": "height",
+        "type": "height: 75.0",
+        "description": "Variant property for height"
+      },
+      {
+        "name": "x",
+        "type": "x: -9864.0",
+        "description": "Variant property for x"
+      },
+      {
+        "name": "type",
+        "type": "type: 'rectangle'",
+        "description": "Variant property for type"
+      },
+      {
+        "name": "y",
+        "type": "y: -7633.0",
+        "description": "Variant property for y"
+      }
+    ],
+    "extends": [
+      "React.HTMLAttributes<HTMLElement>"
+    ],
+    "generics": []
+  }
+]

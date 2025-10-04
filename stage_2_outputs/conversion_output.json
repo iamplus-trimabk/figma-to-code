@@ -1,0 +1,2548 @@
+{
+  "metadata": {
+    "conversion_time": "2025-10-04T20:16:06.876511",
+    "source_file": "Login Page UI (Community)",
+    "version": "1.0.0",
+    "stage": "2",
+    "converter_version": "1.0.0"
+  },
+  "tailwind_config": {
+    "colors": {
+      "primary": {
+        "50": "#f7f6fd",
+        "100": "#efeefb",
+        "200": "#dfddf7",
+        "300": "#cfccf4",
+        "400": "#c0bbf0",
+        "500": "#6257db",
+        "600": "#584ec5",
+        "700": "#4e45af",
+        "800": "#443c99",
+        "900": "#3a3483",
+        "950": "#312b6d"
+      },
+      "success": {
+        "50": "#f4fbf5",
+        "100": "#e9f7ec",
+        "200": "#d4f0da",
+        "300": "#bee8c7",
+        "400": "#a9e1b5",
+        "500": "#28b446",
+        "600": "#24a23f",
+        "700": "#209038",
+        "800": "#1c7d31",
+        "900": "#186c2a",
+        "950": "#145a23"
+      },
+      "warning": {
+        "50": "#fefbf2",
+        "100": "#fef8e5",
+        "200": "#fef1cc",
+        "300": "#fdeab2",
+        "400": "#fde399",
+        "500": "#fbbb00",
+        "600": "#e1a800",
+        "700": "#c89500",
+        "800": "#af8200",
+        "900": "#967000",
+        "950": "#7d5d00"
+      },
+      "white": "#ffffff",
+      "black": "#000000",
+      "gray": {
+        "500": "#2e2e2e"
+      },
+      "facebook": {
+        "500": "#3b5999"
+      },
+      "brand-1": {
+        "500": "#f36f56"
+      },
+      "brand-2": {
+        "500": "#3e4177"
+      },
+      "brand-3": {
+        "500": "#518ef8"
+      },
+      "brand-4": {
+        "500": "#311944"
+      },
+      "brand-5": {
+        "500": "#9571f6"
+      },
+      "brand-6": {
+        "500": "#893976"
+      },
+      "brand-7": {
+        "500": "#26264f"
+      },
+      "brand-8": {
+        "500": "#fb6fbb"
+      },
+      "brand-9": {
+        "500": "#ff9085"
+      },
+      "brand-10": {
+        "500": "#444b8c"
+      },
+      "brand-11": {
+        "500": "#aa80f9"
+      },
+      "brand-12": {
+        "500": "#f14336"
+      },
+      "brand-13": {
+        "500": "#e38ddd"
+      },
+      "brand-14": {
+        "500": "#ffc444"
+      },
+      "brand-15": {
+        "500": "#6165d7"
+      }
+    },
+    "fontFamily": {
+      "sans": [
+        "Poppins",
+        "system-ui",
+        "sans-serif"
+      ],
+      "serif": [
+        "Georgia",
+        "Cambria",
+        "Times New Roman",
+        "Times",
+        "serif"
+      ],
+      "mono": [
+        "Menlo",
+        "Monaco",
+        "Consolas",
+        "Liberation Mono",
+        "Courier New",
+        "monospace"
+      ]
+    },
+    "fontSize": {
+      "caption": [
+        "12px",
+        {
+          "lineHeight": 1.4
+        }
+      ],
+      "body": [
+        "16px",
+        {
+          "lineHeight": 1.5
+        }
+      ],
+      "heading-2": [
+        "36px",
+        {
+          "lineHeight": 1.7
+        }
+      ],
+      "heading-1": [
+        "40px",
+        {
+          "lineHeight": 1.7
+        }
+      ],
+      "leading-140": [
+        "1.4px",
+        {
+          "lineHeight": 1.4
+        }
+      ],
+      "xs": [
+        "12.0px",
+        {
+          "lineHeight": 1.4
+        }
+      ],
+      "sm": [
+        "14.0px",
+        {
+          "lineHeight": 1.5
+        }
+      ],
+      "base": [
+        "16px",
+        {
+          "lineHeight": 1.5
+        }
+      ],
+      "lg": [
+        "18.0px",
+        {
+          "lineHeight": 1.6
+        }
+      ],
+      "xl": [
+        "20.0px",
+        {
+          "lineHeight": 1.6
+        }
+      ],
+      "2xl": [
+        "24.0px",
+        {
+          "lineHeight": 1.7
+        }
+      ],
+      "3xl": [
+        "30.0px",
+        {
+          "lineHeight": 1.7
+        }
+      ],
+      "4xl": [
+        "36.0px",
+        {
+          "lineHeight": 1.7
+        }
+      ],
+      "5xl": [
+        "48px",
+        {
+          "lineHeight": 1.7
+        }
+      ],
+      "6xl": [
+        "48px",
+        {
+          "lineHeight": 1.7
+        }
+      ],
+      "7xl": [
+        "48px",
+        {
+          "lineHeight": 1.7
+        }
+      ],
+      "8xl": [
+        "48px",
+        {
+          "lineHeight": 1.7
+        }
+      ],
+      "9xl": [
+        "48px",
+        {
+          "lineHeight": 1.7
+        }
+      ]
+    },
+    "fontWeight": {
+      "regular": 400,
+      "black": 900
+    },
+    "lineHeight": {
+      "caption": 1.4,
+      "body": 1.5,
+      "heading-2": 1.7,
+      "heading-1": 1.7,
+      "leading-140": 1.4,
+      "xs": 1.4,
+      "sm": 1.5,
+      "base": 1.5,
+      "lg": 1.6,
+      "xl": 1.6,
+      "2xl": 1.7,
+      "3xl": 1.7,
+      "4xl": 1.7,
+      "5xl": 1.7,
+      "6xl": 1.7,
+      "7xl": 1.7,
+      "8xl": 1.7,
+      "9xl": 1.7
+    },
+    "spacing": {
+      "0": 0,
+      "px": 1,
+      "0.5": 2,
+      "1": 4,
+      "1.5": 6,
+      "2": 8,
+      "2.5": 10,
+      "3": 13,
+      "3.5": 14,
+      "4": 16,
+      "5": 19,
+      "6": 22,
+      "7": 28,
+      "8": 32,
+      "9": 36,
+      "10": 40,
+      "11": 44,
+      "12": 47,
+      "14": 56,
+      "16": 63,
+      "20": 80,
+      "24": 95,
+      "28": 112,
+      "32": 128,
+      "36": 144,
+      "40": 160,
+      "44": 176,
+      "48": 192,
+      "52": 208,
+      "56": 224,
+      "60": 240,
+      "64": 256,
+      "72": 288,
+      "80": 320,
+      "96": 384
+    },
+    "borderRadius": {
+      "none": "0px",
+      "sm": "0.125rem",
+      "DEFAULT": "0.25rem",
+      "md": "0.375rem",
+      "lg": "0.5rem",
+      "xl": "0.75rem",
+      "2xl": "1rem",
+      "3xl": "1.5rem",
+      "full": "9999px"
+    },
+    "boxShadow": {
+      "sm": "0 1px 2px 0 rgb(0 0 0 / 0.05)",
+      "DEFAULT": "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
+      "md": "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+      "lg": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
+      "xl": "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
+      "2xl": "0 25px 50px -12px rgb(0 0 0 / 0.25)",
+      "custom-1": "0px 0px 0px 0px rgba(0, 0, 0, 0.1)",
+      "custom-2": "0px 0px 0px 0px rgba(0, 0, 0, 0.1)",
+      "custom-3": "0px 0px 0px 0px rgba(0, 0, 0, 0.1)",
+      "custom-4": "0px 0px 0px 0px rgba(0, 0, 0, 0.1)"
+    },
+    "blur": {
+      "none": "0",
+      "sm": "4px",
+      "DEFAULT": "8px",
+      "md": "12px",
+      "lg": "16px",
+      "xl": "24px",
+      "2xl": "40px",
+      "3xl": "64px"
+    }
+  },
+  "native_wind_config": {
+    "colors": {
+      "primary": {
+        "50": "#f7f6fd",
+        "100": "#efeefb",
+        "200": "#dfddf7",
+        "300": "#cfccf4",
+        "400": "#c0bbf0",
+        "500": "#6257db",
+        "600": "#584ec5",
+        "700": "#4e45af",
+        "800": "#443c99",
+        "900": "#3a3483",
+        "950": "#312b6d"
+      },
+      "success": {
+        "50": "#f4fbf5",
+        "100": "#e9f7ec",
+        "200": "#d4f0da",
+        "300": "#bee8c7",
+        "400": "#a9e1b5",
+        "500": "#28b446",
+        "600": "#24a23f",
+        "700": "#209038",
+        "800": "#1c7d31",
+        "900": "#186c2a",
+        "950": "#145a23"
+      },
+      "warning": {
+        "50": "#fefbf2",
+        "100": "#fef8e5",
+        "200": "#fef1cc",
+        "300": "#fdeab2",
+        "400": "#fde399",
+        "500": "#fbbb00",
+        "600": "#e1a800",
+        "700": "#c89500",
+        "800": "#af8200",
+        "900": "#967000",
+        "950": "#7d5d00"
+      },
+      "white": "#ffffff",
+      "black": "#000000",
+      "gray": {
+        "500": "#2e2e2e"
+      },
+      "facebook": {
+        "500": "#3b5999"
+      },
+      "brand-1": {
+        "500": "#f36f56"
+      },
+      "brand-2": {
+        "500": "#3e4177"
+      },
+      "brand-3": {
+        "500": "#518ef8"
+      },
+      "brand-4": {
+        "500": "#311944"
+      },
+      "brand-5": {
+        "500": "#9571f6"
+      },
+      "brand-6": {
+        "500": "#893976"
+      },
+      "brand-7": {
+        "500": "#26264f"
+      },
+      "brand-8": {
+        "500": "#fb6fbb"
+      },
+      "brand-9": {
+        "500": "#ff9085"
+      },
+      "brand-10": {
+        "500": "#444b8c"
+      },
+      "brand-11": {
+        "500": "#aa80f9"
+      },
+      "brand-12": {
+        "500": "#f14336"
+      },
+      "brand-13": {
+        "500": "#e38ddd"
+      },
+      "brand-14": {
+        "500": "#ffc444"
+      },
+      "brand-15": {
+        "500": "#6165d7"
+      }
+    },
+    "fonts": {
+      "body": "Poppins",
+      "heading": "Poppins"
+    },
+    "fontSizes": {
+      "caption": 12,
+      "body": 16,
+      "heading-2": 36,
+      "heading-1": 40,
+      "leading-140": 1,
+      "xs": 12,
+      "sm": 14,
+      "base": 16,
+      "lg": 18,
+      "xl": 20,
+      "2xl": 24,
+      "3xl": 30,
+      "4xl": 36,
+      "5xl": 48,
+      "6xl": 48,
+      "7xl": 48,
+      "8xl": 48,
+      "9xl": 48
+    },
+    "fontWeights": {
+      "regular": "400",
+      "black": "900"
+    },
+    "spacing": {
+      "0": 0,
+      "px": 1,
+      "0.5": 2,
+      "1": 4,
+      "1.5": 6,
+      "2": 8,
+      "2.5": 10,
+      "3": 13,
+      "3.5": 14,
+      "4": 16,
+      "5": 19,
+      "6": 22,
+      "7": 28,
+      "8": 32,
+      "9": 36,
+      "10": 40,
+      "11": 44,
+      "12": 47,
+      "14": 56,
+      "16": 63,
+      "20": 80,
+      "24": 95,
+      "28": 112,
+      "32": 128,
+      "36": 144,
+      "40": 160,
+      "44": 176,
+      "48": 192,
+      "52": 208,
+      "56": 224,
+      "60": 240,
+      "64": 256,
+      "72": 288,
+      "80": 320,
+      "96": 384
+    },
+    "borderRadius": {
+      "sm": 2,
+      "md": 4,
+      "lg": 8,
+      "xl": 12,
+      "2xl": 16,
+      "full": 9999
+    },
+    "shadows": {
+      "sm": {
+        "shadowOffset": {
+          "width": 0,
+          "height": 1
+        },
+        "shadowOpacity": 0.05,
+        "shadowRadius": 2,
+        "elevation": 1
+      },
+      "md": {
+        "shadowOffset": {
+          "width": 0,
+          "height": 4
+        },
+        "shadowOpacity": 0.1,
+        "shadowRadius": 6,
+        "elevation": 4
+      },
+      "lg": {
+        "shadowOffset": {
+          "width": 0,
+          "height": 10
+        },
+        "shadowOpacity": 0.15,
+        "shadowRadius": 15,
+        "elevation": 10
+      }
+    }
+  },
+  "component_interfaces": [
+    {
+      "name": "Bg",
+      "description": "bg - Visual component for displaying content",
+      "props": {
+        "width": "string | number",
+        "height": "string | number",
+        "position": "{ x?: number; y?: number }",
+        "backgroundColor": "string",
+        "backgroundOpacity": "number",
+        "borderRadius": "string | number",
+        "className": "string",
+        "style": "React.CSSProperties",
+        "children": "React.ReactNode",
+        "id": "string",
+        "testId": "string",
+        "display": "block | inline | inline-block | flex | grid | none",
+        "overflow": "visible | hidden | scroll | auto",
+        "opacity": "number"
+      },
+      "variants": [
+        {
+          "name": "width",
+          "type": "width: 788.0",
+          "description": "Variant property for width"
+        },
+        {
+          "name": "name",
+          "type": "name: 'bg'",
+          "description": "Variant property for name"
+        },
+        {
+          "name": "height",
+          "type": "height: 940.0",
+          "description": "Variant property for height"
+        },
+        {
+          "name": "x",
+          "type": "x: -8850.0",
+          "description": "Variant property for x"
+        },
+        {
+          "name": "cornerRadius",
+          "type": "cornerRadius: 8.0",
+          "description": "Variant property for cornerRadius"
+        },
+        {
+          "name": "type",
+          "type": "type: 'rectangle'",
+          "description": "Variant property for type"
+        },
+        {
+          "name": "y",
+          "type": "y: -6976.0",
+          "description": "Variant property for y"
+        }
+      ],
+      "extends": [
+        "React.HTMLAttributes<HTMLElement>"
+      ],
+      "generics": []
+    },
+    {
+      "name": "Angle",
+      "description": "angle - Visual component for displaying content",
+      "props": {
+        "width": "string | number",
+        "height": "string | number",
+        "position": "{ x?: number; y?: number }",
+        "backgroundColor": "string",
+        "backgroundOpacity": "number",
+        "borderRadius": "string | number",
+        "className": "string",
+        "style": "React.CSSProperties",
+        "children": "React.ReactNode",
+        "id": "string",
+        "testId": "string",
+        "display": "block | inline | inline-block | flex | grid | none",
+        "overflow": "visible | hidden | scroll | auto",
+        "opacity": "number"
+      },
+      "variants": [
+        {
+          "name": "width",
+          "type": "width: 681.0",
+          "description": "Variant property for width"
+        },
+        {
+          "name": "name",
+          "type": "name: 'Rectangle 2'",
+          "description": "Variant property for name"
+        },
+        {
+          "name": "height",
+          "type": "height: 78.0",
+          "description": "Variant property for height"
+        },
+        {
+          "name": "x",
+          "type": "x: -8786.0",
+          "description": "Variant property for x"
+        },
+        {
+          "name": "cornerRadius",
+          "type": "cornerRadius: 8.0",
+          "description": "Variant property for cornerRadius"
+        },
+        {
+          "name": "type",
+          "type": "type: 'rectangle'",
+          "description": "Variant property for type"
+        },
+        {
+          "name": "y",
+          "type": "y: -6781.0",
+          "description": "Variant property for y"
+        }
+      ],
+      "extends": [
+        "React.HTMLAttributes<HTMLElement>"
+      ],
+      "generics": []
+    },
+    {
+      "name": "Search",
+      "description": "search - Interactive UI component with user interactions",
+      "props": {
+        "width": "string | number",
+        "height": "string | number",
+        "position": "{ x?: number; y?: number }",
+        "backgroundColor": "string",
+        "backgroundOpacity": "number",
+        "className": "string",
+        "style": "React.CSSProperties",
+        "children": "React.ReactNode",
+        "id": "string",
+        "testId": "string",
+        "interactive": "boolean",
+        "hover": "boolean",
+        "focus": "boolean",
+        "active": "boolean",
+        "onPress": "() => void",
+        "onHover": "(hovering: boolean) => void"
+      },
+      "variants": [
+        {
+          "name": "width",
+          "type": "width: 32.0",
+          "description": "Variant property for width"
+        },
+        {
+          "name": "name",
+          "type": "name: 'search 1'",
+          "description": "Variant property for name"
+        },
+        {
+          "name": "height",
+          "type": "height: 32.0",
+          "description": "Variant property for height"
+        },
+        {
+          "name": "x",
+          "type": "x: -8541.0",
+          "description": "Variant property for x"
+        },
+        {
+          "name": "type",
+          "type": "type: 'frame'",
+          "description": "Variant property for type"
+        },
+        {
+          "name": "y",
+          "type": "y: -6756.0",
+          "description": "Variant property for y"
+        }
+      ],
+      "extends": [
+        "React.HTMLAttributes<HTMLElement>",
+        "InteractiveProps"
+      ],
+      "generics": []
+    },
+    {
+      "name": "ForgotPassword",
+      "description": "forgot-password? - Interactive UI component with user interactions",
+      "props": {
+        "width": "string | number",
+        "height": "string | number",
+        "position": "{ x?: number; y?: number }",
+        "backgroundColor": "string",
+        "backgroundOpacity": "number",
+        "fontFamily": "string",
+        "fontSize": "string | number",
+        "fontWeight": "string | number",
+        "text": "string",
+        "textAlign": "left | center | right | justify",
+        "className": "string",
+        "style": "React.CSSProperties",
+        "children": "React.ReactNode",
+        "id": "string",
+        "testId": "string",
+        "interactive": "boolean",
+        "hover": "boolean",
+        "focus": "boolean",
+        "active": "boolean",
+        "onPress": "() => void",
+        "onHover": "(hovering: boolean) => void"
+      },
+      "variants": [
+        {
+          "name": "width",
+          "type": "width: 141.0",
+          "description": "Variant property for width"
+        },
+        {
+          "name": "name",
+          "type": "name: 'Forgot Password?'",
+          "description": "Variant property for name"
+        },
+        {
+          "name": "height",
+          "type": "height: 22.0",
+          "description": "Variant property for height"
+        },
+        {
+          "name": "text",
+          "type": "text: 'Forgot Password?'",
+          "description": "Variant property for text"
+        },
+        {
+          "name": "x",
+          "type": "x: -8251.0",
+          "description": "Variant property for x"
+        },
+        {
+          "name": "font_family",
+          "type": "font_family: 'Poppins'",
+          "description": "Variant property for font_family"
+        },
+        {
+          "name": "font_size",
+          "type": "font_size: 16.0",
+          "description": "Variant property for font_size"
+        },
+        {
+          "name": "font_weight",
+          "type": "font_weight: 400",
+          "description": "Variant property for font_weight"
+        },
+        {
+          "name": "text_align",
+          "type": "text_align: 'left'",
+          "description": "Variant property for text_align"
+        },
+        {
+          "name": "type",
+          "type": "type: 'text'",
+          "description": "Variant property for type"
+        },
+        {
+          "name": "y",
+          "type": "y: -6306.0",
+          "description": "Variant property for y"
+        },
+        {
+          "name": "letter_spacing",
+          "type": "letter_spacing: 0",
+          "description": "Variant property for letter_spacing"
+        }
+      ],
+      "extends": [
+        "React.HTMLAttributes<HTMLElement>",
+        "InteractiveProps"
+      ],
+      "generics": []
+    },
+    {
+      "name": "Email",
+      "description": "email - Interactive UI component with user interactions",
+      "props": {
+        "width": "string | number",
+        "height": "string | number",
+        "position": "{ x?: number; y?: number }",
+        "backgroundColor": "string",
+        "backgroundOpacity": "number",
+        "fontFamily": "string",
+        "fontSize": "string | number",
+        "fontWeight": "string | number",
+        "text": "string",
+        "textAlign": "left | center | right | justify",
+        "className": "string",
+        "style": "React.CSSProperties",
+        "children": "React.ReactNode",
+        "id": "string",
+        "testId": "string",
+        "interactive": "boolean",
+        "hover": "boolean",
+        "focus": "boolean",
+        "active": "boolean",
+        "onPress": "() => void",
+        "onHover": "(hovering: boolean) => void"
+      },
+      "variants": [
+        {
+          "name": "width",
+          "type": "width: 33.0",
+          "description": "Variant property for width"
+        },
+        {
+          "name": "name",
+          "type": "name: 'Email'",
+          "description": "Variant property for name"
+        },
+        {
+          "name": "height",
+          "type": "height: 16.0",
+          "description": "Variant property for height"
+        },
+        {
+          "name": "text",
+          "type": "text: 'Email'",
+          "description": "Variant property for text"
+        },
+        {
+          "name": "x",
+          "type": "x: -8694.0",
+          "description": "Variant property for x"
+        },
+        {
+          "name": "font_family",
+          "type": "font_family: 'Poppins'",
+          "description": "Variant property for font_family"
+        },
+        {
+          "name": "font_size",
+          "type": "font_size: 12.0",
+          "description": "Variant property for font_size"
+        },
+        {
+          "name": "font_weight",
+          "type": "font_weight: 400",
+          "description": "Variant property for font_weight"
+        },
+        {
+          "name": "text_align",
+          "type": "text_align: 'left'",
+          "description": "Variant property for text_align"
+        },
+        {
+          "name": "type",
+          "type": "type: 'text'",
+          "description": "Variant property for type"
+        },
+        {
+          "name": "y",
+          "type": "y: -6489.0",
+          "description": "Variant property for y"
+        },
+        {
+          "name": "letter_spacing",
+          "type": "letter_spacing: 0",
+          "description": "Variant property for letter_spacing"
+        }
+      ],
+      "extends": [
+        "React.HTMLAttributes<HTMLElement>",
+        "InteractiveProps"
+      ],
+      "generics": []
+    },
+    {
+      "name": "Angle4",
+      "description": "angle-4 - Visual component for displaying content",
+      "props": {
+        "width": "string | number",
+        "height": "string | number",
+        "position": "{ x?: number; y?: number }",
+        "backgroundColor": "string",
+        "backgroundOpacity": "number",
+        "borderRadius": "string | number",
+        "className": "string",
+        "style": "React.CSSProperties",
+        "children": "React.ReactNode",
+        "id": "string",
+        "testId": "string",
+        "display": "block | inline | inline-block | flex | grid | none",
+        "overflow": "visible | hidden | scroll | auto",
+        "opacity": "number"
+      },
+      "variants": [
+        {
+          "name": "width",
+          "type": "width: 671.0",
+          "description": "Variant property for width"
+        },
+        {
+          "name": "name",
+          "type": "name: 'Rectangle 4'",
+          "description": "Variant property for name"
+        },
+        {
+          "name": "height",
+          "type": "height: 77.0",
+          "description": "Variant property for height"
+        },
+        {
+          "name": "x",
+          "type": "x: -8776.0",
+          "description": "Variant property for x"
+        },
+        {
+          "name": "cornerRadius",
+          "type": "cornerRadius: 8.0",
+          "description": "Variant property for cornerRadius"
+        },
+        {
+          "name": "type",
+          "type": "type: 'rectangle'",
+          "description": "Variant property for type"
+        },
+        {
+          "name": "y",
+          "type": "y: -6504.0",
+          "description": "Variant property for y"
+        }
+      ],
+      "extends": [
+        "React.HTMLAttributes<HTMLElement>"
+      ],
+      "generics": []
+    },
+    {
+      "name": "Password",
+      "description": "password - Interactive UI component with user interactions",
+      "props": {
+        "width": "string | number",
+        "height": "string | number",
+        "position": "{ x?: number; y?: number }",
+        "backgroundColor": "string",
+        "backgroundOpacity": "number",
+        "fontFamily": "string",
+        "fontSize": "string | number",
+        "fontWeight": "string | number",
+        "text": "string",
+        "textAlign": "left | center | right | justify",
+        "className": "string",
+        "style": "React.CSSProperties",
+        "children": "React.ReactNode",
+        "id": "string",
+        "testId": "string",
+        "interactive": "boolean",
+        "hover": "boolean",
+        "focus": "boolean",
+        "active": "boolean",
+        "onPress": "() => void",
+        "onHover": "(hovering: boolean) => void"
+      },
+      "variants": [
+        {
+          "name": "width",
+          "type": "width: 58.0",
+          "description": "Variant property for width"
+        },
+        {
+          "name": "name",
+          "type": "name: 'Password'",
+          "description": "Variant property for name"
+        },
+        {
+          "name": "height",
+          "type": "height: 16.0",
+          "description": "Variant property for height"
+        },
+        {
+          "name": "text",
+          "type": "text: 'Password'",
+          "description": "Variant property for text"
+        },
+        {
+          "name": "x",
+          "type": "x: -8694.0",
+          "description": "Variant property for x"
+        },
+        {
+          "name": "font_family",
+          "type": "font_family: 'Poppins'",
+          "description": "Variant property for font_family"
+        },
+        {
+          "name": "font_size",
+          "type": "font_size: 12.0",
+          "description": "Variant property for font_size"
+        },
+        {
+          "name": "font_weight",
+          "type": "font_weight: 400",
+          "description": "Variant property for font_weight"
+        },
+        {
+          "name": "text_align",
+          "type": "text_align: 'left'",
+          "description": "Variant property for text_align"
+        },
+        {
+          "name": "type",
+          "type": "type: 'text'",
+          "description": "Variant property for type"
+        },
+        {
+          "name": "y",
+          "type": "y: -6392.0",
+          "description": "Variant property for y"
+        },
+        {
+          "name": "letter_spacing",
+          "type": "letter_spacing: 0",
+          "description": "Variant property for letter_spacing"
+        }
+      ],
+      "extends": [
+        "React.HTMLAttributes<HTMLElement>",
+        "InteractiveProps"
+      ],
+      "generics": []
+    },
+    {
+      "name": "Angle5",
+      "description": "angle-5 - Visual component for displaying content",
+      "props": {
+        "width": "string | number",
+        "height": "string | number",
+        "position": "{ x?: number; y?: number }",
+        "backgroundColor": "string",
+        "backgroundOpacity": "number",
+        "borderRadius": "string | number",
+        "className": "string",
+        "style": "React.CSSProperties",
+        "children": "React.ReactNode",
+        "id": "string",
+        "testId": "string",
+        "display": "block | inline | inline-block | flex | grid | none",
+        "overflow": "visible | hidden | scroll | auto",
+        "opacity": "number"
+      },
+      "variants": [
+        {
+          "name": "width",
+          "type": "width: 671.0",
+          "description": "Variant property for width"
+        },
+        {
+          "name": "name",
+          "type": "name: 'Rectangle 5'",
+          "description": "Variant property for name"
+        },
+        {
+          "name": "height",
+          "type": "height: 77.0",
+          "description": "Variant property for height"
+        },
+        {
+          "name": "x",
+          "type": "x: -8776.0",
+          "description": "Variant property for x"
+        },
+        {
+          "name": "cornerRadius",
+          "type": "cornerRadius: 8.0",
+          "description": "Variant property for cornerRadius"
+        },
+        {
+          "name": "type",
+          "type": "type: 'rectangle'",
+          "description": "Variant property for type"
+        },
+        {
+          "name": "y",
+          "type": "y: -6407.0",
+          "description": "Variant property for y"
+        }
+      ],
+      "extends": [
+        "React.HTMLAttributes<HTMLElement>"
+      ],
+      "generics": []
+    },
+    {
+      "name": "Button",
+      "description": "button - Interactive UI component with user interactions",
+      "props": {
+        "width": "string | number",
+        "height": "string | number",
+        "position": "{ x?: number; y?: number }",
+        "borderRadius": "string | number",
+        "className": "string",
+        "style": "React.CSSProperties",
+        "children": "React.ReactNode",
+        "id": "string",
+        "testId": "string",
+        "variant": "primary | secondary | outline | ghost",
+        "size": "sm | md | lg",
+        "disabled": "boolean",
+        "loading": "boolean",
+        "onClick": "(event: React.MouseEvent) => void",
+        "type": "'button' | 'submit' | 'reset'"
+      },
+      "variants": [
+        {
+          "name": "width",
+          "type": "width: 671.0",
+          "description": "Variant property for width"
+        },
+        {
+          "name": "name",
+          "type": "name: 'button'",
+          "description": "Variant property for name"
+        },
+        {
+          "name": "height",
+          "type": "height: 77.0",
+          "description": "Variant property for height"
+        },
+        {
+          "name": "x",
+          "type": "x: -8776.0",
+          "description": "Variant property for x"
+        },
+        {
+          "name": "cornerRadius",
+          "type": "cornerRadius: 8.0",
+          "description": "Variant property for cornerRadius"
+        },
+        {
+          "name": "type",
+          "type": "type: 'group'",
+          "description": "Variant property for type"
+        },
+        {
+          "name": "y",
+          "type": "y: -6260.0",
+          "description": "Variant property for y"
+        }
+      ],
+      "extends": [
+        "React.HTMLAttributes<HTMLElement>",
+        "ButtonProps"
+      ],
+      "generics": []
+    },
+    {
+      "name": "Angle6",
+      "description": "angle-6 - Visual component for displaying content",
+      "props": {
+        "width": "string | number",
+        "height": "string | number",
+        "position": "{ x?: number; y?: number }",
+        "backgroundColor": "string",
+        "backgroundOpacity": "number",
+        "borderRadius": "string | number",
+        "className": "string",
+        "style": "React.CSSProperties",
+        "children": "React.ReactNode",
+        "id": "string",
+        "testId": "string",
+        "display": "block | inline | inline-block | flex | grid | none",
+        "overflow": "visible | hidden | scroll | auto",
+        "opacity": "number"
+      },
+      "variants": [
+        {
+          "name": "width",
+          "type": "width: 671.0",
+          "description": "Variant property for width"
+        },
+        {
+          "name": "name",
+          "type": "name: 'Rectangle 6'",
+          "description": "Variant property for name"
+        },
+        {
+          "name": "height",
+          "type": "height: 77.0",
+          "description": "Variant property for height"
+        },
+        {
+          "name": "x",
+          "type": "x: -8776.0",
+          "description": "Variant property for x"
+        },
+        {
+          "name": "cornerRadius",
+          "type": "cornerRadius: 8.0",
+          "description": "Variant property for cornerRadius"
+        },
+        {
+          "name": "type",
+          "type": "type: 'rectangle'",
+          "description": "Variant property for type"
+        },
+        {
+          "name": "y",
+          "type": "y: -6260.0",
+          "description": "Variant property for y"
+        }
+      ],
+      "extends": [
+        "React.HTMLAttributes<HTMLElement>"
+      ],
+      "generics": []
+    },
+    {
+      "name": "RememberMe",
+      "description": "remember-me - Visual component for displaying content",
+      "props": {
+        "width": "string | number",
+        "height": "string | number",
+        "position": "{ x?: number; y?: number }",
+        "borderRadius": "string | number",
+        "className": "string",
+        "style": "React.CSSProperties",
+        "children": "React.ReactNode",
+        "id": "string",
+        "testId": "string",
+        "display": "block | inline | inline-block | flex | grid | none",
+        "overflow": "visible | hidden | scroll | auto",
+        "opacity": "number"
+      },
+      "variants": [
+        {
+          "name": "width",
+          "type": "width: 153.0",
+          "description": "Variant property for width"
+        },
+        {
+          "name": "name",
+          "type": "name: 'Remember me'",
+          "description": "Variant property for name"
+        },
+        {
+          "name": "height",
+          "type": "height: 22.0",
+          "description": "Variant property for height"
+        },
+        {
+          "name": "x",
+          "type": "x: -8774.0",
+          "description": "Variant property for x"
+        },
+        {
+          "name": "cornerRadius",
+          "type": "cornerRadius: 4.0",
+          "description": "Variant property for cornerRadius"
+        },
+        {
+          "name": "type",
+          "type": "type: 'group'",
+          "description": "Variant property for type"
+        },
+        {
+          "name": "y",
+          "type": "y: -6306.0",
+          "description": "Variant property for y"
+        }
+      ],
+      "extends": [
+        "React.HTMLAttributes<HTMLElement>"
+      ],
+      "generics": []
+    },
+    {
+      "name": "Check",
+      "description": "check - Visual component for displaying content",
+      "props": {
+        "width": "string | number",
+        "height": "string | number",
+        "position": "{ x?: number; y?: number }",
+        "backgroundColor": "string",
+        "backgroundOpacity": "number",
+        "borderColor": "string",
+        "borderWidth": "number",
+        "borderRadius": "string | number",
+        "className": "string",
+        "style": "React.CSSProperties",
+        "children": "React.ReactNode",
+        "id": "string",
+        "testId": "string",
+        "display": "block | inline | inline-block | flex | grid | none",
+        "overflow": "visible | hidden | scroll | auto",
+        "opacity": "number"
+      },
+      "variants": [
+        {
+          "name": "width",
+          "type": "width: 18.0",
+          "description": "Variant property for width"
+        },
+        {
+          "name": "name",
+          "type": "name: 'check'",
+          "description": "Variant property for name"
+        },
+        {
+          "name": "height",
+          "type": "height: 18.0",
+          "description": "Variant property for height"
+        },
+        {
+          "name": "x",
+          "type": "x: -8774.0",
+          "description": "Variant property for x"
+        },
+        {
+          "name": "cornerRadius",
+          "type": "cornerRadius: 4.0",
+          "description": "Variant property for cornerRadius"
+        },
+        {
+          "name": "type",
+          "type": "type: 'rectangle'",
+          "description": "Variant property for type"
+        },
+        {
+          "name": "y",
+          "type": "y: -6304.0",
+          "description": "Variant property for y"
+        }
+      ],
+      "extends": [
+        "React.HTMLAttributes<HTMLElement>"
+      ],
+      "generics": []
+    },
+    {
+      "name": "Angle7",
+      "description": "angle-7 - Visual component for displaying content",
+      "props": {
+        "width": "string | number",
+        "height": "string | number",
+        "position": "{ x?: number; y?: number }",
+        "borderColor": "string",
+        "borderWidth": "number",
+        "borderRadius": "string | number",
+        "className": "string",
+        "style": "React.CSSProperties",
+        "children": "React.ReactNode",
+        "id": "string",
+        "testId": "string",
+        "display": "block | inline | inline-block | flex | grid | none",
+        "overflow": "visible | hidden | scroll | auto",
+        "opacity": "number"
+      },
+      "variants": [
+        {
+          "name": "width",
+          "type": "width: 958.0",
+          "description": "Variant property for width"
+        },
+        {
+          "name": "name",
+          "type": "name: 'Rectangle 7'",
+          "description": "Variant property for name"
+        },
+        {
+          "name": "height",
+          "type": "height: 524.0",
+          "description": "Variant property for height"
+        },
+        {
+          "name": "x",
+          "type": "x: -9600.0",
+          "description": "Variant property for x"
+        },
+        {
+          "name": "cornerRadius",
+          "type": "cornerRadius: 25.0",
+          "description": "Variant property for cornerRadius"
+        },
+        {
+          "name": "type",
+          "type": "type: 'rectangle'",
+          "description": "Variant property for type"
+        },
+        {
+          "name": "y",
+          "type": "y: -8088.0",
+          "description": "Variant property for y"
+        }
+      ],
+      "extends": [
+        "React.HTMLAttributes<HTMLElement>"
+      ],
+      "generics": []
+    },
+    {
+      "name": "Login",
+      "description": "login - Visual component for displaying content",
+      "props": {
+        "width": "string | number",
+        "height": "string | number",
+        "position": "{ x?: number; y?: number }",
+        "backgroundColor": "string",
+        "backgroundOpacity": "number",
+        "borderRadius": "string | number",
+        "className": "string",
+        "style": "React.CSSProperties",
+        "children": "React.ReactNode",
+        "id": "string",
+        "testId": "string",
+        "display": "block | inline | inline-block | flex | grid | none",
+        "overflow": "visible | hidden | scroll | auto",
+        "opacity": "number"
+      },
+      "variants": [
+        {
+          "name": "width",
+          "type": "width: 934.0",
+          "description": "Variant property for width"
+        },
+        {
+          "name": "name",
+          "type": "name: 'Login 1'",
+          "description": "Variant property for name"
+        },
+        {
+          "name": "height",
+          "type": "height: 498.0",
+          "description": "Variant property for height"
+        },
+        {
+          "name": "x",
+          "type": "x: -9587.0",
+          "description": "Variant property for x"
+        },
+        {
+          "name": "cornerRadius",
+          "type": "cornerRadius: 22.0",
+          "description": "Variant property for cornerRadius"
+        },
+        {
+          "name": "type",
+          "type": "type: 'rectangle'",
+          "description": "Variant property for type"
+        },
+        {
+          "name": "y",
+          "type": "y: -8075.0",
+          "description": "Variant property for y"
+        }
+      ],
+      "extends": [
+        "React.HTMLAttributes<HTMLElement>"
+      ],
+      "generics": []
+    },
+    {
+      "name": "Image",
+      "description": "image - Visual component for displaying content",
+      "props": {
+        "width": "string | number",
+        "height": "string | number",
+        "position": "{ x?: number; y?: number }",
+        "backgroundColor": "string",
+        "backgroundOpacity": "number",
+        "className": "string",
+        "style": "React.CSSProperties",
+        "children": "React.ReactNode",
+        "id": "string",
+        "testId": "string",
+        "display": "block | inline | inline-block | flex | grid | none",
+        "overflow": "visible | hidden | scroll | auto",
+        "opacity": "number"
+      },
+      "variants": [
+        {
+          "name": "width",
+          "type": "width: 50.0",
+          "description": "Variant property for width"
+        },
+        {
+          "name": "name",
+          "type": "name: 'image 1'",
+          "description": "Variant property for name"
+        },
+        {
+          "name": "height",
+          "type": "height: 75.0",
+          "description": "Variant property for height"
+        },
+        {
+          "name": "x",
+          "type": "x: -9864.0",
+          "description": "Variant property for x"
+        },
+        {
+          "name": "type",
+          "type": "type: 'rectangle'",
+          "description": "Variant property for type"
+        },
+        {
+          "name": "y",
+          "type": "y: -7633.0",
+          "description": "Variant property for y"
+        }
+      ],
+      "extends": [
+        "React.HTMLAttributes<HTMLElement>"
+      ],
+      "generics": []
+    }
+  ],
+  "design_system_css": {
+    "variables": {
+      "colors": {
+        "--color-primary": "#6257db",
+        "--color-primary-light": "#dfddf7",
+        "--color-primary-dark": "#4e45af",
+        "--color-success": "#28b446",
+        "--color-success-light": "#d4f0da",
+        "--color-success-dark": "#209038",
+        "--color-warning": "#fbbb00",
+        "--color-warning-light": "#fef1cc",
+        "--color-warning-dark": "#c89500",
+        "--color-white": "#ffffff",
+        "--color-black": "#000000",
+        "--color-gray-50": "#f4f7fa",
+        "--color-gray-100": "#d9d9d9",
+        "--color-gray-200": "#bfbfbf",
+        "--color-gray-900": "#2e2e2e",
+        "--color-facebook": "#3b5999",
+        "--color-brand-1": "#f36f56",
+        "--color-brand-2": "#3e4177",
+        "--color-brand-3": "#518ef8",
+        "--color-brand-4": "#311944",
+        "--color-brand-5": "#9571f6",
+        "--color-brand-6": "#893976",
+        "--color-brand-7": "#26264f",
+        "--color-brand-8": "#fb6fbb",
+        "--color-brand-9": "#ff9085",
+        "--color-brand-10": "#444b8c",
+        "--color-brand-11": "#aa80f9",
+        "--color-brand-12": "#f14336",
+        "--color-brand-13": "#e38ddd",
+        "--color-brand-14": "#ffc444",
+        "--color-brand-15": "#6165d7"
+      },
+      "typography": {
+        "--font-family-base": "Poppins",
+        "--font-size-caption": "12px",
+        "--font-size-body": "16px",
+        "--font-size-heading-2": "36px",
+        "--font-size-heading-1": "40px",
+        "--font-size-leading-140": "1.4px",
+        "--font-size-xs": "12.0px",
+        "--font-size-sm": "14.0px",
+        "--font-size-base": "16px",
+        "--font-size-lg": "18.0px",
+        "--font-size-xl": "20.0px",
+        "--font-size-2xl": "24.0px",
+        "--font-size-3xl": "30.0px",
+        "--font-size-4xl": "36.0px",
+        "--font-size-5xl": "48px",
+        "--font-size-6xl": "48px",
+        "--font-size-7xl": "48px",
+        "--font-size-8xl": "48px",
+        "--font-size-9xl": "48px",
+        "--line-height-caption": "1.4",
+        "--line-height-body": "1.5",
+        "--line-height-heading-2": "1.7",
+        "--line-height-heading-1": "1.7",
+        "--line-height-leading-140": "1.4",
+        "--line-height-xs": "1.4",
+        "--line-height-sm": "1.5",
+        "--line-height-base": "1.5",
+        "--line-height-lg": "1.6",
+        "--line-height-xl": "1.6",
+        "--line-height-2xl": "1.7",
+        "--line-height-3xl": "1.7",
+        "--line-height-4xl": "1.7",
+        "--line-height-5xl": "1.7",
+        "--line-height-6xl": "1.7",
+        "--line-height-7xl": "1.7",
+        "--line-height-8xl": "1.7",
+        "--line-height-9xl": "1.7"
+      },
+      "spacing": {
+        "--spacing-0": "0px",
+        "--spacing-px": "1px",
+        "--spacing-0.5": "2px",
+        "--spacing-1": "4px",
+        "--spacing-1.5": "6px",
+        "--spacing-2": "8px",
+        "--spacing-2.5": "10px",
+        "--spacing-3": "13px",
+        "--spacing-3.5": "14px",
+        "--spacing-4": "16px",
+        "--spacing-5": "19px",
+        "--spacing-6": "22px",
+        "--spacing-7": "28px",
+        "--spacing-8": "32px",
+        "--spacing-9": "36px",
+        "--spacing-10": "40px",
+        "--spacing-11": "44px",
+        "--spacing-12": "47px",
+        "--spacing-14": "56px",
+        "--spacing-16": "63px",
+        "--spacing-20": "80px",
+        "--spacing-24": "95px",
+        "--spacing-28": "112px",
+        "--spacing-32": "128px",
+        "--spacing-36": "144px",
+        "--spacing-40": "160px",
+        "--spacing-44": "176px",
+        "--spacing-48": "192px",
+        "--spacing-52": "208px",
+        "--spacing-56": "224px",
+        "--spacing-60": "240px",
+        "--spacing-64": "256px",
+        "--spacing-72": "288px",
+        "--spacing-80": "320px",
+        "--spacing-96": "384px"
+      },
+      "effects": {
+        "--shadow-1": "0px 0px 0px rgba(0, 0, 0, 0.1)",
+        "--shadow-2": "0px 0px 0px rgba(0, 0, 0, 0.1)",
+        "--shadow-3": "0px 0px 0px rgba(0, 0, 0, 0.1)",
+        "--shadow-4": "0px 0px 0px rgba(0, 0, 0, 0.1)"
+      }
+    },
+    "utilities": {
+      ".text-primary": "color: var(--color-primary);",
+      ".bg-primary": "background-color: var(--color-primary);",
+      ".border-primary": "border-color: var(--color-primary);",
+      ".text-success": "color: var(--color-success);",
+      ".bg-success": "background-color: var(--color-success);",
+      ".border-success": "border-color: var(--color-success);",
+      ".text-warning": "color: var(--color-warning);",
+      ".bg-warning": "background-color: var(--color-warning);",
+      ".border-warning": "border-color: var(--color-warning);",
+      ".p-xs": "padding: var(--spacing-px);",
+      ".m-xs": "margin: var(--spacing-px);",
+      ".p-sm": "padding: var(--spacing-1.5);",
+      ".m-sm": "margin: var(--spacing-1.5);",
+      ".p-md": "padding: var(--spacing-3);",
+      ".m-md": "margin: var(--spacing-3);",
+      ".p-lg": "padding: var(--spacing-6);",
+      ".m-lg": "margin: var(--spacing-6);",
+      ".p-xl": "padding: var(--spacing-10);",
+      ".m-xl": "margin: var(--spacing-10);"
+    },
+    "componentClasses": {
+      ".btn-primary": "\n                background-color: var(--color-primary);\n                color: white;\n                padding: var(--spacing-4) var(--spacing-6);\n                border-radius: var(--border-radius-md);\n                border: none;\n                cursor: pointer;\n                transition: all 0.2s ease;\n            ",
+      ".btn-primary:hover": "\n                background-color: var(--color-primary-dark);\n                transform: translateY(-1px);\n            ",
+      ".input": "\n            padding: var(--spacing-3) var(--spacing-4);\n            border: 1px solid #e5e7eb;\n            border-radius: var(--border-radius-md);\n            font-size: var(--font-size-base);\n            transition: border-color 0.2s ease;\n        ",
+      ".input:focus": "\n            outline: none;\n            border-color: var(--color-primary);\n            box-shadow: 0 0 0 3px var(--color-primary-light);\n        "
+    }
+  },
+  "platform_configs": [
+    {
+      "platform": "web",
+      "config": {
+        "theme": {
+          "colors": {
+            "primary": {
+              "50": "#f7f6fd",
+              "100": "#efeefb",
+              "200": "#dfddf7",
+              "300": "#cfccf4",
+              "400": "#c0bbf0",
+              "500": "#6257db",
+              "600": "#584ec5",
+              "700": "#4e45af",
+              "800": "#443c99",
+              "900": "#3a3483",
+              "950": "#312b6d"
+            },
+            "success": {
+              "50": "#f4fbf5",
+              "100": "#e9f7ec",
+              "200": "#d4f0da",
+              "300": "#bee8c7",
+              "400": "#a9e1b5",
+              "500": "#28b446",
+              "600": "#24a23f",
+              "700": "#209038",
+              "800": "#1c7d31",
+              "900": "#186c2a",
+              "950": "#145a23"
+            },
+            "warning": {
+              "50": "#fefbf2",
+              "100": "#fef8e5",
+              "200": "#fef1cc",
+              "300": "#fdeab2",
+              "400": "#fde399",
+              "500": "#fbbb00",
+              "600": "#e1a800",
+              "700": "#c89500",
+              "800": "#af8200",
+              "900": "#967000",
+              "950": "#7d5d00"
+            },
+            "white": "#ffffff",
+            "black": "#000000",
+            "gray": {
+              "500": "#2e2e2e"
+            },
+            "facebook": {
+              "500": "#3b5999"
+            },
+            "brand-1": {
+              "500": "#f36f56"
+            },
+            "brand-2": {
+              "500": "#3e4177"
+            },
+            "brand-3": {
+              "500": "#518ef8"
+            },
+            "brand-4": {
+              "500": "#311944"
+            },
+            "brand-5": {
+              "500": "#9571f6"
+            },
+            "brand-6": {
+              "500": "#893976"
+            },
+            "brand-7": {
+              "500": "#26264f"
+            },
+            "brand-8": {
+              "500": "#fb6fbb"
+            },
+            "brand-9": {
+              "500": "#ff9085"
+            },
+            "brand-10": {
+              "500": "#444b8c"
+            },
+            "brand-11": {
+              "500": "#aa80f9"
+            },
+            "brand-12": {
+              "500": "#f14336"
+            },
+            "brand-13": {
+              "500": "#e38ddd"
+            },
+            "brand-14": {
+              "500": "#ffc444"
+            },
+            "brand-15": {
+              "500": "#6165d7"
+            }
+          },
+          "fontFamily": {
+            "sans": [
+              "Poppins",
+              "system-ui",
+              "sans-serif"
+            ],
+            "serif": [
+              "Georgia",
+              "Cambria",
+              "Times New Roman",
+              "Times",
+              "serif"
+            ],
+            "mono": [
+              "Menlo",
+              "Monaco",
+              "Consolas",
+              "Liberation Mono",
+              "Courier New",
+              "monospace"
+            ]
+          },
+          "fontSize": {
+            "caption": [
+              "12px",
+              {
+                "lineHeight": 1.4
+              }
+            ],
+            "body": [
+              "16px",
+              {
+                "lineHeight": 1.5
+              }
+            ],
+            "heading-2": [
+              "36px",
+              {
+                "lineHeight": 1.7
+              }
+            ],
+            "heading-1": [
+              "40px",
+              {
+                "lineHeight": 1.7
+              }
+            ],
+            "leading-140": [
+              "1.4px",
+              {
+                "lineHeight": 1.4
+              }
+            ],
+            "xs": [
+              "12.0px",
+              {
+                "lineHeight": 1.4
+              }
+            ],
+            "sm": [
+              "14.0px",
+              {
+                "lineHeight": 1.5
+              }
+            ],
+            "base": [
+              "16px",
+              {
+                "lineHeight": 1.5
+              }
+            ],
+            "lg": [
+              "18.0px",
+              {
+                "lineHeight": 1.6
+              }
+            ],
+            "xl": [
+              "20.0px",
+              {
+                "lineHeight": 1.6
+              }
+            ],
+            "2xl": [
+              "24.0px",
+              {
+                "lineHeight": 1.7
+              }
+            ],
+            "3xl": [
+              "30.0px",
+              {
+                "lineHeight": 1.7
+              }
+            ],
+            "4xl": [
+              "36.0px",
+              {
+                "lineHeight": 1.7
+              }
+            ],
+            "5xl": [
+              "48px",
+              {
+                "lineHeight": 1.7
+              }
+            ],
+            "6xl": [
+              "48px",
+              {
+                "lineHeight": 1.7
+              }
+            ],
+            "7xl": [
+              "48px",
+              {
+                "lineHeight": 1.7
+              }
+            ],
+            "8xl": [
+              "48px",
+              {
+                "lineHeight": 1.7
+              }
+            ],
+            "9xl": [
+              "48px",
+              {
+                "lineHeight": 1.7
+              }
+            ]
+          },
+          "fontWeight": {
+            "regular": 400,
+            "black": 900
+          },
+          "lineHeight": {
+            "caption": 1.4,
+            "body": 1.5,
+            "heading-2": 1.7,
+            "heading-1": 1.7,
+            "leading-140": 1.4,
+            "xs": 1.4,
+            "sm": 1.5,
+            "base": 1.5,
+            "lg": 1.6,
+            "xl": 1.6,
+            "2xl": 1.7,
+            "3xl": 1.7,
+            "4xl": 1.7,
+            "5xl": 1.7,
+            "6xl": 1.7,
+            "7xl": 1.7,
+            "8xl": 1.7,
+            "9xl": 1.7
+          },
+          "spacing": {
+            "0": 0,
+            "px": 1,
+            "0.5": 2,
+            "1": 4,
+            "1.5": 6,
+            "2": 8,
+            "2.5": 10,
+            "3": 13,
+            "3.5": 14,
+            "4": 16,
+            "5": 19,
+            "6": 22,
+            "7": 28,
+            "8": 32,
+            "9": 36,
+            "10": 40,
+            "11": 44,
+            "12": 47,
+            "14": 56,
+            "16": 63,
+            "20": 80,
+            "24": 95,
+            "28": 112,
+            "32": 128,
+            "36": 144,
+            "40": 160,
+            "44": 176,
+            "48": 192,
+            "52": 208,
+            "56": 224,
+            "60": 240,
+            "64": 256,
+            "72": 288,
+            "80": 320,
+            "96": 384
+          },
+          "borderRadius": {
+            "none": "0px",
+            "sm": "0.125rem",
+            "DEFAULT": "0.25rem",
+            "md": "0.375rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "2xl": "1rem",
+            "3xl": "1.5rem",
+            "full": "9999px"
+          },
+          "boxShadow": {
+            "sm": "0 1px 2px 0 rgb(0 0 0 / 0.05)",
+            "DEFAULT": "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
+            "md": "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+            "lg": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
+            "xl": "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
+            "2xl": "0 25px 50px -12px rgb(0 0 0 / 0.25)",
+            "custom-1": "0px 0px 0px 0px rgba(0, 0, 0, 0.1)",
+            "custom-2": "0px 0px 0px 0px rgba(0, 0, 0, 0.1)",
+            "custom-3": "0px 0px 0px 0px rgba(0, 0, 0, 0.1)",
+            "custom-4": "0px 0px 0px 0px rgba(0, 0, 0, 0.1)"
+          },
+          "blur": {
+            "none": "0",
+            "sm": "4px",
+            "DEFAULT": "8px",
+            "md": "12px",
+            "lg": "16px",
+            "xl": "24px",
+            "2xl": "40px",
+            "3xl": "64px"
+          }
+        },
+        "plugins": [
+          "@tailwindcss/forms",
+          "@tailwindcss/typography",
+          "@tailwindcss/aspect-ratio",
+          "@tailwindcss/container-queries"
+        ],
+        "content": [
+          "./src/**/*.{js,ts,jsx,tsx}",
+          "./pages/**/*.{js,ts,jsx,tsx}",
+          "./components/**/*.{js,ts,jsx,tsx}",
+          "./app/**/*.{js,ts,jsx,tsx}"
+        ],
+        "presets": [
+          "default"
+        ],
+        "optimizations": {
+          "purgeCSS": true,
+          "minifyCSS": true,
+          "autoprefixer": true,
+          "criticalCSS": true,
+          "fontDisplay": "swap",
+          "imageOptimization": true,
+          "lazyLoading": true
+        },
+        "performance": {
+          "unusedClassesRemoval": true,
+          "cssNesting": true,
+          "cssCustomProperties": true,
+          "containerQueries": true
+        }
+      },
+      "optimizations": {
+        "purge": {
+          "enabled": true,
+          "content": [
+            "./src/**/*.{js,ts,jsx,tsx}",
+            "./pages/**/*.{js,ts,jsx,tsx}",
+            "./components/**/*.{js,ts,jsx,tsx}",
+            "./app/**/*.{js,ts,jsx,tsx}"
+          ],
+          "options": {
+            "safelist": [
+              "bg-primary",
+              "bg-secondary",
+              "text-primary",
+              "text-secondary",
+              "border-primary",
+              "hover:bg-primary-dark",
+              "focus:bg-primary-light",
+              "/^bg-/",
+              "/^text-/",
+              "/^border-/",
+              "/^p-/",
+              "/^m-/",
+              "/^w-/",
+              "/^h-/"
+            ]
+          }
+        },
+        "corePlugins": {
+          "float": true,
+          "clear": true,
+          "overflow": true,
+          "display": true,
+          "position": true,
+          "top": true,
+          "right": true,
+          "bottom": true,
+          "left": true,
+          "inset": true,
+          "isolation": true,
+          "zIndex": true,
+          "flex": true,
+          "flexDirection": true,
+          "flexWrap": true,
+          "flexGrow": true,
+          "flexShrink": true,
+          "flexBasis": true,
+          "grid": true,
+          "gridTemplateColumns": true,
+          "gridTemplateRows": true,
+          "gridTemplateAreas": true,
+          "gridAutoColumns": true,
+          "gridAutoRows": true,
+          "gridAutoFlow": true,
+          "gap": true,
+          "space": true,
+          "divideColor": true,
+          "divideStyle": true,
+          "divideWidth": true,
+          "divideX": true,
+          "divideY": true,
+          "placeSelf": true,
+          "placeItems": true,
+          "placeContent": true,
+          "alignContent": true,
+          "alignItems": true,
+          "alignSelf": true,
+          "justifyContent": true,
+          "justifyItems": true,
+          "justifySelf": true,
+          "padding": true,
+          "margin": true,
+          "width": true,
+          "minWidth": true,
+          "maxWidth": true,
+          "height": true,
+          "minHeight": true,
+          "maxHeight": true,
+          "fontSize": true,
+          "fontSmoothing": true,
+          "fontStyle": true,
+          "fontWeight": true,
+          "fontVariantNumeric": true,
+          "fontFamily": true,
+          "lineHeight": true,
+          "letterSpacing": true,
+          "textColor": true,
+          "textDecoration": true,
+          "textIndent": true,
+          "textOpacity": true,
+          "textOverflow": true,
+          "textTransform": true,
+          "verticalAlign": true,
+          "whitespace": true,
+          "wordBreak": true,
+          "backgroundColor": true,
+          "backgroundOpacity": true,
+          "backgroundPosition": true,
+          "backgroundSize": true,
+          "borderColor": true,
+          "borderOpacity": true,
+          "borderStyle": true,
+          "borderWidth": true,
+          "borderTopWidth": true,
+          "borderRightWidth": true,
+          "borderBottomWidth": true,
+          "borderLeftWidth": true,
+          "borderRadius": true,
+          "boxShadow": true,
+          "boxSizing": true,
+          "cursor": true,
+          "transform": true,
+          "transformOrigin": true,
+          "transition": true,
+          "transitionDelay": true,
+          "transitionDuration": true,
+          "transitionProperty": true,
+          "transitionTimingFunction": true,
+          "animation": true,
+          "animationDelay": true,
+          "animationDirection": true,
+          "animationDuration": true,
+          "animationFillMode": true,
+          "animationIterationCount": true,
+          "animationName": true,
+          "animationPlayState": true,
+          "animationTimingFunction": true,
+          "opacity": true,
+          "objectFit": true,
+          "objectPosition": true
+        },
+        "darkMode": {
+          "media": "(prefers-color-scheme: dark)",
+          "classSelector": ".dark",
+          "classPrefix": "dark:",
+          "variantPrefix": "dark:"
+        },
+        "variants": {
+          "responsive": [
+            "sm",
+            "md",
+            "lg",
+            "xl",
+            "2xl"
+          ],
+          "hover": [
+            "hover"
+          ],
+          "focus": [
+            "focus"
+          ],
+          "active": [
+            "active"
+          ],
+          "disabled": [
+            "disabled"
+          ],
+          "group-hover": [
+            "group-hover"
+          ],
+          "group-focus": [
+            "group-focus"
+          ],
+          "dark": [
+            "dark"
+          ],
+          "motion-safe": [
+            "motion-safe"
+          ],
+          "motion-reduce": [
+            "motion-reduce"
+          ],
+          "first": [
+            "first"
+          ],
+          "last": [
+            "last"
+          ],
+          "odd": [
+            "odd"
+          ],
+          "even": [
+            "even"
+          ],
+          "visited": [
+            "visited"
+          ],
+          "checked": [
+            "checked"
+          ]
+        },
+        "cssVariables": true
+      }
+    },
+    {
+      "platform": "mobile",
+      "config": {
+        "theme": {
+          "colors": {
+            "primary": {
+              "50": "#f7f6fd",
+              "100": "#efeefb",
+              "200": "#dfddf7",
+              "300": "#cfccf4",
+              "400": "#c0bbf0",
+              "500": "#6257db",
+              "600": "#584ec5",
+              "700": "#4e45af",
+              "800": "#443c99",
+              "900": "#3a3483",
+              "950": "#312b6d"
+            },
+            "success": {
+              "50": "#f4fbf5",
+              "100": "#e9f7ec",
+              "200": "#d4f0da",
+              "300": "#bee8c7",
+              "400": "#a9e1b5",
+              "500": "#28b446",
+              "600": "#24a23f",
+              "700": "#209038",
+              "800": "#1c7d31",
+              "900": "#186c2a",
+              "950": "#145a23"
+            },
+            "warning": {
+              "50": "#fefbf2",
+              "100": "#fef8e5",
+              "200": "#fef1cc",
+              "300": "#fdeab2",
+              "400": "#fde399",
+              "500": "#fbbb00",
+              "600": "#e1a800",
+              "700": "#c89500",
+              "800": "#af8200",
+              "900": "#967000",
+              "950": "#7d5d00"
+            },
+            "white": "#ffffff",
+            "black": "#000000",
+            "gray": {
+              "500": "#2e2e2e"
+            },
+            "facebook": {
+              "500": "#3b5999"
+            },
+            "brand-1": {
+              "500": "#f36f56"
+            },
+            "brand-2": {
+              "500": "#3e4177"
+            },
+            "brand-3": {
+              "500": "#518ef8"
+            },
+            "brand-4": {
+              "500": "#311944"
+            },
+            "brand-5": {
+              "500": "#9571f6"
+            },
+            "brand-6": {
+              "500": "#893976"
+            },
+            "brand-7": {
+              "500": "#26264f"
+            },
+            "brand-8": {
+              "500": "#fb6fbb"
+            },
+            "brand-9": {
+              "500": "#ff9085"
+            },
+            "brand-10": {
+              "500": "#444b8c"
+            },
+            "brand-11": {
+              "500": "#aa80f9"
+            },
+            "brand-12": {
+              "500": "#f14336"
+            },
+            "brand-13": {
+              "500": "#e38ddd"
+            },
+            "brand-14": {
+              "500": "#ffc444"
+            },
+            "brand-15": {
+              "500": "#6165d7"
+            }
+          },
+          "fonts": {
+            "body": "Poppins",
+            "heading": "Poppins"
+          },
+          "fontSizes": {
+            "caption": 12,
+            "body": 16,
+            "heading-2": 36,
+            "heading-1": 40,
+            "leading-140": 1,
+            "xs": 12,
+            "sm": 14,
+            "base": 16,
+            "lg": 18,
+            "xl": 20,
+            "2xl": 24,
+            "3xl": 30,
+            "4xl": 36,
+            "5xl": 48,
+            "6xl": 48,
+            "7xl": 48,
+            "8xl": 48,
+            "9xl": 48
+          },
+          "fontWeights": {
+            "regular": "400",
+            "black": "900"
+          },
+          "spacing": {
+            "0": 0,
+            "px": 1,
+            "0.5": 2,
+            "1": 4,
+            "1.5": 6,
+            "2": 8,
+            "2.5": 10,
+            "3": 13,
+            "3.5": 14,
+            "4": 16,
+            "5": 19,
+            "6": 22,
+            "7": 28,
+            "8": 32,
+            "9": 36,
+            "10": 40,
+            "11": 44,
+            "12": 47,
+            "14": 56,
+            "16": 63,
+            "20": 80,
+            "24": 95,
+            "28": 112,
+            "32": 128,
+            "36": 144,
+            "40": 160,
+            "44": 176,
+            "48": 192,
+            "52": 208,
+            "56": 224,
+            "60": 240,
+            "64": 256,
+            "72": 288,
+            "80": 320,
+            "96": 384
+          },
+          "borderRadius": {
+            "sm": 2,
+            "md": 4,
+            "lg": 8,
+            "xl": 12,
+            "2xl": 16,
+            "full": 9999
+          },
+          "shadows": {
+            "sm": {
+              "shadowOffset": {
+                "width": 0,
+                "height": 1
+              },
+              "shadowOpacity": 0.05,
+              "shadowRadius": 2,
+              "elevation": 1
+            },
+            "md": {
+              "shadowOffset": {
+                "width": 0,
+                "height": 4
+              },
+              "shadowOpacity": 0.1,
+              "shadowRadius": 6,
+              "elevation": 4
+            },
+            "lg": {
+              "shadowOffset": {
+                "width": 0,
+                "height": 10
+              },
+              "shadowOpacity": 0.15,
+              "shadowRadius": 15,
+              "elevation": 10
+            }
+          }
+        },
+        "plugins": [
+          "nativewind/plugin",
+          "@nativewind/plugin"
+        ],
+        "project": {
+          "ios": {
+            "shadowColor": true,
+            "shadowOffset": true,
+            "shadowOpacity": true,
+            "shadowRadius": true,
+            "elevation": true,
+            "zIndex": true
+          },
+          "android": {
+            "elevation": true,
+            "zIndex": true
+          },
+          "web": {
+            "shadowColor": true,
+            "shadowOffset": true,
+            "shadowOpacity": true,
+            "shadowRadius": true,
+            "elevation": true,
+            "zIndex": true
+          }
+        },
+        "output": {
+          "native": true,
+          "web": true,
+          "inlineRem": true,
+          "output": {
+            "css": "./styles/nativewind.css",
+            "js": "./styles/nativewind.js"
+          }
+        },
+        "optimizations": {
+          "treeShaking": true,
+          "bundleOptimization": true,
+          "fontOptimization": true,
+          "imageOptimization": true,
+          "lazyLoading": true,
+          "memoryOptimization": true
+        },
+        "performance": {
+          "runtimeOptimization": true,
+          "memoryUsage": "low",
+          "bundleSize": "minimal",
+          "renderOptimization": true
+        },
+        "platformSpecific": {
+          "ios": {
+            "shadowPerformance": true,
+            "animationPerformance": true,
+            "memoryEfficiency": true
+          },
+          "android": {
+            "shadowPerformance": true,
+            "animationPerformance": true,
+            "memoryEfficiency": true
+          },
+          "web": {
+            "cssPerformance": true,
+            "animationPerformance": true,
+            "loadPerformance": true
+          }
+        }
+      },
+      "optimizations": {
+        "treeShaking": true,
+        "bundleOptimization": true,
+        "fontOptimization": true,
+        "imageOptimization": true,
+        "lazyLoading": true
+      }
+    }
+  ],
+  "conversion_stats": {
+    "conversion_duration_seconds": 0.001,
+    "input_tokens": {
+      "colors": 1,
+      "typography": 1,
+      "spacing": 1,
+      "effects": 1
+    },
+    "output_tokens": {
+      "colors": 25,
+      "typography_font_sizes": 18,
+      "typography_font_weights": 2,
+      "spacing_values": 35,
+      "effects_shadows": 4
+    },
+    "components": {
+      "input_count": 15,
+      "output_interfaces": 15,
+      "categories": {
+        "display": 10,
+        "interactive": 4,
+        "buttons": 1
+      }
+    },
+    "platforms": {
+      "web_config": true,
+      "mobile_config": true,
+      "css_variables": true
+    },
+    "quality_metrics": {
+      "conversion_success_rate": 1.0,
+      "token_coverage": 1.0,
+      "interface_coverage": 1.0
+    }
+  }
+}

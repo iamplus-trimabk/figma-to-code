@@ -1,0 +1,276 @@
+{
+  "platform": "mobile",
+  "config": {
+    "theme": {
+      "colors": {
+        "primary": {
+          "50": "#f7f6fd",
+          "100": "#efeefb",
+          "200": "#dfddf7",
+          "300": "#cfccf4",
+          "400": "#c0bbf0",
+          "500": "#6257db",
+          "600": "#584ec5",
+          "700": "#4e45af",
+          "800": "#443c99",
+          "900": "#3a3483",
+          "950": "#312b6d"
+        },
+        "success": {
+          "50": "#f4fbf5",
+          "100": "#e9f7ec",
+          "200": "#d4f0da",
+          "300": "#bee8c7",
+          "400": "#a9e1b5",
+          "500": "#28b446",
+          "600": "#24a23f",
+          "700": "#209038",
+          "800": "#1c7d31",
+          "900": "#186c2a",
+          "950": "#145a23"
+        },
+        "warning": {
+          "50": "#fefbf2",
+          "100": "#fef8e5",
+          "200": "#fef1cc",
+          "300": "#fdeab2",
+          "400": "#fde399",
+          "500": "#fbbb00",
+          "600": "#e1a800",
+          "700": "#c89500",
+          "800": "#af8200",
+          "900": "#967000",
+          "950": "#7d5d00"
+        },
+        "white": "#ffffff",
+        "black": "#000000",
+        "gray": {
+          "500": "#2e2e2e"
+        },
+        "facebook": {
+          "500": "#3b5999"
+        },
+        "brand-1": {
+          "500": "#f36f56"
+        },
+        "brand-2": {
+          "500": "#3e4177"
+        },
+        "brand-3": {
+          "500": "#518ef8"
+        },
+        "brand-4": {
+          "500": "#311944"
+        },
+        "brand-5": {
+          "500": "#9571f6"
+        },
+        "brand-6": {
+          "500": "#893976"
+        },
+        "brand-7": {
+          "500": "#26264f"
+        },
+        "brand-8": {
+          "500": "#fb6fbb"
+        },
+        "brand-9": {
+          "500": "#ff9085"
+        },
+        "brand-10": {
+          "500": "#444b8c"
+        },
+        "brand-11": {
+          "500": "#aa80f9"
+        },
+        "brand-12": {
+          "500": "#f14336"
+        },
+        "brand-13": {
+          "500": "#e38ddd"
+        },
+        "brand-14": {
+          "500": "#ffc444"
+        },
+        "brand-15": {
+          "500": "#6165d7"
+        }
+      },
+      "fonts": {
+        "body": "Poppins",
+        "heading": "Poppins"
+      },
+      "fontSizes": {
+        "caption": 12,
+        "body": 16,
+        "heading-2": 36,
+        "heading-1": 40,
+        "leading-140": 1,
+        "xs": 12,
+        "sm": 14,
+        "base": 16,
+        "lg": 18,
+        "xl": 20,
+        "2xl": 24,
+        "3xl": 30,
+        "4xl": 36,
+        "5xl": 48,
+        "6xl": 48,
+        "7xl": 48,
+        "8xl": 48,
+        "9xl": 48
+      },
+      "fontWeights": {
+        "regular": "400",
+        "black": "900"
+      },
+      "spacing": {
+        "0": 0,
+        "px": 1,
+        "0.5": 2,
+        "1": 4,
+        "1.5": 6,
+        "2": 8,
+        "2.5": 10,
+        "3": 13,
+        "3.5": 14,
+        "4": 16,
+        "5": 19,
+        "6": 22,
+        "7": 28,
+        "8": 32,
+        "9": 36,
+        "10": 40,
+        "11": 44,
+        "12": 47,
+        "14": 56,
+        "16": 63,
+        "20": 80,
+        "24": 95,
+        "28": 112,
+        "32": 128,
+        "36": 144,
+        "40": 160,
+        "44": 176,
+        "48": 192,
+        "52": 208,
+        "56": 224,
+        "60": 240,
+        "64": 256,
+        "72": 288,
+        "80": 320,
+        "96": 384
+      },
+      "borderRadius": {
+        "sm": 2,
+        "md": 4,
+        "lg": 8,
+        "xl": 12,
+        "2xl": 16,
+        "full": 9999
+      },
+      "shadows": {
+        "sm": {
+          "shadowOffset": {
+            "width": 0,
+            "height": 1
+          },
+          "shadowOpacity": 0.05,
+          "shadowRadius": 2,
+          "elevation": 1
+        },
+        "md": {
+          "shadowOffset": {
+            "width": 0,
+            "height": 4
+          },
+          "shadowOpacity": 0.1,
+          "shadowRadius": 6,
+          "elevation": 4
+        },
+        "lg": {
+          "shadowOffset": {
+            "width": 0,
+            "height": 10
+          },
+          "shadowOpacity": 0.15,
+          "shadowRadius": 15,
+          "elevation": 10
+        }
+      }
+    },
+    "plugins": [
+      "nativewind/plugin",
+      "@nativewind/plugin"
+    ],
+    "project": {
+      "ios": {
+        "shadowColor": true,
+        "shadowOffset": true,
+        "shadowOpacity": true,
+        "shadowRadius": true,
+        "elevation": true,
+        "zIndex": true
+      },
+      "android": {
+        "elevation": true,
+        "zIndex": true
+      },
+      "web": {
+        "shadowColor": true,
+        "shadowOffset": true,
+        "shadowOpacity": true,
+        "shadowRadius": true,
+        "elevation": true,
+        "zIndex": true
+      }
+    },
+    "output": {
+      "native": true,
+      "web": true,
+      "inlineRem": true,
+      "output": {
+        "css": "./styles/nativewind.css",
+        "js": "./styles/nativewind.js"
+      }
+    },
+    "optimizations": {
+      "treeShaking": true,
+      "bundleOptimization": true,
+      "fontOptimization": true,
+      "imageOptimization": true,
+      "lazyLoading": true,
+      "memoryOptimization": true
+    },
+    "performance": {
+      "runtimeOptimization": true,
+      "memoryUsage": "low",
+      "bundleSize": "minimal",
+      "renderOptimization": true
+    },
+    "platformSpecific": {
+      "ios": {
+        "shadowPerformance": true,
+        "animationPerformance": true,
+        "memoryEfficiency": true
+      },
+      "android": {
+        "shadowPerformance": true,
+        "animationPerformance": true,
+        "memoryEfficiency": true
+      },
+      "web": {
+        "cssPerformance": true,
+        "animationPerformance": true,
+        "loadPerformance": true
+      }
+    }
+  },
+  "optimizations": {
+    "treeShaking": true,
+    "bundleOptimization": true,
+    "fontOptimization": true,
+    "imageOptimization": true,
+    "lazyLoading": true
+  }
+}
