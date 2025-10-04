@@ -208,7 +208,9 @@ const {{ component_name }} = React.forwardRef<
 {%- endif %},
   {{ component_name }}Props
 >(
-  ({ {% include 'partials/component-args.j2' %} }, ref) => {
+  ({
+    {% include 'partials/component-args.j2' %}
+  }, ref) => {
 {%- include 'partials/component-state.j2' %}
 {%- include 'partials/component-handlers.j2' %}
 

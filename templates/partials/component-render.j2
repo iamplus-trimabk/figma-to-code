@@ -138,9 +138,9 @@
             htmlFor={id}
             className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             style={% raw %}{{{% endraw %}
-              fontFamily: fontFamily || designTokens.typography.fontFamily.join(', '),
-              fontSize: fontSize || designTokens.typography.fontSize.sm,
-              fontWeight: fontWeight || designTokens.typography.fontWeight.medium
+              fontFamily: fontFamily || "'Poppins', sans-serif",
+              fontSize: fontSize || "14px",
+              fontWeight: fontWeight || "500"
             }{% raw %}}{% endraw %}
             {label}
             {required && <span className="text-red-500 ml-1">*</span>}
@@ -273,9 +273,9 @@
               {/* Title section */}
               {title && (
                 <h4 className="font-semibold mb-1" style={% raw %}{{{% endraw %}
-                  fontFamily: designTokens.typography.fontFamily.join(', '),
-                  fontSize: size === 'lg' ? designTokens.typography.fontSize.lg : designTokens.typography.fontSize.base,
-                  fontWeight: designTokens.typography.fontWeight.semibold
+                  fontFamily: "'Poppins', sans-serif",
+                  fontSize: size === 'lg' ? "18px" : "16px",
+                  fontWeight: "600"
                 }{% raw %}}{% endraw %}>
                   {title}
                 </h4>
@@ -284,9 +284,9 @@
               {/* Description section */}
               {description && (
                 <p className="text-sm mb-2" style={% raw %}{{{% endraw %}
-                  fontFamily: designTokens.typography.fontFamily.join(', '),
-                  fontSize: designTokens.typography.fontSize.sm,
-                  fontWeight: designTokens.typography.fontWeight.regular,
+                  fontFamily: "'Poppins', sans-serif",
+                  fontSize: "14px",
+                  fontWeight: "400",
                   opacity: 0.8
                 }{% raw %}}{% endraw %}>
                   {description}
@@ -316,9 +316,9 @@
             {/* Title section */}
             {title && (
               <h4 className="font-semibold mb-1" style={% raw %}{{{% endraw %}
-                fontFamily: designTokens.typography.fontFamily.join(', '),
-                fontSize: size === 'lg' ? designTokens.typography.fontSize.lg : designTokens.typography.fontSize.base,
-                fontWeight: designTokens.typography.fontWeight.semibold
+                fontFamily: "'Poppins', sans-serif",
+                fontSize: size === 'lg' ? "18px" : "16px",
+                fontWeight: "600"
               }{% raw %}}{% endraw %}>
                 {title}
               </h4>
@@ -327,9 +327,9 @@
             {/* Description section */}
             {description && (
               <p className="text-sm mb-2" style={% raw %}{{{% endraw %}
-                fontFamily: designTokens.typography.fontFamily.join(', '),
-                fontSize: designTokens.typography.fontSize.sm,
-                fontWeight: designTokens.typography.fontWeight.regular,
+                fontFamily: "'Poppins', sans-serif",
+                fontSize: "14px",
+                fontWeight: "400",
                 opacity: 0.8
               }{% raw %}}{% endraw %}>
                 {description}
