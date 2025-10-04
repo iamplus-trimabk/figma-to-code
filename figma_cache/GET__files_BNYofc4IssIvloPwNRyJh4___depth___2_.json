@@ -1,0 +1,204 @@
+{
+  "data": {
+    "document": {
+      "id": "0:0",
+      "name": "Document",
+      "type": "DOCUMENT",
+      "scrollBehavior": "SCROLLS",
+      "children": [
+        {
+          "id": "0:1",
+          "name": "Page 1",
+          "type": "CANVAS",
+          "scrollBehavior": "SCROLLS",
+          "children": [
+            {
+              "id": "1:95",
+              "name": "Login",
+              "type": "FRAME",
+              "scrollBehavior": "SCROLLS",
+              "children": [],
+              "blendMode": "PASS_THROUGH",
+              "clipsContent": true,
+              "background": [
+                {
+                  "blendMode": "NORMAL",
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.9583333134651184,
+                    "g": 0.9583333134651184,
+                    "b": 0.9583333134651184,
+                    "a": 1.0
+                  }
+                }
+              ],
+              "fills": [
+                {
+                  "blendMode": "NORMAL",
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.9583333134651184,
+                    "g": 0.9583333134651184,
+                    "b": 0.9583333134651184,
+                    "a": 1.0
+                  }
+                }
+              ],
+              "strokes": [],
+              "strokeWeight": 1.0,
+              "strokeAlign": "INSIDE",
+              "backgroundColor": {
+                "r": 0.9583333134651184,
+                "g": 0.9583333134651184,
+                "b": 0.9583333134651184,
+                "a": 1.0
+              },
+              "absoluteBoundingBox": {
+                "x": -9902.0,
+                "y": -7018.0,
+                "width": 1920.0,
+                "height": 1024.0
+              },
+              "absoluteRenderBounds": {
+                "x": -9902.0,
+                "y": -7018.0,
+                "width": 1920.0,
+                "height": 1024.0
+              },
+              "constraints": {
+                "vertical": "TOP",
+                "horizontal": "LEFT"
+              },
+              "exportSettings": [
+                {
+                  "suffix": "",
+                  "format": "PNG",
+                  "constraint": {
+                    "type": "SCALE",
+                    "value": 1.0
+                  }
+                }
+              ],
+              "effects": [],
+              "interactions": []
+            },
+            {
+              "id": "7:4",
+              "name": "thum",
+              "type": "FRAME",
+              "scrollBehavior": "SCROLLS",
+              "children": [],
+              "blendMode": "PASS_THROUGH",
+              "clipsContent": true,
+              "background": [
+                {
+                  "blendMode": "NORMAL",
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.38639992475509644,
+                    "g": 0.3449999690055847,
+                    "b": 0.862500011920929,
+                    "a": 1.0
+                  }
+                }
+              ],
+              "fills": [
+                {
+                  "blendMode": "NORMAL",
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0.38639992475509644,
+                    "g": 0.3449999690055847,
+                    "b": 0.862500011920929,
+                    "a": 1.0
+                  }
+                }
+              ],
+              "strokes": [],
+              "strokeWeight": 1.0,
+              "strokeAlign": "INSIDE",
+              "backgroundColor": {
+                "r": 0.38639992475509644,
+                "g": 0.3449999690055847,
+                "b": 0.862500011920929,
+                "a": 1.0
+              },
+              "styles": {
+                "fills": "1:98",
+                "fill": "1:98"
+              },
+              "absoluteBoundingBox": {
+                "x": -9902.0,
+                "y": -8198.0,
+                "width": 1280.0,
+                "height": 720.0
+              },
+              "absoluteRenderBounds": {
+                "x": -9902.0,
+                "y": -8198.0,
+                "width": 1280.0,
+                "height": 720.0
+              },
+              "constraints": {
+                "vertical": "TOP",
+                "horizontal": "LEFT"
+              },
+              "exportSettings": [
+                {
+                  "suffix": "",
+                  "format": "PNG",
+                  "constraint": {
+                    "type": "SCALE",
+                    "value": 1.0
+                  }
+                }
+              ],
+              "effects": [],
+              "interactions": []
+            }
+          ],
+          "backgroundColor": {
+            "r": 0.8980392217636108,
+            "g": 0.8980392217636108,
+            "b": 0.8980392217636108,
+            "a": 1.0
+          },
+          "prototypeStartNodeID": null,
+          "flowStartingPoints": [],
+          "prototypeDevice": {
+            "type": "NONE",
+            "rotation": "NONE"
+          }
+        }
+      ]
+    },
+    "components": {},
+    "componentSets": {},
+    "schemaVersion": 0,
+    "styles": {
+      "1:98": {
+        "key": "a23783dafa7137719c774e10e6aae3e8987bebf9",
+        "name": "Primary Color",
+        "styleType": "FILL",
+        "remote": false,
+        "description": ""
+      },
+      "1:99": {
+        "key": "6547577d447213a17bef505044820e45f90f1fbf",
+        "name": "Black",
+        "styleType": "FILL",
+        "remote": false,
+        "description": ""
+      }
+    },
+    "name": "Login Page UI (Community)",
+    "lastModified": "2025-10-03T20:41:58Z",
+    "thumbnailUrl": "https://s3-alpha.figma.com/thumbnails/3ed40011-a137-46cd-ae48-96aa25f5f021?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQ4GOSFWC6UK6QLJ2%2F20251002%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20251002T000000Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=b68a1db5931083e3295f63df017e84c621c84c671af4726393c855439b74f65d",
+    "version": "2270811844008289168",
+    "role": "owner",
+    "editorType": "figma",
+    "linkAccess": "view"
+  },
+  "timestamp": 1759571875.984498,
+  "ttl": 3000
+}
