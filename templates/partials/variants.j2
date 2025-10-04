@@ -1,0 +1,162 @@
+{%- if component_config.category == 'navigation' %}
+      variant: {
+        primary: `
+          bg-[${designTokens.colors.primary[500]}]
+          text-white
+          hover:bg-[${designTokens.colors.primary[600]}]
+          focus:ring-[${designTokens.colors.primary[500]}]
+        `,
+        secondary: `
+          bg-[${designTokens.colors.background}]
+          text-[${designTokens.colors.foreground}]
+          border-[${designTokens.colors.border}]
+          hover:bg-[${designTokens.colors.muted.DEFAULT}]
+        `,
+        outline: `
+          bg-transparent
+          text-[${designTokens.colors.primary[500]}]
+          border-[${designTokens.colors.primary[500]}]
+          hover:bg-[${designTokens.colors.primary[50]}]
+        `,
+        ghost: `
+          bg-transparent
+          text-[${designTokens.colors.foreground}]
+          hover:bg-[${designTokens.colors.muted.DEFAULT}]
+        `,
+        success: `
+          bg-[${designTokens.colors.success[500]}]
+          text-white
+          hover:bg-[${designTokens.colors.success[600]}]
+        `,
+        warning: `
+          bg-[${designTokens.colors.warning[500]}]
+          text-white
+          hover:bg-[${designTokens.colors.warning[600]}]
+        `,
+        destructive: `
+          bg-[${designTokens.colors.error[500]}]
+          text-white
+          hover:bg-[${designTokens.colors.error[600]}]
+        `
+      },
+      size: {
+        sm: "h-8 px-3 text-xs",
+        md: "h-10 px-4 py-2 text-sm",
+        lg: "h-12 px-6 text-base"
+      }
+{%- elif component_config.category == 'forms' %}
+      variant: {
+        default: `
+          border-[${designTokens.colors.border}]
+          focus-visible:border-[${designTokens.colors.primary[500]}]
+          focus-visible:ring-[${designTokens.colors.primary[500]}]
+        `,
+        error: `
+          border-[${designTokens.colors.error[500]}]
+          focus-visible:border-[${designTokens.colors.error[500]}]
+          focus-visible:ring-[${designTokens.colors.error[500]}]
+        `,
+        success: `
+          border-[${designTokens.colors.success[500]}]
+          focus-visible:border-[${designTokens.colors.success[500]}]
+          focus-visible:ring-[${designTokens.colors.success[500]}]
+        `,
+        warning: `
+          border-[${designTokens.colors.warning[500]}]
+          focus-visible:border-[${designTokens.colors.warning[500]}]
+          focus-visible:ring-[${designTokens.colors.warning[500]}]
+        `
+      },
+      size: {
+        sm: `h-8 px-2 text-xs`,
+        md: `h-10 px-3 text-sm`,
+        lg: `h-12 px-4 text-base`
+      }
+{%- elif component_config.category == 'display' %}
+      variant: {
+        default: `
+          bg-[${designTokens.colors.card}]
+          border-[${designTokens.colors.border}]
+        `,
+        elevated: `
+          bg-[${designTokens.colors.card}]
+          border-[${designTokens.colors.border}]
+          shadow-[${designTokens.effects.shadow.md}]
+          hover:shadow-[${designTokens.effects.shadow.lg}]
+          transition-shadow duration-200
+        `,
+        outlined: `
+          bg-[${designTokens.colors.card}]
+          border-2 border-[${designTokens.colors.primary[500]}]
+        `,
+        filled: `
+          bg-[${designTokens.colors.primary[50]}]
+          border-[${designTokens.colors.primary[200]}]
+        `,
+        success: `
+          bg-[${designTokens.colors.success[50]}]
+          border-[${designTokens.colors.success[200]}]
+        `,
+        warning: `
+          bg-[${designTokens.colors.warning[50]}]
+          border-[${designTokens.colors.warning[200]}]
+        `,
+        error: `
+          bg-[${designTokens.colors.error[50]}]
+          border-[${designTokens.colors.error[200]}]
+        `,
+        ghost: `
+          bg-transparent
+          border-[${designTokens.colors.border}]
+        `
+      },
+      size: {
+        sm: "p-3",
+        md: "p-4",
+        lg: "p-6",
+        xl: "p-8"
+      },
+      layout: {
+        default: "flex flex-col space-y-4",
+        horizontal: "flex flex-row space-x-4",
+        stacked: "flex flex-col space-y-2",
+        grid: "grid grid-cols-1 gap-4"
+      }
+{%- elif component_config.category == 'feedback' %}
+      variant: {
+        default: `
+          bg-[${designTokens.colors.background}]
+          border-[${designTokens.colors.border}]
+          text-[${designTokens.colors.foreground}]
+        `,
+        info: `
+          bg-[${designTokens.colors.info[50]}]
+          border-[${designTokens.colors.info[200]}]
+          text-[${designTokens.colors.info[800]}]
+        `,
+        success: `
+          bg-[${designTokens.colors.success[50]}]
+          border-[${designTokens.colors.success[200]}]
+          text-[${designTokens.colors.success[800]}]
+        `,
+        warning: `
+          bg-[${designTokens.colors.warning[50]}]
+          border-[${designTokens.colors.warning[200]}]
+          text-[${designTokens.colors.warning[800]}]
+        `,
+        error: `
+          bg-[${designTokens.colors.error[50]}]
+          border-[${designTokens.colors.error[200]}]
+          text-[${designTokens.colors.error[800]}]
+        `
+      },
+      size: {
+        sm: "p-3 text-sm",
+        md: "p-4 text-sm",
+        lg: "p-6 text-base"
+      },
+      dismissible: {
+        true: "pr-12",
+        false: ""
+      }
+{%- endif %}

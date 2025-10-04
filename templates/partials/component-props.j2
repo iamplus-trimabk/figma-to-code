@@ -1,0 +1,58 @@
+{%- if component_config.category == 'navigation' %}
+  // Enhanced button specific props
+  variant?: "primary" | "secondary" | "outline" | "ghost" | "success" | "warning" | "destructive"
+  size?: "sm" | "md" | "lg"
+  disabled?: boolean
+  loading?: boolean
+  onClick?: (event: React.MouseEvent) => void
+  type?: "button" | "submit" | "reset"
+{%- elif component_config.category == 'forms' %}
+  // Enhanced input specific props
+  type?: "text" | "email" | "password" | "search" | "number" | "tel" | "url"
+  variant?: "default" | "error" | "success" | "warning"
+  size?: "sm" | "md" | "lg"
+  label?: string
+  error?: string
+  helperText?: string
+  required?: boolean
+  disabled?: boolean
+  loading?: boolean
+  leftIcon?: React.ReactNode
+  rightIcon?: React.ReactNode
+  startAdornment?: React.ReactNode
+  endAdornment?: React.ReactNode
+  placeholder?: string
+  value?: string
+  defaultValue?: string
+  onChange?: (value: string) => void
+  onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void
+  onFocus?: (event: React.FocusEvent<HTMLInputElement>) => void
+{%- elif component_config.category == 'display' %}
+  // Enhanced card specific props
+  variant?: "default" | "elevated" | "outlined" | "filled" | "success" | "warning" | "error" | "ghost"
+  size?: "sm" | "md" | "lg" | "xl"
+  layout?: "default" | "horizontal" | "stacked" | "grid"
+  header?: React.ReactNode
+  footer?: React.ReactNode
+  title?: string
+  description?: string
+  actions?: React.ReactNode
+  image?: React.ReactNode
+  loading?: boolean
+  hoverable?: boolean
+  clickable?: boolean
+  onClick?: () => void
+{%- elif component_config.category == 'feedback' %}
+  // Enhanced alert specific props
+  variant?: "default" | "info" | "success" | "warning" | "error"
+  size?: "sm" | "md" | "lg"
+  title?: string
+  description?: string
+  icon?: React.ReactNode
+  dismissible?: boolean
+  onDismiss?: () => void
+  action?: React.ReactNode
+  visible?: boolean
+  autoHide?: boolean
+  autoHideDelay?: number
+{%- endif %}

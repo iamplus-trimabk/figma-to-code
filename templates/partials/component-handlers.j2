@@ -1,0 +1,66 @@
+{%- if component_config.category == 'navigation' %}
+  // No additional handlers needed for basic button
+{%- elif component_config.category == 'forms' %}
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value
+
+    if (value === undefined) {
+      setInternalValue(newValue)
+    }
+
+    onChange?.(newValue)
+  }
+
+  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    setIsFocused(true)
+    onFocus?.(e)
+  }
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    setIsFocused(false)
+    onBlur?.(e)
+  }
+
+  const handleMouseEnter = () => {
+    setIsHovering(true)
+    onHover?.(true)
+  }
+
+  const handleMouseLeave = () => {
+    setIsHovering(false)
+    onHover?.(false)
+  }
+
+  const handlePress = () => {
+    if (interactive && !disabled && !loading) {
+      onPress?.()
+    }
+  }
+
+  // Determine effective variant
+  const effectiveVariant = error ? "error" : variant
+{%- elif component_config.category == 'display' %}
+  const handleMouseEnter = () => {
+    if (hoverable) {
+      setIsHovered(true)
+    }
+  }
+
+  const handleMouseLeave = () => {
+    setIsHovered(false)
+  }
+
+  const handleClick = () => {
+    if (clickable && onClick) {
+      onClick()
+    }
+  }
+{%- elif component_config.category == 'feedback' %}
+  // Get default icon based on variant
+  const defaultIcon = React.useMemo(() => {
+    if (variant) {
+      return AlertIcons[variant as keyof typeof AlertIcons] || AlertIcons.default
+    }
+    return AlertIcons.default
+  }, [variant])
+{%- endif %}

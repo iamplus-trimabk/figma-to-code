@@ -1,0 +1,36 @@
+{%- if component_config.category == 'navigation' %}
+  // No additional state needed for basic button
+{%- elif component_config.category == 'forms' %}
+  const [isHovering, setIsHovering] = React.useState(false)
+  const [isFocused, setIsFocused] = React.useState(false)
+  const [internalValue, setInternalValue] = React.useState(defaultValue || "")
+
+  // Handle controlled/uncontrolled state
+  const currentValue = value !== undefined ? value : internalValue
+{%- elif component_config.category == 'display' %}
+  const [isHovered, setIsHovered] = React.useState(false)
+{%- elif component_config.category == 'feedback' %}
+  const [isVisible, setIsVisible] = React.useState(visible)
+
+  // Handle auto-hide functionality
+  React.useEffect(() => {
+    if (autoHide && visible) {
+      const timer = setTimeout(() => {
+        setIsVisible(false)
+        onDismiss?.()
+      }, autoHideDelay)
+
+      return () => clearTimeout(timer)
+    }
+  }, [autoHide, visible, autoHideDelay, onDismiss])
+
+  // Handle visibility prop changes
+  React.useEffect(() => {
+    setIsVisible(visible)
+  }, [visible])
+
+  const handleDismiss = () => {
+    setIsVisible(false)
+    onDismiss?.()
+  }
+{%- endif %}

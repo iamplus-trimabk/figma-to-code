@@ -1,0 +1,361 @@
+{%- if component_config.category == 'navigation' %}
+    // Don't render if not visible
+    if (!isVisible) {
+      return null
+    }
+
+    return (
+      <button
+        ref={ref}
+        className={ classesVariable }
+        style={inlineStyles}
+        id={id}
+        data-testid={testId}
+        disabled={disabled || loading}
+        onClick={onClick}
+        type={type}
+        {...props}
+      >
+        {loading ? (
+          <>
+            <LoadingSpinner />
+            {children && <span className="ml-2">{children}</span>}
+          </>
+        ) : (
+          children
+        )}
+      </button>
+    )
+{%- elif component_config.category == 'forms' %}
+    // Determine effective variant
+    const effectiveVariant = error ? "error" : variant
+
+    const inputElement = (
+      <input
+        type={type}
+        className={inputVariants({
+          variant: effectiveVariant,
+          size,
+          className: className || ''
+        })}
+        style={inlineStyles}
+        ref={ref}
+        id={id}
+        data-testid={testId}
+        disabled={disabled || loading}
+        value={currentValue}
+        placeholder={placeholder}
+        onChange={handleInputChange}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        onClick={handlePress}
+        aria-required={required}
+        aria-invalid={error ? 'true' : undefined}
+        aria-describedby={
+          error ? `${id}-error` :
+          helperText ? `${id}-helper` :
+          undefined
+        }
+        {...props}
+      />
+    )
+
+    const renderInput = () => {
+      // If there are adornments, render with wrapper
+      if (startAdornment || endAdornment || leftIcon || rightIcon || loading) {
+        return (
+          <div className="flex items-center w-full relative">
+            {startAdornment && (
+              <div className="absolute left-3 flex items-center pointer-events-none">
+                {startAdornment}
+              </div>
+            )}
+            {leftIcon && (
+              <div className="absolute left-3 flex items-center pointer-events-none">
+                {leftIcon}
+              </div>
+            )}
+
+            <input
+              type={type}
+              className={inputVariants({
+                variant: effectiveVariant,
+                size,
+                className: `${startAdornment || leftIcon ? 'pl-10' : ''} ${endAdornment || rightIcon || loading ? 'pr-10' : ''} ${className || ''}`
+              })}
+              style={inlineStyles}
+              ref={ref}
+              id={id}
+              data-testid={testId}
+              disabled={disabled || loading}
+              value={currentValue}
+              placeholder={placeholder}
+              onChange={handleInputChange}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              onClick={handlePress}
+              aria-required={required}
+              aria-invalid={error ? 'true' : undefined}
+              aria-describedby={
+                error ? `${id}-error` :
+                helperText ? `${id}-helper` :
+                undefined
+              }
+              {...props}
+            />
+
+            {endAdornment && (
+              <div className="absolute right-3 flex items-center pointer-events-none">
+                {endAdornment}
+              </div>
+            )}
+            {rightIcon && (
+              <div className="absolute right-3 flex items-center pointer-events-none">
+                {rightIcon}
+              </div>
+            )}
+            {loading && (
+              <div className="absolute right-3 flex items-center pointer-events-none">
+                <LoadingSpinner />
+              </div>
+            )}
+          </div>
+        )
+      }
+
+      return inputElement
+    }
+
+    // If there's a label, render with label wrapper
+    if (label) {
+      return (
+        <div className="space-y-2">
+          <label
+            htmlFor={id}
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            style={% raw %}{{{% endraw %}
+              fontFamily: fontFamily || designTokens.typography.fontFamily.join(', '),
+              fontSize: fontSize || designTokens.typography.fontSize.sm,
+              fontWeight: fontWeight || designTokens.typography.fontWeight.medium
+            }{% raw %}}{% endraw %}
+            {label}
+            {required && <span className="text-red-500 ml-1">*</span>}
+          </label>
+
+          {renderInput()}
+
+          {error && (
+            <p id={`${id}-error`} className="text-sm text-red-500" role="alert">
+              {error}
+            </p>
+          )}
+
+          {helperText && !error && (
+            <p id={`${id}-helper`} className="text-sm text-muted-foreground">
+              {helperText}
+            </p>
+          )}
+        </div>
+      )
+    }
+
+    return (
+      <div className="space-y-2">
+        {renderInput()}
+
+        {error && (
+          <p id={`${id}-error`} className="text-sm text-red-500" role="alert">
+            {error}
+          </p>
+        )}
+
+        {helperText && !error && (
+          <p id={`${id}-helper`} className="text-sm text-muted-foreground">
+            {helperText}
+          </p>
+        )}
+      </div>
+    )
+{%- elif component_config.category == 'display' %}
+    const cardClasses = [
+      cardVariants({ variant, size, layout }),
+      hoverable ? 'cursor-pointer transition-all duration-200' : '',
+      clickable ? 'cursor-pointer' : '',
+      hoverable && isHovered ? 'scale-[1.02] shadow-lg' : '',
+      className || ''
+    ].filter(Boolean).join(' ')
+
+    const renderContent = () => {
+      if (loading) {
+        return <CardSkeleton />
+      }
+
+      // If header, footer, title, or image are provided, use structured layout
+      if (header || footer || title || description || actions || image) {
+        return (
+          <>
+            {image && <div className="relative">{image}</div>}
+
+            {(header || title || description || actions) && (
+              <CardHeader title={title} description={description} actions={actions}>
+                {header}
+              </CardHeader>
+            )}
+
+            <CardContent className={layout === 'default' ? 'flex-1' : ''}>
+              {children}
+            </CardContent>
+
+            {footer && <CardFooter>{footer}</CardFooter>}
+          </>
+        )
+      }
+
+      // Otherwise, render children directly
+      return <>{children}</>
+    }
+
+    return (
+      <div
+        ref={ref}
+        className={cardClasses}
+        style={inlineStyles}
+        id={id}
+        data-testid={testId}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        onClick={handleClick}
+        role={clickable ? 'button' : undefined}
+        tabIndex={clickable ? 0 : undefined}
+        onKeyDown={(e) => {
+          if (clickable && (e.key === 'Enter' || e.key === ' ')) {
+            e.preventDefault()
+            onClick?.()
+          }
+        }}
+        aria-label={clickable ? title : undefined}
+        {...props}
+      >
+        {renderContent()}
+      </div>
+    )
+{%- elif component_config.category == 'feedback' %}
+    // Don't render if not visible
+    if (!isVisible) {
+      return null
+    }
+
+    const alertClasses = [
+      alertVariants({ variant, size, dismissible }),
+      className || ''
+    ].filter(Boolean).join(' ')
+
+    return (
+      <div
+        ref={ref}
+        className={alertClasses}
+        style={inlineStyles}
+        id={id}
+        data-testid={testId}
+        role="alert"
+        aria-live={variant === 'error' ? 'assertive' : 'polite'}
+        {...props}
+      >
+        {/* Icon section */}
+        {(icon !== undefined || defaultIcon) && (
+          <div className="flex items-start gap-3">
+            {icon || defaultIcon}
+            <div className="flex-1 min-w-0">
+              {/* Title section */}
+              {title && (
+                <h4 className="font-semibold mb-1" style={% raw %}{{{% endraw %}
+                  fontFamily: designTokens.typography.fontFamily.join(', '),
+                  fontSize: size === 'lg' ? designTokens.typography.fontSize.lg : designTokens.typography.fontSize.base,
+                  fontWeight: designTokens.typography.fontWeight.semibold
+                }{% raw %}}{% endraw %}>
+                  {title}
+                </h4>
+              )}
+
+              {/* Description section */}
+              {description && (
+                <p className="text-sm mb-2" style={% raw %}{{{% endraw %}
+                  fontFamily: designTokens.typography.fontFamily.join(', '),
+                  fontSize: designTokens.typography.fontSize.sm,
+                  fontWeight: designTokens.typography.fontWeight.regular,
+                  opacity: 0.8
+                }{% raw %}}{% endraw %}>
+                  {description}
+                </p>
+              )}
+
+              {/* Children content */}
+              {children && (
+                <div className="text-sm">
+                  {children}
+                </div>
+              )}
+
+              {/* Action section */}
+              {action && (
+                <div className="mt-3">
+                  {action}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* No icon layout */}
+        {icon === undefined && !defaultIcon && (
+          <div>
+            {/* Title section */}
+            {title && (
+              <h4 className="font-semibold mb-1" style={% raw %}{{{% endraw %}
+                fontFamily: designTokens.typography.fontFamily.join(', '),
+                fontSize: size === 'lg' ? designTokens.typography.fontSize.lg : designTokens.typography.fontSize.base,
+                fontWeight: designTokens.typography.fontWeight.semibold
+              }{% raw %}}{% endraw %}>
+                {title}
+              </h4>
+            )}
+
+            {/* Description section */}
+            {description && (
+              <p className="text-sm mb-2" style={% raw %}{{{% endraw %}
+                fontFamily: designTokens.typography.fontFamily.join(', '),
+                fontSize: designTokens.typography.fontSize.sm,
+                fontWeight: designTokens.typography.fontWeight.regular,
+                opacity: 0.8
+              }{% raw %}}{% endraw %}>
+                {description}
+              </p>
+            )}
+
+            {/* Children content */}
+            {children && (
+              <div className="text-sm">
+                {children}
+              </div>
+            )}
+
+            {/* Action section */}
+            {action && (
+              <div className="mt-3">
+                {action}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Dismiss button */}
+        {dismissible && onDismiss && (
+          <DismissButton onDismiss={handleDismiss} />
+        )}
+      </div>
+    )
+{%- endif %}

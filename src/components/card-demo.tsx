@@ -8,9 +8,9 @@
 "use client"
 
 import * as React from "react"
-import { Card, CardHeader, CardContent, CardFooter } from "./display/card"
-import { Button } from "./navigation/button"
-import { Input } from "./forms/input"
+import { Card, CardHeader, CardContent, CardFooter } from "./feedback/card"
+import { Button } from "./feedback/button"
+import { Input } from "./feedback/input"
 
 export default function CardDemo() {
   const [loadingCards, setLoadingCards] = React.useState<Set<string>>(new Set())

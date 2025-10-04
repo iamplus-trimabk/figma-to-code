@@ -1,0 +1,9 @@
+{%- if component_config.category == 'navigation' %}
+  variant, size
+{%- elif component_config.category == 'forms' %}
+  variant: effectiveVariant, size
+{%- elif component_config.category == 'display' %}
+  variant, size, layout
+{%- elif component_config.category == 'feedback' %}
+  variant, size, dismissible
+{%- endif %}

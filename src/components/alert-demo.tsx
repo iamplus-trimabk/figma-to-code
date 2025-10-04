@@ -9,7 +9,7 @@
 
 import * as React from "react"
 import { Alert } from "./feedback/alert"
-import { Button } from "./navigation/button"
+import { Button } from "./feedback/button"
 
 export default function AlertDemo() {
   const [visibleAlerts, setVisibleAlerts] = React.useState<Set<string>>(new Set())

@@ -1,0 +1,16 @@
+{%- if component_config.category == 'navigation' %}
+      variant: "primary",
+      size: "md"
+{%- elif component_config.category == 'forms' %}
+      variant: "default",
+      size: "md",
+      inputType: "text"
+{%- elif component_config.category == 'display' %}
+      variant: "default",
+      size: "md",
+      layout: "default"
+{%- elif component_config.category == 'feedback' %}
+      variant: "default",
+      size: "md",
+      dismissible: false
+{%- endif %}
