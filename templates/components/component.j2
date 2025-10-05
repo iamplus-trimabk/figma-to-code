@@ -139,7 +139,15 @@ const designTokens = {
 // {{ component_name }} variants using CVA with design tokens
 const {{ component_config.name | lower }}Variants = cva(
   // Base classes
-  "{{ component_config.base_classes }}",
+  {%- if component_config.category == 'navigation' %}
+  "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background",
+  {%- elif component_config.category == 'forms' %}
+  "flex w-full rounded-md border ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+  {%- elif component_config.category == 'display' %}
+  "rounded-lg border text-card-foreground shadow-sm",
+  {%- elif component_config.category == 'feedback' %}
+  "relative w-full rounded-lg border p-4",
+  {%- endif %},
   {
     variants: {
 {%- include 'partials/variants.j2' %}

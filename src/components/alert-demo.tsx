@@ -8,8 +8,8 @@
 "use client"
 
 import * as React from "react"
-import { Alert } from "./feedback/alert"
-import { Button } from "./feedback/button"
+// import { Alert } from "./feedback/alert" // No alert component generated yet
+import { Button } from "./navigation/button"
 
 export default function AlertDemo() {
   const [visibleAlerts, setVisibleAlerts] = React.useState<Set<string>>(new Set())

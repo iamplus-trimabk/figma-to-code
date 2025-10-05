@@ -2,10 +2,10 @@
 
 import * as React from "react"
 import { useState } from "react"
-import { Button } from "@/components/button-demo"
-import { Input } from "@/components/input-demo"
-import { Card } from "@/components/card-demo"
-import { Alert } from "@/components/alert-demo"
+import ButtonDemo from "@/components/button-demo"
+import InputDemo from "@/components/input-demo"
+import CardDemo from "@/components/card-demo"
+import AlertDemo from "@/components/alert-demo"
 
 // Tab interface
 interface Tab {
@@ -22,22 +22,22 @@ export default function ComponentsPage() {
     {
       id: "buttons",
       label: "Buttons",
-      component: <Button />
+      component: <ButtonDemo />
     },
     {
       id: "inputs",
       label: "Inputs",
-      component: <Input />
+      component: <InputDemo />
     },
     {
       id: "cards",
       label: "Cards",
-      component: <Card />
+      component: <CardDemo />
     },
     {
       id: "alerts",
       label: "Alerts",
-      component: <Alert />
+      component: <AlertDemo />
     }
   ]
 

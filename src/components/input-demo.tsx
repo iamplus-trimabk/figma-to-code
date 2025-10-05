@@ -8,8 +8,8 @@
 "use client"
 
 import * as React from "react"
-import { Input } from "./feedback/input"
-import { Button } from "./feedback/button"
+import { Input } from "./forms/input"
+import { Button } from "./navigation/button"
 
 export default function InputDemo() {
   const [formData, setFormData] = React.useState({

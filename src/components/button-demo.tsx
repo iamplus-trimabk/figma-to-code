@@ -8,7 +8,7 @@
 "use client"
 
 import * as React from "react"
-import { Button } from "./feedback/button"
+import { Button } from "./navigation/button"
 
 export default function ButtonDemo() {
   const [isLoading, setIsLoading] = React.useState(false)
