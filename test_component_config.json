@@ -1,0 +1,36 @@
+{
+  "interfaces": {
+    "components": {
+      "button": {
+        "name": "button",
+        "type": "navigation",
+        "category": "buttons",
+        "description": "Interactive button component with Figma design properties",
+        "props": {
+          "width": 120,
+          "height": 40,
+          "backgroundColor": "#6257db",
+          "borderRadius": 6,
+          "children": "Click me"
+        },
+        "variants": [
+          {
+            "name": "default",
+            "props": {
+              "backgroundColor": "#6257db",
+              "color": "#ffffff"
+            }
+          },
+          {
+            "name": "outline",
+            "props": {
+              "backgroundColor": "transparent",
+              "border": "1px solid #6257db",
+              "color": "#6257db"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

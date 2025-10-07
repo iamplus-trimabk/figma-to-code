@@ -1,0 +1,172 @@
+{
+  "interfaces": {
+    "components": {
+      "search": {
+        "name": "search",
+        "type": "forms",
+        "category": "forms",
+        "description": "Search input component with icon",
+        "props": {
+          "placeholder": "Search...",
+          "type": "search",
+          "width": 300,
+          "height": 40,
+          "backgroundColor": "#ffffff",
+          "border": "1px solid #e5e7eb",
+          "borderRadius": 8,
+          "padding": "8px 12px"
+        },
+        "variants": [
+          {
+            "name": "default",
+            "props": {
+              "backgroundColor": "#ffffff",
+              "border": "1px solid #e5e7eb"
+            }
+          },
+          {
+            "name": "focus",
+            "props": {
+              "border": "2px solid #6257db",
+              "outline": "none"
+            }
+          }
+        ]
+      },
+      "password": {
+        "name": "password",
+        "type": "forms",
+        "category": "forms",
+        "description": "Password input component with show/hide functionality",
+        "props": {
+          "placeholder": "Enter password",
+          "type": "password",
+          "width": 300,
+          "height": 40,
+          "backgroundColor": "#ffffff",
+          "border": "1px solid #e5e7eb",
+          "borderRadius": 8
+        },
+        "variants": [
+          {
+            "name": "default",
+            "props": {
+              "backgroundColor": "#ffffff",
+              "border": "1px solid #e5e7eb"
+            }
+          },
+          {
+            "name": "error",
+            "props": {
+              "border": "1px solid #ef4444"
+            }
+          }
+        ]
+      },
+      "remember-me": {
+        "name": "remember-me",
+        "type": "forms",
+        "category": "forms",
+        "description": "Checkbox component for remember me functionality",
+        "props": {
+          "checked": false,
+          "label": "Remember me",
+          "width": 20,
+          "height": 20
+        },
+        "variants": [
+          {
+            "name": "unchecked",
+            "props": {
+              "checked": false
+            }
+          },
+          {
+            "name": "checked",
+            "props": {
+              "checked": true
+            }
+          }
+        ]
+      },
+      "forgot-password": {
+        "name": "forgot-password",
+        "type": "navigation",
+        "category": "navigation",
+        "description": "Forgot password link component",
+        "props": {
+          "text": "Forgot password?",
+          "color": "#6257db",
+          "textDecoration": "underline"
+        },
+        "variants": [
+          {
+            "name": "default",
+            "props": {
+              "color": "#6257db"
+            }
+          },
+          {
+            "name": "hover",
+            "props": {
+              "color": "#4e45af"
+            }
+          }
+        ]
+      },
+      "login": {
+        "name": "login",
+        "type": "navigation",
+        "category": "navigation",
+        "description": "Login button or text component",
+        "props": {
+          "text": "Login",
+          "backgroundColor": "#6257db",
+          "color": "#ffffff",
+          "padding": "12px 24px",
+          "borderRadius": 8
+        },
+        "variants": [
+          {
+            "name": "default",
+            "props": {
+              "backgroundColor": "#6257db"
+            }
+          },
+          {
+            "name": "hover",
+            "props": {
+              "backgroundColor": "#4e45af"
+            }
+          }
+        ]
+      },
+      "bg": {
+        "name": "bg",
+        "type": "display",
+        "category": "display",
+        "description": "Background component for containers",
+        "props": {
+          "backgroundColor": "#ffffff",
+          "width": "100%",
+          "height": "100%",
+          "borderRadius": 8
+        },
+        "variants": [
+          {
+            "name": "default",
+            "props": {
+              "backgroundColor": "#ffffff"
+            }
+          },
+          {
+            "name": "gray",
+            "props": {
+              "backgroundColor": "#f9fafb"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

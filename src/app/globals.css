@@ -27,3 +27,127 @@
 @layer utilities {
   /* Custom utility styles if needed */
 }
+
+/* Design Token Classes - Fallback for Generated Components */
+/* Primary Color Palette */
+.bg-primary-50 { background-color: #f7f6fd; }
+.bg-primary-100 { background-color: #efeefb; }
+.bg-primary-200 { background-color: #dfddf7; }
+.bg-primary-300 { background-color: #cfccf4; }
+.bg-primary-400 { background-color: #c0bbf0; }
+.bg-primary-500 { background-color: #6257db; }
+.bg-primary-600 { background-color: #584ec5; }
+.bg-primary-700 { background-color: #4e45af; }
+.bg-primary-800 { background-color: #443c99; }
+.bg-primary-900 { background-color: #3a3483; }
+.bg-primary-950 { background-color: #312b6d; }
+
+.text-primary-50 { color: #f7f6fd; }
+.text-primary-100 { color: #efeefb; }
+.text-primary-200 { color: #dfddf7; }
+.text-primary-300 { color: #cfccf4; }
+.text-primary-400 { color: #c0bbf0; }
+.text-primary-500 { color: #6257db; }
+.text-primary-600 { color: #584ec5; }
+.text-primary-700 { color: #4e45af; }
+.text-primary-800 { color: #443c99; }
+.text-primary-900 { color: #3a3483; }
+.text-primary-950 { color: #312b6d; }
+
+.border-primary-200 { border-color: #efeefb; }
+.border-primary-300 { border-color: #dfddf7; }
+.border-primary-500 { border-color: #6257db; }
+.border-primary-600 { border-color: #584ec5; }
+.border-primary-700 { border-color: #4e45af; }
+
+/* Success Color Palette */
+.bg-success-50 { background-color: #f4fbf5; }
+.bg-success-100 { background-color: #e9f7ec; }
+.bg-success-200 { background-color: #d4f0da; }
+.bg-success-300 { background-color: #bee8c7; }
+.bg-success-400 { background-color: #a9e1b5; }
+.bg-success-500 { background-color: #28b446; }
+.bg-success-600 { background-color: #24a23f; }
+.bg-success-700 { background-color: #209038; }
+.bg-success-800 { background-color: #1c7d31; }
+.bg-success-900 { background-color: #186c2a; }
+.bg-success-950 { background-color: #145a23; }
+
+.text-success-50 { color: #f4fbf5; }
+.text-success-100 { color: #e9f7ec; }
+.text-success-200 { color: #d4f0da; }
+.text-success-300 { color: #bee8c7; }
+.text-success-400 { color: #a9e1b5; }
+.text-success-500 { color: #28b446; }
+.text-success-600 { color: #24a23f; }
+.text-success-700 { color: #209038; }
+.text-success-800 { color: #1c7d31; }
+.text-success-900 { color: #186c2a; }
+.text-success-950 { color: #145a23; }
+
+.border-success-200 { border-color: #e9f7ec; }
+.border-success-500 { border-color: #28b446; }
+.border-success-600 { border-color: #24a23f; }
+
+/* Warning Color Palette */
+.bg-warning-50 { background-color: #fefbf2; }
+.bg-warning-100 { background-color: #fef8e5; }
+.bg-warning-200 { background-color: #fef1cc; }
+.bg-warning-300 { background-color: #fdeab2; }
+.bg-warning-400 { background-color: #fde399; }
+.bg-warning-500 { background-color: #fbbb00; }
+.bg-warning-600 { background-color: #e1a800; }
+.bg-warning-700 { background-color: #c89500; }
+.bg-warning-800 { background-color: #af8200; }
+.bg-warning-900 { background-color: #967000; }
+.bg-warning-950 { background-color: #7d5d00; }
+
+.text-warning-50 { color: #fefbf2; }
+.text-warning-100 { color: #fef8e5; }
+.text-warning-200 { color: #fef1cc; }
+.text-warning-300 { color: #fdeab2; }
+.text-warning-400 { color: #fde399; }
+.text-warning-500 { color: #fbbb00; }
+.text-warning-600 { color: #e1a800; }
+.text-warning-700 { color: #c89500; }
+.text-warning-800 { color: #af8200; }
+.text-warning-900 { color: #967000; }
+.text-warning-950 { color: #7d5d00; }
+
+.border-warning-200 { border-color: #fef1cc; }
+.border-warning-500 { border-color: #fbbb00; }
+
+/* Error Color Palette */
+.bg-error-50 { background-color: #fef2f2; }
+.bg-error-100 { background-color: #fee2e2; }
+.bg-error-200 { background-color: #fecaca; }
+.bg-error-300 { background-color: #fca5a5; }
+.bg-error-400 { background-color: #f87171; }
+.bg-error-500 { background-color: #ef4444; }
+.bg-error-600 { background-color: #dc2626; }
+.bg-error-700 { background-color: #b91c1c; }
+.bg-error-800 { background-color: #991b1b; }
+.bg-error-900 { background-color: #7f1d1d; }
+.bg-error-950 { background-color: #450a0a; }
+
+.text-error-50 { color: #fef2f2; }
+.text-error-100 { color: #fee2e2; }
+.text-error-200 { color: #fecaca; }
+.text-error-300 { color: #fca5a5; }
+.text-error-400 { color: #f87171; }
+.text-error-500 { color: #ef4444; }
+.text-error-600 { color: #dc2626; }
+.text-error-700 { color: #b91c1c; }
+.text-error-800 { color: #991b1b; }
+.text-error-900 { color: #7f1d1d; }
+.text-error-950 { color: #450a0a; }
+
+.border-error-200 { border-color: #fee2e2; }
+.border-error-500 { border-color: #ef4444; }
+.border-error-600 { border-color: #dc2626; }
+
+/* Ring Colors for Focus States */
+.ring-primary-600 { --tw-ring-color: #584ec5; }
+.ring-success-600 { --tw-ring-color: #24a23f; }
+.ring-warning-600 { --tw-ring-color: #e1a800; }
+.ring-error-600 { --tw-ring-color: #dc2626; }

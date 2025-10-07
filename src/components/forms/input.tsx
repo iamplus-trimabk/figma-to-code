@@ -102,11 +102,15 @@ const designTokens = {
  medium: "500",
  semibold: "600"
  }
-  }}// Input variants using CVA with design tokens
+  }
+}
+
+// Input variants using CVA with design tokens
 const searchVariants = cva(
- // Base classes "flex w-full rounded-md border ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",,
+ "flex w-full rounded-md border ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
  {
- variants: { variant: {
+ variants: {
+ variant: {
  default: "border-gray-300 bg-white",
  error: "border-error-500 bg-error-50",
  success: "border-success-500 bg-success-50",
@@ -120,7 +124,7 @@ const searchVariants = cva(
   },
  defaultVariants: { variant: "default",
  size: "md",
- inputType: "text" }
+ }
   }
 )
 // Export Input props interface matching Stage 2 Search component
@@ -233,16 +237,14 @@ const Input = React.forwardRef< HTMLInputElement,
  fontSize,
  fontWeight,
  textAlign,
-  ...props
+ ...props
 }, ref) => {
-  const [isHovering, setIsHovering] = React.useState(false)
-  const [isFocused, setIsFocused] = React.useState(false)
-  const [internalValue, setInternalValue] = React.useState(defaultValue || "")
-
-  // Handle controlled/uncontrolled state
-  const currentValue = value !== undefined ? value : internalValue
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+ const [isHovering, setIsHovering] = React.useState(false)
+ const [isFocused, setIsFocused] = React.useState(false)
+ const [internalValue, setInternalValue] = React.useState(defaultValue || "");
+ // Handle controlled/uncontrolled state
+ const currentValue = value !== undefined ? value : internalValue;
+ const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
  const newValue = e.target.value;
  if (value === undefined) {
  setInternalValue(newValue)
@@ -295,8 +297,7 @@ const Input = React.forwardRef< HTMLInputElement,
  const searchClasses = [
  searchVariants({ variant: effectiveVariant, size }),
  className || ''
- ].filter(Boolean).join(' ')
-
+ ].filter(Boolean).join(' ');
  const inputElement = (
  <input
  type = {type}
@@ -327,8 +328,7 @@ const Input = React.forwardRef< HTMLInputElement,
  }
  {...props}
  />
- )
-
+ );
  const renderInput = () => {
  // If there are adornments, render with wrapper
  if (startAdornment || endAdornment || leftIcon || rightIcon || loading) {
@@ -405,7 +405,8 @@ const Input = React.forwardRef< HTMLInputElement,
  fontFamily: fontFamily || "'Poppins', sans-serif",
  fontSize: fontSize || "14px",
  fontWeight: fontWeight || "500"
- }}
+ }
+  }
  >
  {label}
  {required && <span className="text-red-500 ml-1">*</span>}

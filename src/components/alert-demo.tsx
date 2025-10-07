@@ -8,7 +8,21 @@
 "use client"
 
 import * as React from "react"
-// import { Alert } from "./feedback/alert" // No alert component generated yet
+// Placeholder for Alert component since it wasn't generated
+const Alert = ({ variant, title, description, closable, onClose, children, ...props }: any) => (
+  <div className={`p-4 border rounded-md ${variant === 'destructive' ? 'bg-red-50 border-red-200 text-red-800' : 'bg-blue-50 border-blue-200 text-blue-800'}`} {...props}>
+    <div className="flex justify-between items-start">
+      <div>
+        {title && <h4 className="font-semibold">{title}</h4>}
+        {description && <p className="text-sm mt-1">{description}</p>}
+        {children}
+      </div>
+      {closable && (
+        <button onClick={onClose} className="ml-4 text-sm underline">✕</button>
+      )}
+    </div>
+  </div>
+)
 import { Button } from "./navigation/button"
 
 export default function AlertDemo() {
@@ -106,7 +120,7 @@ export default function AlertDemo() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Dismissible Alert */}
             <div className="space-y-2">
-              <Button onClick={() => showAlert('dismissible')} size="sm">
+              <Button onClick={() => showAlert('dismissible')}>
                 Show Dismissible Alert
               </Button>
               {visibleAlerts.has('dismissible') && (
@@ -122,7 +136,7 @@ export default function AlertDemo() {
 
             {/* Auto-Hide Alert */}
             <div className="space-y-2">
-              <Button onClick={() => handleAutoHide('autohide')} size="sm" variant="success">
+              <Button onClick={() => handleAutoHide('autohide')}>
                 Show Auto-Hide Alert
               </Button>
               {visibleAlerts.has('autohide') && (

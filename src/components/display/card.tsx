@@ -95,11 +95,15 @@ const designTokens = {
  md: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
  lg: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)"
  }
-  },}// Card variants using CVA with design tokens
+ }
+}
+
+// Card variants using CVA with design tokens
 const loginVariants = cva(
- // Base classes "rounded-lg border text-card-foreground shadow-sm",,
+ "rounded-lg border text-card-foreground shadow-sm",
  {
- variants: { variant: {
+ variants: {
+ variant: {
  default: "bg-white border-gray-200",
  elevated: "bg-white border-gray-200 shadow-md",
  outlined: "bg-white border-gray-300",
@@ -164,8 +168,7 @@ const CardSkeleton = () => (
  <div className="h-3 bg-gray-200 rounded w-5/6"></div>
  </div>
  </div>
-)
-
+);
 // Card Header component
 const CardHeader = React.forwardRef<
  HTMLDivElement,
@@ -241,11 +244,10 @@ const Card = React.forwardRef< HTMLDivElement,
  hoverable = false,
  clickable = false,
  onClick,
-  ...props
+ ...props
 }, ref) => {
-  const [isHovered, setIsHovered] = React.useState(false)
-
-  const handleMouseEnter = () => {
+ const [isHovered, setIsHovered] = React.useState(false);
+ const handleMouseEnter = () => {
  if (hoverable) {
  setIsHovered(true)
  }
@@ -278,9 +280,8 @@ const Card = React.forwardRef< HTMLDivElement,
  const loginClasses = [
  loginVariants({ variant, size, layout }),
  className || ''
- ].filter(Boolean).join(' ')
-
-  const cardClasses = [
+ ].filter(Boolean).join(' ');
+ const cardClasses = [
  loginVariants({ variant, size, layout }),
  hoverable ? 'cursor-pointer transition-all duration-200' : '',
  clickable ? 'cursor-pointer' : '',
@@ -311,11 +312,10 @@ const Card = React.forwardRef< HTMLDivElement,
  {footer && <CardFooter>{footer}</CardFooter>}
  </>
  )
- }
-
+ };
  // Otherwise, render children directly
  return <>{children}</>
- }
+ };
  return (
  <div
  ref = {ref}
