@@ -4,24 +4,28 @@
 {%- if component_config.category == 'navigation' %}
       variant: {
         {# Use Figma design tokens for primary colors #}
-        {%- set primary_bg = design_vars.component_defaults.button.primary_bg|join(' ') %}
-        {%- set primary_text = design_vars.component_defaults.button.primary_text|join(' ') %}
-        {%- set success_bg = design_vars.component_defaults.button.success_bg|join(' ') %}
-        {%- set success_text = design_vars.component_defaults.button.success_text|join(' ') %}
-        {%- set warning_bg = design_vars.component_defaults.button.warning_bg|join(' ') %}
-        {%- set warning_text = design_vars.component_defaults.button.warning_text|join(' ') %}
-        {%- set error_bg = design_vars.component_defaults.button.error_bg|join(' ') %}
-        {%- set error_text = design_vars.component_defaults.button.error_text|join(' ') %}
+        {%- set primary_bg = design_vars.component_defaults.button.primary_bg|join(' ') if design_vars.component_defaults.button.primary_bg else 'bg-primary-500' %}
+        {%- set primary_text = design_vars.component_defaults.button.primary_text|join(' ') if design_vars.component_defaults.button.primary_text else 'text-primary-foreground' %}
+        {%- set success_bg = design_vars.component_defaults.button.success_bg|join(' ') if design_vars.component_defaults.button.success_bg else 'bg-success-500' %}
+        {%- set success_text = design_vars.component_defaults.button.success_text|join(' ') if design_vars.component_defaults.button.success_text else 'text-success-foreground' %}
+        {%- set warning_bg = design_vars.component_defaults.button.warning_bg|join(' ') if design_vars.component_defaults.button.warning_bg else 'bg-warning-500' %}
+        {%- set warning_text = design_vars.component_defaults.button.warning_text|join(' ') if design_vars.component_defaults.button.warning_text else 'text-warning-foreground' %}
+        {%- set error_bg = design_vars.component_defaults.button.error_bg|join(' ') if design_vars.component_defaults.button.error_bg else 'bg-error-500' %}
+        {%- set error_text = design_vars.component_defaults.button.error_text|join(' ') if design_vars.component_defaults.button.error_text else 'text-error-foreground' %}
 
         default: "{{ primary_bg }} {{ primary_text }} hover:opacity-90",
         primary: "{{ primary_bg }} {{ primary_text }} hover:opacity-90",
         destructive: "{{ error_bg }} {{ error_text }} hover:opacity-90",
-        outline: "border {{ design_vars.color_mappings.gray_200.border_classes|join(' ') if design_vars.color_mappings.gray_200 and design_vars.color_mappings.gray_200.border_classes else 'border-gray-300' }} {{ design_vars.color_mappings.white.bg_classes|join(' ') if design_vars.color_mappings.white and design_vars.color_mappings.white.bg_classes else 'bg-white' }} hover:{{ design_vars.color_mappings.gray_50.bg_classes|join(' ') if design_vars.color_mappings.gray_50 and design_vars.color_mappings.gray_50.bg_classes else 'bg-gray-50' }}",
-        secondary: "{{ design_vars.color_mappings.gray_100.bg_classes|join(' ') if design_vars.color_mappings.gray_100 and design_vars.color_mappings.gray_100.bg_classes else 'bg-gray-100' }} {{ design_vars.color_mappings.gray_900.text_classes|join(' ') if design_vars.color_mappings.gray_900 and design_vars.color_mappings.gray_900.text_classes else 'text-gray-900' }} hover:{{ design_vars.color_mappings.gray_200.bg_classes|join(' ') if design_vars.color_mappings.gray_200 and design_vars.color_mappings.gray_200.bg_classes else 'bg-gray-200' }}",
-        ghost: "hover:{{ design_vars.color_mappings.gray_100.bg_classes|join(' ') if design_vars.color_mappings.gray_100 and design_vars.color_mappings.gray_100.bg_classes else 'bg-gray-100' }}",
-        link: "underline-offset-4 hover:underline {{ primary_text }}",
+        outline: "border border-gray-200 bg-white hover:bg-gray-50 text-gray-900",
+        secondary: "bg-gray-100 text-gray-900 hover:bg-gray-200",
+        ghost: "hover:bg-gray-100 text-gray-900",
+        link: "underline-offset-4 hover:underline text-primary",
         success: "{{ success_bg }} {{ success_text }} hover:opacity-90",
         warning: "{{ warning_bg }} {{ warning_text }} hover:opacity-90",
+        # Enhanced social login variants based on our manual fixes
+        google: "bg-white text-black border border-gray-200 hover:bg-gray-50 flex items-center justify-center gap-2",
+        facebook: "bg-blue-600 text-white border border-blue-600 hover:bg-blue-700 flex items-center justify-center gap-2",
+        github: "bg-gray-900 text-white border border-gray-900 hover:bg-gray-800 flex items-center justify-center gap-2",
       },
       size: {
         {# Use Figma spacing values #}
