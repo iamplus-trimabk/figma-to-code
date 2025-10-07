@@ -38,24 +38,48 @@ export class PageAssembler {
   /**
    * Convert Figma layout to responsive CSS layout
    */
-  private figmaToResponsiveLayout(component: ParsedComponent, index: number, totalComponents: number): React.CSSProperties {
+  private figmaToResponsiveLayout(component: ParsedComponent, index: number, totalComponents: number, screenLayout?: any): React.CSSProperties {
     const styles: React.CSSProperties = {}
 
-    // Remove absolute positioning - use flexbox/grid instead
-    // Use flexbox for responsive layout
-    styles.display = 'flex'
-    styles.flexDirection = 'column'
-    styles.alignItems = 'center'
-    styles.justifyContent = 'center'
-    styles.margin = '0.5rem'
-    styles.padding = '1rem'
-
-    // Maintain aspect ratio using responsive sizing
-    if (component.size) {
-      const aspectRatio = component.size.width / component.size.height
-      styles.maxWidth = '100%'
-      styles.width = 'auto'
-      styles.height = 'auto'
+    // Check if this is the main screen container
+    if (component.name === 'Login' && component.type === 'frame') {
+      // Use horizontal layout for the main login screen
+      styles.display = 'flex'
+      styles.flexDirection = 'row'
+      styles.alignItems = 'stretch'
+      styles.justifyContent = 'center'
+      styles.minHeight = '100vh'
+      styles.backgroundColor = screenLayout?.background_color || '#f4f4f4'
+      styles.padding = '2rem'
+      styles.gap = '2rem'
+    } else if (component.name === 'bg') {
+      // Handle the white background container - this should be a card container
+      styles.display = 'flex'
+      styles.flexDirection = 'column'
+      styles.alignItems = 'center'
+      styles.justifyContent = 'flex-start'
+      styles.backgroundColor = component.style?.background_colors?.[0] || '#ffffff'
+      styles.borderRadius = `${Math.min(component.style?.border_radius || 8, 16)}px`
+      styles.padding = '2rem'
+      styles.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)'
+      styles.flex = '1'
+      styles.maxWidth = '400px' // More constrained to match Figma design
+      styles.width = '100%'
+      styles.position = 'relative' // Allow proper positioning of child elements
+    } else if (component.name === 'Illustration') {
+      // Handle the illustration area
+      styles.display = 'flex'
+      styles.alignItems = 'center'
+      styles.justifyContent = 'center'
+      styles.flex = '1'
+      styles.maxWidth = '600px'
+    } else {
+      // For form components, use proper spacing within the bg container
+      styles.display = 'flex'
+      styles.flexDirection = 'column'
+      styles.alignItems = 'stretch'
+      styles.margin = '0.5rem 0'
+      styles.width = '100%'
     }
 
     return styles
@@ -234,12 +258,20 @@ export class PageAssembler {
           componentProps.variant = 'default'
           componentProps.type = 'submit'
           componentProps.className += ' login-btn'
+          // Apply primary purple color for login button
+          ;(styles as any).backgroundColor = '#6257db' // Primary purple from design tokens
+          ;(styles as any).color = '#ffffff'
+          ;(styles as any).border = 'none'
+          ;(styles as any).fontWeight = '500'
+          ;(styles as any).fontSize = '16px'
+          ;(styles as any).padding = '12px 24px'
+          ;(styles as any).cursor = 'pointer'
+          ;(styles as any).transition = 'all 0.2s ease'
           // Apply button styling from Figma
-          if (component.style?.background_colors?.length > 0) {
-            ;(styles as any).backgroundColor = component.style.background_colors[0]
-          }
           if (component.style?.border_radius) {
             ;(styles as any).borderRadius = `${component.style.border_radius}px`
+          } else {
+            ;(styles as any).borderRadius = '8px'
           }
           break
 
@@ -349,7 +381,94 @@ export class PageAssembler {
 
     const components = this.layoutParser.getRenderableComponents(screenName)
 
-    // Responsive screen styles - no more fixed dimensions!
+    // For the Login screen, use horizontal layout with illustration and form card
+    if (screenName === 'Login') {
+      const loginScreenStyles: React.CSSProperties = {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
+        minHeight: '100vh',
+        backgroundColor: screen.backgroundColor || '#f4f4f4',
+        padding: '2rem',
+        gap: '2rem'
+      }
+
+      // Separate illustration and form components
+      const illustrationComponent = components.find(c => c.name === 'Illustration')
+      const bgComponent = components.find(c => c.name === 'bg')
+      const otherComponents = components.filter(c => c.name !== 'Illustration' && c.name !== 'bg')
+
+      return React.createElement(
+        'div',
+        {
+          className: 'responsive-screen-login',
+          style: loginScreenStyles
+        },
+        // Illustration side
+        illustrationComponent && React.createElement(
+          'div',
+          {
+            key: 'illustration-side',
+            style: {
+              flex: '1',
+              maxWidth: '600px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }
+          },
+          this.assembleComponent({
+            component: illustrationComponent,
+            index: 0,
+            totalComponents: 1
+          })
+        ),
+        // Form card side (white background)
+        bgComponent && React.createElement(
+          'div',
+          {
+            key: 'form-card-side',
+            style: {
+              flex: '1',
+              maxWidth: '400px',
+              width: '100%',
+              backgroundColor: bgComponent.style?.background_colors?.[0] || '#ffffff',
+              borderRadius: `${Math.min(bgComponent.style?.border_radius || 8, 16)}px`,
+              padding: '2rem',
+              boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'flex-start'
+            }
+          },
+          // Render all form components within the white card
+          otherComponents.map((component, index) => {
+            const assembledComponent = this.assembleComponent({
+              component,
+              index,
+              totalComponents: otherComponents.length
+            })
+            if (React.isValidElement(assembledComponent)) {
+              return React.cloneElement(assembledComponent, {
+                key: `${component.name}-${component.index || index}`,
+                style: {
+                  ...assembledComponent.props.style,
+                  width: '100%',
+                  maxWidth: '100%',
+                  margin: '0.5rem 0'
+                }
+              })
+            }
+            return assembledComponent
+          })
+        )
+      )
+    }
+
+    // Default screen assembly for non-login screens
     const screenStyles: React.CSSProperties = {
       display: 'flex',
       flexDirection: 'column',
@@ -360,7 +479,7 @@ export class PageAssembler {
       minHeight: '100vh',
       padding: '2rem 1rem',
       backgroundColor: screen.backgroundColor || '#ffffff',
-      overflow: 'visible', // Changed from hidden to visible
+      overflow: 'visible',
     }
 
     return React.createElement(
