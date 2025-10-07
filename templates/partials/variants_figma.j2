@@ -1,0 +1,111 @@
+{# Enhanced Variants Template using Figma Design Properties #}
+{# This template uses actual design values from Figma instead of static patterns #}
+
+{%- if component_config.category == 'navigation' %}
+      variant: {
+        {# Use Figma design tokens for primary colors #}
+        {%- set primary_bg = design_vars.component_defaults.button.primary_bg|join(' ') %}
+        {%- set primary_text = design_vars.component_defaults.button.primary_text|join(' ') %}
+        {%- set success_bg = design_vars.component_defaults.button.success_bg|join(' ') %}
+        {%- set success_text = design_vars.component_defaults.button.success_text|join(' ') %}
+        {%- set warning_bg = design_vars.component_defaults.button.warning_bg|join(' ') %}
+        {%- set warning_text = design_vars.component_defaults.button.warning_text|join(' ') %}
+        {%- set error_bg = design_vars.component_defaults.button.error_bg|join(' ') %}
+        {%- set error_text = design_vars.component_defaults.button.error_text|join(' ') %}
+
+        default: "{{ primary_bg }} {{ primary_text }} hover:opacity-90",
+        primary: "{{ primary_bg }} {{ primary_text }} hover:opacity-90",
+        destructive: "{{ error_bg }} {{ error_text }} hover:opacity-90",
+        outline: "border {{ design_vars.color_mappings.gray_200.border_classes|join(' ') if design_vars.color_mappings.gray_200 and design_vars.color_mappings.gray_200.border_classes else 'border-gray-300' }} {{ design_vars.color_mappings.white.bg_classes|join(' ') if design_vars.color_mappings.white and design_vars.color_mappings.white.bg_classes else 'bg-white' }} hover:{{ design_vars.color_mappings.gray_50.bg_classes|join(' ') if design_vars.color_mappings.gray_50 and design_vars.color_mappings.gray_50.bg_classes else 'bg-gray-50' }}",
+        secondary: "{{ design_vars.color_mappings.gray_100.bg_classes|join(' ') if design_vars.color_mappings.gray_100 and design_vars.color_mappings.gray_100.bg_classes else 'bg-gray-100' }} {{ design_vars.color_mappings.gray_900.text_classes|join(' ') if design_vars.color_mappings.gray_900 and design_vars.color_mappings.gray_900.text_classes else 'text-gray-900' }} hover:{{ design_vars.color_mappings.gray_200.bg_classes|join(' ') if design_vars.color_mappings.gray_200 and design_vars.color_mappings.gray_200.bg_classes else 'bg-gray-200' }}",
+        ghost: "hover:{{ design_vars.color_mappings.gray_100.bg_classes|join(' ') if design_vars.color_mappings.gray_100 and design_vars.color_mappings.gray_100.bg_classes else 'bg-gray-100' }}",
+        link: "underline-offset-4 hover:underline {{ primary_text }}",
+        success: "{{ success_bg }} {{ success_text }} hover:opacity-90",
+        warning: "{{ warning_bg }} {{ warning_text }} hover:opacity-90",
+      },
+      size: {
+        {# Use Figma spacing values #}
+        {%- set sm_padding = design_vars.spacing_mappings.md.padding_classes|join(' ') if design_vars.spacing_mappings.md and design_vars.spacing_mappings.md.padding_classes else 'p-3' %}
+        {%- set md_padding = design_vars.spacing_mappings.md.padding_classes|join(' ') if design_vars.spacing_mappings.md and design_vars.spacing_mappings.md.padding_classes else 'p-3' %}
+        {%- set lg_padding = design_vars.spacing_mappings.lg.padding_classes|join(' ') if design_vars.spacing_mappings.lg and design_vars.spacing_mappings.lg.padding_classes else 'p-4' %}
+
+        default: "h-10 {{ md_padding }}",
+        sm: "h-9 {{ sm_padding }} {{ design_vars.component_defaults.button.border_radius|join(' ') }}",
+        md: "h-10 {{ md_padding }}",
+        lg: "h-11 {{ lg_padding }} {{ design_vars.component_defaults.button.border_radius|join(' ') }}",
+        icon: "h-10 w-10",
+      }
+{%- elif component_config.category == 'forms' %}
+      variant: {
+        {# Use Figma design tokens for form inputs #}
+        default: "{{ design_vars.component_defaults.input.border_color|join(' ') }} {{ design_vars.component_defaults.input.background|join(' ') }}",
+        error: "{{ design_vars.color_mappings.error.border_classes|join(' ') }} {{ design_vars.color_mappings.error.bg_classes|join(' ') if design_vars.color_mappings.error.bg_classes else design_vars.color_mappings.gray_50.bg_classes|join(' ') }}",
+        success: "{{ design_vars.color_mappings.success.border_classes|join(' ') }} {{ design_vars.color_mappings.success.bg_classes|join(' ') if design_vars.color_mappings.success.bg_classes else design_vars.color_mappings.gray_50.bg_classes|join(' ') }}",
+        warning: "{{ design_vars.color_mappings.warning.border_classes|join(' ') }} {{ design_vars.color_mappings.warning.bg_classes|join(' ') if design_vars.color_mappings.warning.bg_classes else design_vars.color_mappings.gray_50.bg_classes|join(' ') }}",
+      },
+      size: {
+        {%- set sm_padding = design_vars.spacing_mappings.md.padding_classes|join(' ') if design_vars.spacing_mappings.md and design_vars.spacing_mappings.md.padding_classes else 'p-3' %}
+        {%- set md_padding = design_vars.spacing_mappings.md.padding_classes|join(' ') if design_vars.spacing_mappings.md and design_vars.spacing_mappings.md.padding_classes else 'p-3' %}
+        {%- set lg_padding = design_vars.spacing_mappings.lg.padding_classes|join(' ') if design_vars.spacing_mappings.lg and design_vars.spacing_mappings.lg.padding_classes else 'p-4' %}
+
+        sm: "h-9 {{ sm_padding }} text-sm",
+        md: "h-10 {{ md_padding }} text-sm",
+        lg: "h-11 {{ lg_padding }} text-base",
+      }
+{%- elif component_config.category == 'display' %}
+      variant: {
+        {# Use Figma design tokens for display components #}
+        default: "{{ design_vars.component_defaults.card.background|join(' ') }} {{ design_vars.component_defaults.card.border_color|join(' ') }}",
+        elevated: "{{ design_vars.component_defaults.card.background|join(' ') }} {{ design_vars.component_defaults.card.border_color|join(' ') }} {{ design_vars.component_defaults.card.shadow|join(' ') }}",
+        outlined: "{{ design_vars.component_defaults.card.background|join(' ') }} {{ design_vars.color_mappings.gray_300.border_classes|join(' ') if design_vars.color_mappings.gray_300 and design_vars.color_mappings.gray_300.border_classes else design_vars.color_mappings.gray_200.border_classes|join(' ') if design_vars.color_mappings.gray_200 and design_vars.color_mappings.gray_200.border_classes else 'border-gray-300' }}",
+        filled: "{{ design_vars.color_mappings.gray_50.bg_classes|join(' ') }} {{ design_vars.component_defaults.card.border_color|join(' ') }}",
+        success: "{{ design_vars.color_mappings.success.bg_classes|join(' ') if design_vars.color_mappings.success.bg_classes else design_vars.color_mappings.gray_50.bg_classes|join(' ') }} {{ design_vars.color_mappings.success.border_classes|join(' ') if design_vars.color_mappings.success.border_classes else design_vars.color_mappings.gray_200.border_classes|join(' ') }}",
+        warning: "{{ design_vars.color_mappings.warning.bg_classes|join(' ') if design_vars.color_mappings.warning.bg_classes else design_vars.color_mappings.gray_50.bg_classes|join(' ') }} {{ design_vars.color_mappings.warning.border_classes|join(' ') if design_vars.color_mappings.warning.border_classes else design_vars.color_mappings.gray_200.border_classes|join(' ') }}",
+        error: "{{ design_vars.color_mappings.error.bg_classes|join(' ') if design_vars.color_mappings.error.bg_classes else design_vars.color_mappings.gray_50.bg_classes|join(' ') }} {{ design_vars.color_mappings.error.border_classes|join(' ') if design_vars.color_mappings.error.border_classes else design_vars.color_mappings.gray_200.border_classes|join(' ') }}",
+        ghost: "bg-transparent border-transparent shadow-none",
+      },
+      size: {
+        {%- set sm_padding = design_vars.spacing_mappings.md.padding_classes|join(' ') if design_vars.spacing_mappings.md and design_vars.spacing_mappings.md.padding_classes else 'p-3' %}
+        {%- set md_padding = design_vars.spacing_mappings.md.padding_classes|join(' ') if design_vars.spacing_mappings.md and design_vars.spacing_mappings.md.padding_classes else 'p-3' %}
+        {%- set lg_padding = design_vars.spacing_mappings.lg.padding_classes|join(' ') if design_vars.spacing_mappings.lg and design_vars.spacing_mappings.lg.padding_classes else 'p-4' %}
+        {%- set xl_padding = design_vars.spacing_mappings.xl.padding_classes|join(' ') if design_vars.spacing_mappings.xl and design_vars.spacing_mappings.xl.padding_classes else design_vars.spacing_mappings.lg.padding_classes|join(' ') if design_vars.spacing_mappings.lg and design_vars.spacing_mappings.lg.padding_classes else 'p-4' %}
+
+        sm: "{{ sm_padding }}",
+        md: "{{ md_padding }}",
+        lg: "{{ lg_padding }}",
+        xl: "{{ xl_padding }}",
+      },
+      layout: {
+        default: "flex flex-col",
+        horizontal: "flex flex-row {{ design_vars.spacing_mappings.md.gap_classes|join(' ') if design_vars.spacing_mappings.md.gap_classes else 'gap-6' }}",
+        stacked: "flex flex-col {{ design_vars.spacing_mappings.md.space_classes|join(' ') if design_vars.spacing_mappings.md.space_classes else 'space-y-2' }}",
+        grid: "grid grid-cols-1 {{ design_vars.spacing_mappings.md.gap_classes|join(' ') if design_vars.spacing_mappings.md.gap_classes else 'gap-4' }}",
+      }
+{%- elif component_config.category == 'feedback' %}
+      variant: {
+        {# Use Figma design tokens for feedback components #}
+        default: "{{ design_vars.component_defaults.card.background|join(' ') }} {{ design_vars.component_defaults.card.border_color|join(' ') }} {{ design_vars.color_mappings.gray_900.text_classes|join(' ') }}",
+        destructive: "{{ design_vars.color_mappings.error.bg_classes|join(' ') if design_vars.color_mappings.error.bg_classes else design_vars.color_mappings.gray_50.bg_classes|join(' ') }} {{ design_vars.color_mappings.error.border_classes|join(' ') if design_vars.color_mappings.error.border_classes else design_vars.color_mappings.gray_200.border_classes|join(' ') }} {{ design_vars.color_mappings.error.text_classes|join(' ') if design_vars.color_mappings.error.text_classes else design_vars.color_mappings.gray_800.text_classes|join(' ') }}",
+        outline: "{{ design_vars.component_defaults.card.background|join(' ') }} {{ design_vars.color_mappings.gray_300.border_classes|join(' ') if design_vars.color_mappings.gray_300 and design_vars.color_mappings.gray_300.border_classes else design_vars.color_mappings.gray_200.border_classes|join(' ') if design_vars.color_mappings.gray_200 and design_vars.color_mappings.gray_200.border_classes else 'border-gray-300' }} {{ design_vars.color_mappings.gray_900.text_classes|join(' ') if design_vars.color_mappings.gray_900 and design_vars.color_mappings.gray_900.text_classes else 'text-gray-900' }}",
+        secondary: "{{ design_vars.color_mappings.gray_50.bg_classes|join(' ') }} {{ design_vars.component_defaults.card.border_color|join(' ') }} {{ design_vars.color_mappings.gray_800.text_classes|join(' ') if design_vars.color_mappings.gray_800.text_classes else design_vars.color_mappings.gray_700.text_classes|join(' ') }}",
+        ghost: "bg-transparent border-transparent {{ design_vars.color_mappings.gray_900.text_classes|join(' ') }}",
+        link: "bg-transparent border-transparent underline {{ design_vars.color_mappings.primary.text_classes|join(' ') }}",
+        info: "{{ design_vars.color_mappings.primary.bg_classes|join(' ') if design_vars.color_mappings.primary.bg_classes else design_vars.color_mappings.gray_50.bg_classes|join(' ') }} {{ design_vars.color_mappings.primary.border_classes|join(' ') if design_vars.color_mappings.primary.border_classes else design_vars.color_mappings.gray_200.border_classes|join(' ') }} {{ design_vars.color_mappings.primary.text_classes|join(' ') if design_vars.color_mappings.primary.text_classes else design_vars.color_mappings.gray_800.text_classes|join(' ') }}",
+        success: "{{ design_vars.color_mappings.success.bg_classes|join(' ') if design_vars.color_mappings.success.bg_classes else design_vars.color_mappings.gray_50.bg_classes|join(' ') }} {{ design_vars.color_mappings.success.border_classes|join(' ') if design_vars.color_mappings.success.border_classes else design_vars.color_mappings.gray_200.border_classes|join(' ') }} {{ design_vars.color_mappings.success.text_classes|join(' ') if design_vars.color_mappings.success.text_classes else design_vars.color_mappings.gray_800.text_classes|join(' ') }}",
+        warning: "{{ design_vars.color_mappings.warning.bg_classes|join(' ') if design_vars.color_mappings.warning.bg_classes else design_vars.color_mappings.gray_50.bg_classes|join(' ') }} {{ design_vars.color_mappings.warning.border_classes|join(' ') if design_vars.color_mappings.warning.border_classes else design_vars.color_mappings.gray_200.border_classes|join(' ') }} {{ design_vars.color_mappings.warning.text_classes|join(' ') if design_vars.color_mappings.warning.text_classes else design_vars.color_mappings.gray_800.text_classes|join(' ') }}",
+        error: "{{ design_vars.color_mappings.error.bg_classes|join(' ') if design_vars.color_mappings.error.bg_classes else design_vars.color_mappings.gray_50.bg_classes|join(' ') }} {{ design_vars.color_mappings.error.border_classes|join(' ') if design_vars.color_mappings.error.border_classes else design_vars.color_mappings.gray_200.border_classes|join(' ') }} {{ design_vars.color_mappings.error.text_classes|join(' ') if design_vars.color_mappings.error.text_classes else design_vars.color_mappings.gray_800.text_classes|join(' ') }}"
+      },
+      size: {
+        {%- set sm_padding = design_vars.spacing_mappings.md.padding_classes|join(' ') if design_vars.spacing_mappings.md and design_vars.spacing_mappings.md.padding_classes else 'p-3' %}
+        {%- set md_padding = design_vars.spacing_mappings.md.padding_classes|join(' ') if design_vars.spacing_mappings.md and design_vars.spacing_mappings.md.padding_classes else 'p-3' %}
+        {%- set lg_padding = design_vars.spacing_mappings.lg.padding_classes|join(' ') if design_vars.spacing_mappings.lg and design_vars.spacing_mappings.lg.padding_classes else 'p-4' %}
+
+        sm: "{{ sm_padding }} text-sm",
+        md: "{{ md_padding }} text-sm",
+        lg: "{{ lg_padding }} text-base"
+      },
+      dismissible: {
+        true: "pr-12",
+        false: ""
+      }
+{%- endif %}

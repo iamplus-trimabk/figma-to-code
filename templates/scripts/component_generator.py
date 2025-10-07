@@ -10,7 +10,7 @@ import json
 import os
 import sys
 from pathlib import Path
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Set
 import argparse
 
 try:
@@ -18,6 +18,9 @@ try:
 except ImportError:
     print("Error: jinja2 is required. Install with: pip install jinja2")
     sys.exit(1)
+
+# Import CSS validator
+from css_validator import CSSValidator
 
 
 class ComponentGenerator:
@@ -29,6 +32,8 @@ class ComponentGenerator:
         self.output_dir = Path(output_dir)
         self.stage2_outputs = self._load_stage2_outputs()
         self.jinja_env = self._setup_jinja_environment()
+        self.css_validator = CSSValidator()
+        self.design_variables = self._load_design_variables()
 
     def _load_stage2_outputs(self) -> Dict[str, Any]:
         """Load Stage 2 outputs from JSON files"""
@@ -46,6 +51,23 @@ class ComponentGenerator:
             # If it's a file, load it directly
             with open(self.stage2_outputs_path, 'r') as f:
                 return json.load(f)
+
+    def _load_design_variables(self) -> Dict[str, Any]:
+        """Load design variables from template_design_variables.json"""
+        design_vars_path = Path("template_design_variables.json")
+
+        if not design_vars_path.exists():
+            print("⚠️  Design variables file not found, using empty defaults")
+            return {}
+
+        try:
+            with open(design_vars_path, 'r', encoding='utf-8') as f:
+                design_vars = json.load(f)
+            print("✅ Loaded Figma design variables for template intelligence")
+            return design_vars
+        except Exception as e:
+            print(f"⚠️  Error loading design variables: {e}")
+            return {}
 
     def _setup_jinja_environment(self) -> jinja2.Environment:
         """Configure Jinja2 environment with custom filters"""
@@ -134,11 +156,14 @@ class ComponentGenerator:
         # Get component interfaces from loaded outputs
         interfaces = []
         for key, value in self.stage2_outputs.items():
-            if key == 'component_interfaces.json':
-                interfaces = value
+            if key == 'component_catalog.json':
+                interfaces = value.get('components', [])
                 break
-            elif isinstance(value, dict) and 'component_interfaces' in value:
-                interfaces = value['component_interfaces']
+            elif isinstance(value, dict) and 'component_catalog' in value:
+                interfaces = value['component_catalog'].get('components', [])
+                break
+            elif isinstance(value, dict) and 'components' in value:
+                interfaces = value['components']
                 break
 
         # Find component by name (case-insensitive)
@@ -146,12 +171,53 @@ class ComponentGenerator:
             if interface.get('name', '').lower() == component_name.lower():
                 return interface
 
-        raise ValueError(f"Component '{component_name}' not found in Stage 2 interfaces")
+        # If not found, provide helpful error message
+        available_components = [iface.get('name', 'N/A') for iface in interfaces]
+        raise ValueError(f"Component '{component_name}' not found in Stage 2 interfaces. Available components: {available_components}")
 
     def _select_template(self, component_config: Dict) -> str:
         """Select appropriate template based on component type"""
         category = self._get_component_category(component_config)
-        return "components/component.j2"
+
+        # Use Figma-enhanced template if design variables are available
+        if self.design_variables and category in ['navigation', 'forms', 'display', 'feedback']:
+            return "components/component_figma.j2"
+        else:
+            return "components/component.j2"
+
+    def _validate_design_tokens(self) -> bool:
+        """Validate that all required design tokens are available"""
+        required_tokens = ['primary', 'success', 'warning', 'error']
+
+        # Check design tokens in loaded outputs
+        design_tokens_found = False
+        for key, value in self.stage2_outputs.items():
+            if key == 'web_config.json':
+                design_tokens_found = True
+                design_tokens = value
+                break
+            elif isinstance(value, dict) and 'web_config' in value:
+                design_tokens_found = True
+                design_tokens = value['web_config']
+                break
+
+        if not design_tokens_found:
+            print("  Warning: No design tokens found in Stage 2 outputs")
+            return False
+
+        # Check for required color palettes
+        if isinstance(design_tokens, dict):
+            missing_tokens = []
+            for token in required_tokens:
+                if token not in design_tokens:
+                    missing_tokens.append(token)
+
+            if missing_tokens:
+                print(f"  Warning: Missing design tokens: {missing_tokens}")
+                print("  Components will use CSS validator to generate fallbacks")
+                return False
+
+        return True
 
     def _prepare_context(self, component_config: Dict, platform: str = 'web') -> Dict[str, Any]:
         """Prepare template context with component data"""
@@ -180,6 +246,10 @@ class ComponentGenerator:
                 design_tokens = value['web_config']
                 break
 
+        # Validate design tokens
+        if not self._validate_design_tokens():
+            print("  Warning: Design token validation failed, will generate CSS fallbacks")
+
         return {
             'component_name': component_name,
             'component_config': {
@@ -192,6 +262,7 @@ class ComponentGenerator:
             'uses_cva': uses_cva,
             'platform': platform,
             'design_tokens': design_tokens,
+            'design_vars': self.design_variables,  # Add Figma design variables
             'accessibility': True
         }
 
@@ -227,6 +298,53 @@ class ComponentGenerator:
 
         return True
 
+    def _validate_css_classes(self, formatted_code: str, component_name: str):
+        """Validate CSS classes using CSS validator"""
+        # Extract classes from generated code
+        classes = self.css_validator.extract_classes_from_component(formatted_code)
+
+        # Validate design token classes
+        missing_classes, invalid_classes = self.css_validator.validate_design_token_classes(classes)
+
+        if missing_classes:
+            print(f"  Warning: {len(missing_classes)} design token classes missing from CSS:")
+            for cls in sorted(missing_classes):
+                print(f"    - {cls}")
+
+            # Generate CSS for missing classes
+            css_content = self.css_validator.generate_css_for_classes(missing_classes)
+            if css_content:
+                # Save to a CSS file for manual review
+                css_output_path = self.output_dir / f"generated-{component_name.lower()}-styles.css"
+                with open(css_output_path, 'w') as f:
+                    f.write(f"/* Auto-generated CSS for {component_name} */\n")
+                    f.write(f"/* Add these classes to your CSS file */\n\n")
+                    f.write(css_content)
+                print(f"  Generated CSS file: {css_output_path}")
+
+        if invalid_classes:
+            print(f"  Warning: {len(invalid_classes)} potentially invalid CSS classes:")
+            for cls in sorted(invalid_classes):
+                print(f"    - {cls}")
+
+    def _generate_css_fallbacks(self, missing_classes: Set[str]) -> str:
+        """Generate CSS fallbacks for missing design token classes"""
+        if not missing_classes:
+            return ""
+
+        css_content = [
+            "/* Auto-generated CSS fallbacks for design tokens */",
+            "/* Generated by Component Generator - Do not edit manually */",
+            ""
+        ]
+
+        for class_name in sorted(missing_classes):
+            css_rule = self.css_validator._generate_css_rule(class_name)
+            if css_rule:
+                css_content.append(css_rule)
+
+        return "\n".join(css_content)
+
     def generate_component(self, component_name: str, platform: str = 'web') -> str:
         """Generate a component using templates"""
         print(f"Generating component: {component_name}")
@@ -253,6 +371,9 @@ class ComponentGenerator:
 
             if not self._validate_component(formatted_code):
                 print("  Warning: Generated code may have issues")
+
+            # 6. Validate CSS classes
+            self._validate_css_classes(formatted_code, component_name)
 
             print(f"  Successfully generated {component_name} component")
             return formatted_code
@@ -290,6 +411,44 @@ class ComponentGenerator:
 
         print(f"  Saved to: {output_path}")
 
+        # Also validate and generate CSS if needed
+        self._validate_and_generate_css(code, component_name)
+
+    def _validate_and_generate_css(self, code: str, component_name: str):
+        """Validate CSS classes and generate fallbacks if needed"""
+        # Extract classes from component code
+        classes = self.css_validator.extract_classes_from_component(code)
+
+        # Check for missing design token classes
+        missing_classes, invalid_classes = self.css_validator.validate_design_token_classes(classes)
+
+        if missing_classes:
+            print(f"  Generating CSS fallbacks for {len(missing_classes)} missing classes...")
+
+            # Generate CSS fallbacks
+            css_fallbacks = self._generate_css_fallbacks(missing_classes)
+
+            if css_fallbacks:
+                # Append to main globals.css file
+                globals_css_path = self.output_dir / "src" / "app" / "globals.css"
+
+                existing_css = ""
+                if globals_css_path.exists():
+                    with open(globals_css_path, 'r') as f:
+                        existing_css = f.read()
+
+                # Append generated CSS if not already present
+                if css_fallbacks.strip() not in existing_css:
+                    with open(globals_css_path, 'a') as f:
+                        f.write("\n\n")
+                        f.write(css_fallbacks)
+                    print(f"  Updated CSS in: {globals_css_path}")
+                else:
+                    print(f"  CSS classes already exist in: {globals_css_path}")
+
+        if invalid_classes:
+            print(f"  Note: {len(invalid_classes)} classes may need manual review")
+
     def generate_all_components(self, platform: str = 'web'):
         """Generate all available components"""
         print("Generating all components from Stage 2 interfaces...")
@@ -297,11 +456,14 @@ class ComponentGenerator:
         # Get component interfaces from loaded outputs
         interfaces = []
         for key, value in self.stage2_outputs.items():
-            if key == 'component_interfaces.json':
-                interfaces = value
+            if key == 'component_catalog.json':
+                interfaces = value.get('components', [])
                 break
-            elif isinstance(value, dict) and 'component_interfaces' in value:
-                interfaces = value['component_interfaces']
+            elif isinstance(value, dict) and 'component_catalog' in value:
+                interfaces = value['component_catalog'].get('components', [])
+                break
+            elif isinstance(value, dict) and 'components' in value:
+                interfaces = value['components']
                 break
 
         generated_components = []
