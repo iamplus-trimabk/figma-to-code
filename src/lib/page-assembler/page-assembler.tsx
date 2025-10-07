@@ -137,12 +137,12 @@ export class PageAssembler {
     const responsiveContainer = {
       display: 'flex',
       flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: 'stretch', // Changed from center to stretch for better alignment
+      justifyContent: 'flex-start',
       margin: '0.5rem',
       padding: '0.5rem',
       width: '100%',
-      maxWidth: '400px', // Reasonable max width for mobile
+      maxWidth: '100%', // Use full width within constraints
     }
 
     // Handle text components with enhanced styling from Figma
@@ -150,9 +150,10 @@ export class PageAssembler {
       const textStyles: React.CSSProperties = {
         ...this.extractStyles(component),
         ...responsiveContainer,
-        textAlign: 'center',
+        textAlign: 'left', // Changed from center to left alignment
         fontSize: '1.25rem',
         fontWeight: 'normal',
+        alignSelf: 'flex-start', // Ensure left alignment within flex container
       }
 
       // Apply specific styling based on text component type
@@ -162,6 +163,10 @@ export class PageAssembler {
           textStyles.fontWeight = 'bold'
           ;(textStyles as any).color = component.style?.background_colors?.[0] || '#2e2e2e'
           ;(textStyles as any).marginBottom = '1.5rem'
+          // Remove background color to show text properly
+          ;(textStyles as any).backgroundColor = 'transparent'
+          ;(textStyles as any).textAlign = 'left'
+          ;(textStyles as any).alignSelf = 'flex-start'
           break
 
         case 'or':
@@ -169,16 +174,23 @@ export class PageAssembler {
           ;(textStyles as any).color = '#6b7280'
           textStyles.margin = '1rem 0'
           ;(textStyles as any).position = 'relative'
+          ;(textStyles as any).backgroundColor = 'transparent'
+          ;(textStyles as any).textAlign = 'center' // Keep "or" centered
+          ;(textStyles as any).alignSelf = 'center'
           break
 
         case "Don't have an account? Register":
           textStyles.fontSize = '0.875rem'
           ;(textStyles as any).color = component.style?.background_colors?.[0] || '#000000'
           ;(textStyles as any).marginTop = '1rem'
+          ;(textStyles as any).backgroundColor = 'transparent'
+          ;(textStyles as any).textAlign = 'left'
+          ;(textStyles as any).alignSelf = 'flex-start'
           break
 
         default:
           ;(textStyles as any).color = component.style?.background_colors?.[0] || '#374151'
+          ;(textStyles as any).backgroundColor = 'transparent'
       }
 
       return React.createElement(
@@ -235,22 +247,42 @@ export class PageAssembler {
           componentProps.children = 'Continue with Google'
           componentProps.variant = 'outline'
           componentProps.className += ' google-btn'
-          // Apply Google brand colors from Figma if available
-          if (component.style?.background_colors?.length > 0) {
-            ;(styles as any).backgroundColor = '#4285f4'
-            ;(styles as any).color = '#ffffff'
-          }
+          // Apply Google button styling with border and proper colors
+          ;(styles as any).backgroundColor = '#ffffff'
+          ;(styles as any).color = '#000000'
+          ;(styles as any).border = '1px solid #dadce0'
+          ;(styles as any).borderRadius = '8px'
+          ;(styles as any).padding = '12px 16px'
+          ;(styles as any).fontSize = '16px'
+          ;(styles as any).fontWeight = '500'
+          ;(styles as any).display = 'flex'
+          ;(styles as any).alignItems = 'center'
+          ;(styles as any).justifyContent = 'center'
+          ;(styles as any).gap = '8px'
+          ;(styles as any).transition = 'all 0.2s ease'
+          ;(styles as any).cursor = 'pointer'
+          ;(styles as any).zIndex = '10'
           break
 
         case 'Login with facebook':
           componentProps.children = 'Continue with Facebook'
           componentProps.variant = 'outline'
           componentProps.className += ' facebook-btn'
-          // Apply Facebook brand colors from Figma if available
-          if (component.style?.background_colors?.length > 0) {
-            ;(styles as any).backgroundColor = '#1877f2'
-            ;(styles as any).color = '#ffffff'
-          }
+          // Apply Facebook button styling with border and proper colors
+          ;(styles as any).backgroundColor = '#1877f2'
+          ;(styles as any).color = '#ffffff'
+          ;(styles as any).border = '1px solid #1877f2'
+          ;(styles as any).borderRadius = '8px'
+          ;(styles as any).padding = '12px 16px'
+          ;(styles as any).fontSize = '16px'
+          ;(styles as any).fontWeight = '500'
+          ;(styles as any).display = 'flex'
+          ;(styles as any).alignItems = 'center'
+          ;(styles as any).justifyContent = 'center'
+          ;(styles as any).gap = '8px'
+          ;(styles as any).transition = 'all 0.2s ease'
+          ;(styles as any).cursor = 'pointer'
+          ;(styles as any).zIndex = '10'
           break
 
         case 'button':
@@ -301,6 +333,13 @@ export class PageAssembler {
           componentProps.children = 'Remember me'
           componentProps.type = 'checkbox'
           componentProps.className += ' remember-me-checkbox'
+          // Fix alignment - use flex with left alignment
+          ;(styles as any).display = 'flex'
+          ;(styles as any).alignItems = 'center'
+          ;(styles as any).justifyContent = 'flex-start'
+          ;(styles as any).textAlign = 'left'
+          ;(styles as any).alignSelf = 'flex-start'
+          ;(styles as any).width = '100%'
           // Apply checkbox styling from Figma
           if (component.style?.border_radius) {
             ;(styles as any).borderRadius = `${component.style.border_radius}px`
@@ -317,6 +356,10 @@ export class PageAssembler {
           }
           ;(styles as any).textDecoration = 'underline'
           ;(styles as any).cursor = 'pointer'
+          ;(styles as any).textAlign = 'right'
+          ;(styles as any).alignSelf = 'flex-end'
+          ;(styles as any).fontSize = '14px'
+          ;(styles as any).marginTop = '-1rem' // Position it properly next to Remember me
           break
 
         case 'Welcome to Design School':
@@ -444,13 +487,32 @@ export class PageAssembler {
               justifyContent: 'flex-start'
             }
           },
-          // Render all form components within the white card
+          // Render all form components within the white card with proper layout
           otherComponents.map((component, index) => {
             const assembledComponent = this.assembleComponent({
               component,
               index,
               totalComponents: otherComponents.length
             })
+
+            // Special handling for Remember me and Forgot Password to position them side by side
+            if (component.name === 'Remember me' || component.name === 'Forgot Password?') {
+              return React.createElement(
+                'div',
+                {
+                  key: `${component.name}-${component.index || index}-wrapper`,
+                  style: {
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    width: '100%',
+                    margin: '0.5rem 0'
+                  }
+                },
+                assembledComponent
+              )
+            }
+
             if (React.isValidElement(assembledComponent)) {
               return React.cloneElement(assembledComponent, {
                 key: `${component.name}-${component.index || index}`,
