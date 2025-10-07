@@ -219,7 +219,7 @@ class EnhancedPageAssemblerGenerator:
 
 import React from "react"
 import {{ Button }} from "@/components/navigation/button"
-import {{ Input }} from "@/components/forms/email"
+import {{ Input }} from "@/components/forms/input"
 import {{ Card }} from "@/components/display/card"
 
 export default function LoginPage() {{
