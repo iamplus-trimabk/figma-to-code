@@ -288,18 +288,19 @@ export default function LoginPage() {{
 
             elif component['type'] == 'checkbox':
                 component_code += f'''
-                <div className="flex items-center justify-between w-full">
-                  <label className="flex items-center space-x-2 text-sm text-gray-600" style={{{{ textAlign: 'left', alignSelf: 'flex-start' }}}}>
-                    <input type="checkbox" className="rounded border-gray-300" />
-                    <span>{component['text']}</span>
-                  </label>
-                  <button
-                    className="text-primary underline text-sm"
-                    style={{{{ color: '#6257db', textDecoration: 'underline', fontSize: '14px', textAlign: 'right' }}}}
-                  >
-                    Forgot Password?
-                  </button>
+                <div className="flex items-center space-x-2 text-sm text-gray-600" style={{{{ textAlign: 'left', alignSelf: 'flex-start' }}}}>
+                  <input type="checkbox" className="rounded border-gray-300" />
+                  <span>{component['text']}</span>
                 </div>'''
+
+            elif component['type'] == 'link':
+                component_code += f'''
+                <button
+                  className="text-primary underline text-sm"
+                  style={{{{ color: '#6257db', textDecoration: 'underline', fontSize: '14px', textAlign: 'right' }}}}
+                >
+                  {component['text']}
+                </button>'''
 
             elif component['type'] == 'text' and 'register' in component['text'].lower():
                 component_code += f'''

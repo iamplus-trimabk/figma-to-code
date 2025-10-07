@@ -1,18 +1,57 @@
 # Stage 4 Issue Fixes and Testing Plan
 
-## Current Status Analysis
+## Playwright MCP Analysis Results
 
-The Stage 4 Page Assembler has been implemented but is encountering **critical syntax errors** in the generated components that prevent the Login page from loading:
+**Analysis Date:** Current session
+**Pages Compared:** `/login` (manual fixes) vs `/final-pipeline-generated-login` (pipeline)
+**Analysis Method:** Playwright MCP browser automation and visual inspection
 
-### Key Issues Identified:
-1. **Missing `loginVariants` definition** - The Login component exports `loginVariants` but the actual `cva` definition is missing
-2. **Syntax errors in multiple components** - Missing semicolons, malformed interfaces, incomplete variant definitions
-3. **Template generation issues** - Hyphenated component names create invalid TypeScript syntax
+### Critical Differences Found:
 
-### Current State:
-- Development server is running on `http://localhost:3002`
-- Login page route exists at `/login` but returns 500 error due to component syntax issues
-- Page Assembler code is architecturally complete but blocked by broken component dependencies
+#### 1. **Component Hierarchy Structure Issues**
+- **Manual Page (/login)**: Uses PageAssembler with `screenName="Login"` and proper component registry mapping
+- **Pipeline Page**: Uses hardcoded React component structure with fixed imports
+- **Impact**: Pipeline generates static pages vs manual uses dynamic PageAssembler system
+
+#### 2. **Text Component Rendering Differences**
+- **Manual Page**:
+  - "Welcome to Design School" renders as generic text element (`generic [ref=e9]`)
+  - Text likely handled by PageAssembler's text component mapping
+- **Pipeline Page**:
+  - "Welcome to Design School" renders as proper heading (`heading "Welcome to Design School" [level=1] [ref=e11]`)
+  - Pipeline generates semantic HTML elements
+
+#### 3. **Input Field Ordering Issues**
+- **Manual Page**: Email → Password (correct order)
+  - `textbox "Enter your email" [ref=e15]` → `textbox "Enter your password" [ref=e16]`
+- **Pipeline Page**: Password → Email → Password (incorrect order)
+  - `textbox "Enter your password" [ref=e16]` → `textbox "Enter your email" [ref=e18]` → `textbox "Enter your password" [ref=e20]`
+- **Issue**: Pipeline generates duplicate password field and wrong order
+
+#### 4. **Component References and Structure**
+- **Manual Page**:
+  - Form container structure: `generic [ref=e19]` contains checkbox and text
+  - "Forgot Password?" renders as separate button before form inputs
+- **Pipeline Page**:
+  - Form container structure: `generic [ref=e22]` with nested structure
+  - "Forgot Password?" button inside form container after checkbox
+
+#### 5. **Social Button Variant Implementation**
+- **Manual Page**: Uses PageAssembler component mapping for social button variants
+- **Pipeline Page**: Uses hardcoded Button component with `variant="google"` and `variant="facebook"`
+- **Difference**: Variant system implementation approach differs
+
+### Root Cause Analysis:
+
+#### Pipeline Generator Issues:
+1. **Component Order Logic**: Enhanced page assembler generator doesn't respect Figma component hierarchy order
+2. **Input Field Duplication**: Generator creates multiple password fields instead of one
+3. **Form Structure**: Hardcoded structure vs dynamic PageAssembler mapping
+4. **Component Analysis Logic**: `_analyze_component_type()` method may have incorrect mapping logic
+
+#### Manual vs Pipeline Approach:
+- **Manual**: Uses PageAssembler system that reads Figma layouts dynamically
+- **Pipeline**: Generates static React components with hardcoded structure
 
 ## Phase 1: Fix Critical Component Syntax Issues (Immediate)
 
@@ -140,17 +179,87 @@ The Stage 4 Page Assembler has been implemented but is encountering **critical s
 - [ ] Responsive behavior works as expected
 - [ ] All component interactions function properly
 
+## New Pipeline Fixes Required (Based on Playwright MCP Analysis)
+
+### Priority 1: Fix Component Order and Duplication Issues
+
+#### 1.1 Fix Input Field Ordering in Enhanced Page Assembler Generator
+- **File**: `templates/scripts/enhanced_page_assembler_generator.py`
+- **Issue**: Generator creates password → email → password instead of email → password
+- **Root Cause**: Component analysis logic doesn't preserve Figma hierarchy order
+- **Fix**: Update `_analyze_component_type()` method to respect component order from Figma data
+
+#### 1.2 Remove Duplicate Input Fields
+- **Issue**: Generator creates multiple password fields
+- **Root Cause**: Component analysis may incorrectly map multiple components to same type
+- **Fix**: Add deduplication logic in component generation loop
+
+#### 1.3 Fix Form Structure to Match Manual Implementation
+- **Issue**: Pipeline generates different form structure than manual PageAssembler
+- **Current Pipeline**: Checkbox + "Forgot Password?" button in same container
+- **Should Match**: Manual structure with proper form element grouping
+
+### Priority 2: Improve Component Analysis Logic
+
+#### 2.1 Enhance Component Type Detection
+- **File**: `templates/scripts/enhanced_page_assembler_generator.py`
+- **Method**: `_analyze_component_type()`
+- **Issue**: May not correctly distinguish between different text elements and form components
+- **Fix**: Improve component name parsing and type mapping logic
+
+#### 2.2 Preserve Figma Hierarchy Order
+- **Issue**: Generated component order doesn't match Figma design
+- **Fix**: Process components in the order they appear in Figma screen layout data
+
+#### 2.3 Fix Component References and Structure
+- **Issue**: Different DOM structure between manual and pipeline versions
+- **Fix**: Align pipeline-generated structure with PageAssembler output format
+
+### Priority 3: Component Integration Fixes
+
+#### 3.1 Align Button Variant Implementation
+- **Issue**: Manual uses PageAssembler mapping, pipeline uses hardcoded variants
+- **Fix**: Ensure pipeline generates consistent button variant usage
+
+#### 3.2 Fix Text Component Rendering
+- **Current**: Pipeline generates proper heading elements
+- **Issue**: Should match manual implementation approach
+- **Fix**: Determine which approach is correct and align both
+
 ## Implementation Order
 
-1. **Fix Login Component** - Missing loginVariants definition (blocking)
-2. **Fix Email Component** - Missing semicolon syntax error
-3. **Fix Remember Me Component** - Const initialization error
-4. **Fix Forgot Password Component** - Interface formatting error
-5. **Fix BG Component** - Complete component structure
-6. **Test Login Page Loading** - Verify basic functionality
-7. **Validate Component Rendering** - Check all components appear
-8. **Test Layout and Positioning** - Verify pixel-perfect rendering
-9. **Component Integration Testing** - Test registry and mapping
-10. **Visual and Functional Testing** - Complete validation
+### **Immediate (Pipeline Fixes)**:
+1. **Fix Input Field Order** - Email → Password (currently Password → Email → Password)
+2. **Remove Duplicate Password Fields** - Only one password field should exist
+3. **Fix Form Structure** - Match manual PageAssembler structure
+4. **Improve Component Analysis** - Better component type detection and ordering
+5. **Align Component References** - Match DOM structure between manual and pipeline
 
-This plan addresses the immediate syntax issues blocking the implementation and then systematically tests all aspects of the Page Assembler functionality.
+### **Validation**:
+6. **Generate Fresh Pipeline Page** - Test fixes with new generation
+7. **Compare with Manual Implementation** - Use Playwright MCP to verify fixes
+8. **Validate Component Order** - Ensure correct Email → Password sequence
+9. **Test Form Structure** - Verify proper form element grouping
+10. **Final Visual Comparison** - Confirm pipeline matches manual quality
+
+## Success Criteria (Updated)
+
+### **Pipeline Quality**:
+- [ ] Pipeline-generated page has correct input field order (Email → Password)
+- [ ] No duplicate form fields
+- [ ] Form structure matches manual PageAssembler implementation
+- [ ] Component hierarchy preserved from Figma design
+- [ ] Visual output matches manual implementation quality
+
+### **Component Accuracy**:
+- [ ] All components render in correct positions
+- [ ] Component types are properly detected and mapped
+- [ ] No missing or duplicate elements
+- [ ] Semantic HTML structure is maintained
+
+### **System Reliability**:
+- [ ] Pipeline generator produces consistent output
+- [ ] Generation process is deterministic and repeatable
+- [ ] Generated code requires no manual fixes
+
+This updated plan addresses the critical issues found through Playwright MCP analysis and focuses on making the pipeline generation match the quality and structure of the manual implementation.
