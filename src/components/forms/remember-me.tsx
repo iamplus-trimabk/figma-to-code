@@ -38,7 +38,7 @@ const rememberMeVariants = cva(
 
 // Export Remember-Me props interface matching Stage 2 remember-me component
 export interface RememberMeProps extends
-  React.HTMLAttributes<HTMLDivElement>,
+  React.InputHTMLAttributes<HTMLInputElement>,
   VariantProps<typeof rememberMeVariants>
 {
   // Stage 2 remember-me component interface
@@ -54,11 +54,13 @@ export interface RememberMeProps extends
   children?: React.ReactNode
   id?: string
   testId?: string
+  label?: string
+  type?: "checkbox"
 }
 
 // Main Remember-Me component
 const RememberMe = React.forwardRef<
-  HTMLDivElement,
+  HTMLInputElement,
   RememberMeProps
 >(
   ({
@@ -74,9 +76,11 @@ const RememberMe = React.forwardRef<
   display,
   overflow,
   style,
-  children,
   id,
   testId,
+  label = "Remember me",
+  type = "checkbox",
+  children,
   ...props
   }, ref) => {
 
@@ -107,17 +111,37 @@ const RememberMe = React.forwardRef<
     }),
     className || ''
   ].filter(Boolean).join(' ')
+
+  // For checkbox, render a wrapper div with input + label
+  if (type === "checkbox") {
+    return (
+      <div
+        className={componentClasses}
+        style={inlineStyles}
+        data-testid={testId}
+      >
+        <input
+          ref={ref}
+          type={type}
+          id={id}
+          {...props}
+        />
+        {children || <label htmlFor={id} style={{ marginLeft: '8px' }}>{label}</label>}
+      </div>
+    )
+  }
+
+  // Fallback for other types
   return (
-    <div
+    <input
       ref={ref}
+      type={type}
       className={componentClasses}
       style={inlineStyles}
       id={id}
       data-testid={testId}
       {...props}
-    >
-      {children}
-    </div>
+    />
   )
   }
 )

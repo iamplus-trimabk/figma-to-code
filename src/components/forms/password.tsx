@@ -38,7 +38,7 @@ const passwordVariants = cva(
 
 // Export Password props interface matching Stage 2 password component
 export interface PasswordProps extends
-  React.HTMLAttributes<HTMLDivElement>,
+  React.InputHTMLAttributes<HTMLInputElement>,
   VariantProps<typeof passwordVariants>
 {
   // Stage 2 password component interface
@@ -54,11 +54,13 @@ export interface PasswordProps extends
   children?: React.ReactNode
   id?: string
   testId?: string
+  placeholder?: string
+  type?: "password"
 }
 
 // Main Password component
 const Password = React.forwardRef<
-  HTMLDivElement,
+  HTMLInputElement,
   PasswordProps
 >(
   ({
@@ -74,9 +76,10 @@ const Password = React.forwardRef<
   display,
   overflow,
   style,
-  children,
   id,
   testId,
+  placeholder = "Enter your password",
+  type = "password",
   ...props
   }, ref) => {
 
@@ -108,16 +111,16 @@ const Password = React.forwardRef<
     className || ''
   ].filter(Boolean).join(' ')
   return (
-    <div
+    <input
       ref={ref}
+      type={type}
+      placeholder={placeholder}
       className={componentClasses}
       style={inlineStyles}
       id={id}
       data-testid={testId}
       {...props}
-    >
-      {children}
-    </div>
+    />
   )
   }
 )

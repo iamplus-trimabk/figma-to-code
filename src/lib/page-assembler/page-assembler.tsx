@@ -121,14 +121,40 @@ export class PageAssembler {
       maxWidth: '400px', // Reasonable max width for mobile
     }
 
-    // Handle text components
+    // Handle text components with enhanced styling from Figma
     if (this.componentRegistry.isTextComponent(component.name)) {
-      const textStyles = {
+      const textStyles: React.CSSProperties = {
         ...this.extractStyles(component),
         ...responsiveContainer,
-        textAlign: 'center' as const,
-        fontSize: '1rem',
+        textAlign: 'center',
+        fontSize: '1.25rem',
         fontWeight: 'normal',
+      }
+
+      // Apply specific styling based on text component type
+      switch (component.name) {
+        case 'Welcome to Design School':
+          textStyles.fontSize = '2rem'
+          textStyles.fontWeight = 'bold'
+          ;(textStyles as any).color = component.style?.background_colors?.[0] || '#2e2e2e'
+          ;(textStyles as any).marginBottom = '1.5rem'
+          break
+
+        case 'or':
+          textStyles.fontSize = '1rem'
+          ;(textStyles as any).color = '#6b7280'
+          textStyles.margin = '1rem 0'
+          ;(textStyles as any).position = 'relative'
+          break
+
+        case "Don't have an account? Register":
+          textStyles.fontSize = '0.875rem'
+          ;(textStyles as any).color = component.style?.background_colors?.[0] || '#000000'
+          ;(textStyles as any).marginTop = '1rem'
+          break
+
+        default:
+          ;(textStyles as any).color = component.style?.background_colors?.[0] || '#374151'
       }
 
       return React.createElement(
@@ -144,7 +170,7 @@ export class PageAssembler {
 
     // Handle placeholder components (icons, illustrations)
     if (this.componentRegistry.isPlaceholderComponent(component.name)) {
-      const placeholderStyles = {
+      const placeholderStyles: React.CSSProperties = {
         ...this.extractStyles(component),
         ...responsiveContainer,
         backgroundColor: '#f0f0f0',
@@ -153,7 +179,7 @@ export class PageAssembler {
         minHeight: '80px',
         fontSize: '12px',
         color: '#666',
-        textAlign: 'center' as const,
+        textAlign: 'center',
       }
 
       return React.createElement(
@@ -169,7 +195,7 @@ export class PageAssembler {
 
     // Handle actual React components
     if (Component) {
-      const styles = {
+      const styles: React.CSSProperties = {
         ...this.extractStyles(component),
         ...responsiveContainer,
       }
@@ -179,21 +205,117 @@ export class PageAssembler {
         className: `responsive-component ${component.name.toLowerCase().replace(/\s+/g, '-')}`,
       }
 
-      // Add specific props based on component type
-      if (component.name.toLowerCase().includes('button') || component.name.toLowerCase().includes('login')) {
-        componentProps.children = component.name.replace(/Login with /i, '')
-        componentProps.className += ' btn-primary' // Add bootstrap-like class for buttons
-      } else if (component.name.toLowerCase().includes('input') || component.name.toLowerCase().includes('password')) {
-        componentProps.placeholder = component.name
-        componentProps.type = component.name.toLowerCase().includes('password') ? 'password' : 'text'
-        componentProps.className += ' form-control' // Add form control class
+      // Enhanced component-specific props based on Figma component names
+      switch (component.name) {
+        case 'Login with Google':
+          componentProps.children = 'Continue with Google'
+          componentProps.variant = 'outline'
+          componentProps.className += ' google-btn'
+          // Apply Google brand colors from Figma if available
+          if (component.style?.background_colors?.length > 0) {
+            ;(styles as any).backgroundColor = '#4285f4'
+            ;(styles as any).color = '#ffffff'
+          }
+          break
+
+        case 'Login with facebook':
+          componentProps.children = 'Continue with Facebook'
+          componentProps.variant = 'outline'
+          componentProps.className += ' facebook-btn'
+          // Apply Facebook brand colors from Figma if available
+          if (component.style?.background_colors?.length > 0) {
+            ;(styles as any).backgroundColor = '#1877f2'
+            ;(styles as any).color = '#ffffff'
+          }
+          break
+
+        case 'button':
+          componentProps.children = 'Login'
+          componentProps.variant = 'default'
+          componentProps.type = 'submit'
+          componentProps.className += ' login-btn'
+          // Apply button styling from Figma
+          if (component.style?.background_colors?.length > 0) {
+            ;(styles as any).backgroundColor = component.style.background_colors[0]
+          }
+          if (component.style?.border_radius) {
+            ;(styles as any).borderRadius = `${component.style.border_radius}px`
+          }
+          break
+
+        case 'Email':
+          componentProps.placeholder = 'Enter your email'
+          componentProps.type = 'email'
+          componentProps.className += ' email-input'
+          // Apply input styling from Figma
+          ;(styles as any).width = '100%'
+          ;(styles as any).padding = '12px 16px'
+          ;(styles as any).border = '1px solid #d1d5db'
+          ;(styles as any).borderRadius = '6px'
+          break
+
+        case 'Password':
+          componentProps.placeholder = 'Enter your password'
+          componentProps.type = 'password'
+          componentProps.className += ' password-input'
+          // Apply input styling from Figma
+          ;(styles as any).width = '100%'
+          ;(styles as any).padding = '12px 16px'
+          ;(styles as any).border = '1px solid #d1d5db'
+          ;(styles as any).borderRadius = '6px'
+          break
+
+        case 'Remember me':
+          componentProps.children = 'Remember me'
+          componentProps.type = 'checkbox'
+          componentProps.className += ' remember-me-checkbox'
+          // Apply checkbox styling from Figma
+          if (component.style?.border_radius) {
+            ;(styles as any).borderRadius = `${component.style.border_radius}px`
+          }
+          break
+
+        case 'Forgot Password?':
+          componentProps.children = 'Forgot Password?'
+          componentProps.variant = 'link'
+          componentProps.className += ' forgot-password-link'
+          // Apply link styling from Figma
+          if (component.style?.background_colors?.length > 0) {
+            ;(styles as any).color = component.style.background_colors[0]
+          }
+          ;(styles as any).textDecoration = 'underline'
+          ;(styles as any).cursor = 'pointer'
+          break
+
+        case 'Welcome to Design School':
+          // Welcome text is handled by text component logic
+          break
+
+        case 'bg':
+          // Background component - apply proper styling from Figma
+          if (component.style?.background_colors?.length > 0) {
+            ;(styles as any).backgroundColor = component.style.background_colors[0]
+          }
+          if (component.style?.border_radius) {
+            ;(styles as any).borderRadius = `${component.style.border_radius}px`
+          }
+          ;(styles as any).minHeight = '400px' // Ensure background has proper height
+          ;(styles as any).padding = '2rem'
+          break
+
+        default:
+          // Fallback for unknown components
+          if (component.name.toLowerCase().includes('button')) {
+            componentProps.children = component.name
+            componentProps.className += ' btn-primary'
+          }
       }
 
       return React.createElement(Component, componentProps, componentProps.children)
     }
 
     // Fallback: render as a div
-    const fallbackStyles = {
+    const fallbackStyles: React.CSSProperties = {
       ...this.extractStyles(component),
       ...responsiveContainer,
     }

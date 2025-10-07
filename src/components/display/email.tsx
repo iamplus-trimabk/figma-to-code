@@ -42,7 +42,7 @@ const emailVariants = cva(
 
 // Export Email props interface matching Stage 2 email component
 export interface EmailProps extends
-  React.HTMLAttributes<HTMLDivElement>,
+  React.InputHTMLAttributes<HTMLInputElement>,
   VariantProps<typeof emailVariants>
 {
   // Stage 2 email component interface
@@ -58,11 +58,13 @@ export interface EmailProps extends
   children?: React.ReactNode
   id?: string
   testId?: string
+  placeholder?: string
+  type?: "email"
 }
 
 // Main Email component
 const Email = React.forwardRef<
-  HTMLDivElement,
+  HTMLInputElement,
   EmailProps
 >(
   ({
@@ -79,9 +81,10 @@ const Email = React.forwardRef<
     display,
     overflow,
     style,
-    children,
     id,
     testId,
+    placeholder = "Enter your email",
+    type = "email",
     ...props
   }, ref) => {
 
@@ -113,16 +116,16 @@ const Email = React.forwardRef<
   ].filter(Boolean).join(' ')
 
   return (
-    <div
+    <input
       ref={ref}
+      type={type}
+      placeholder={placeholder}
       className={componentClasses}
       style={inlineStyles}
       id={id}
       data-testid={testId}
       {...props}
-    >
-      {children}
-    </div>
+    />
   )
 })
 
