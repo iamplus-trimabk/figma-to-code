@@ -305,6 +305,7 @@
         class LayoutConverter {
             constructor() {
                 this.tokenResolver = null;
+                console.log('🚀 LayoutConverter initialized - NEW VERSION!');
             }
 
             convert(designJson, viewport, theme = 'light') {
@@ -332,7 +333,31 @@
 
                 const screenElements = this.convertScreen(screen, screenBounds);
                 const flattenedElements = this.flattenArray(screenElements);
-                renderJson.elements.push(...flattenedElements);
+
+                // Calculate total content height for vertical centering
+                let minY = Infinity, maxY = -Infinity;
+                flattenedElements.forEach(el => {
+                    if (el.bounds) {
+                        minY = Math.min(minY, el.bounds.y);
+                        maxY = Math.max(maxY, el.bounds.y + el.bounds.height);
+                    }
+                });
+
+                const totalContentHeight = maxY - minY;
+                const offsetY = (viewport.height - totalContentHeight) / 2;
+
+                console.log(`🎯 Content: totalHeight=${totalContentHeight}, viewport=${viewport.height}, offsetY=${offsetY}`);
+
+                // Apply vertical centering offset to all elements
+                const centeredElements = flattenedElements.map(el => ({
+                    ...el,
+                    bounds: {
+                        ...el.bounds,
+                        y: el.bounds.y + offsetY
+                    }
+                }));
+
+                renderJson.elements.push(...centeredElements);
 
                 // Debug: Check the final render coordinates
                 console.log('🔍 Final Render JSON elements:');
@@ -533,35 +558,66 @@
                 if (!content) return elements;
 
                 if (content.children && Array.isArray(content.children)) {
-                    // Render multiple children with vertical stacking
-                    let currentY = layout.bounds.y;
-                    const gap = this.tokenResolver.parseValue(componentDef.layout.gap || 0);
+                    // Render multiple children with proper vertical stacking
+                    const padding = this.resolvePadding(componentDef.layout.padding);
+                    const gap = this.tokenResolver.parseValue(componentDef.layout.gap || 16); // 16px gap
+                    const availableWidth = layout.bounds.width - padding.left - padding.right;
 
+                    // Calculate total content height first
+                    let totalContentHeight = 0;
                     content.children.forEach((child, index) => {
                         if (child.type === 'text') {
+                            totalContentHeight += 30; // text height
+                        } else if (child.type === 'component') {
+                            const childComponentDef = this.getComponentDefinition(child.name);
+                            if (childComponentDef) {
+                                totalContentHeight += this.tokenResolver.parseDimension(childComponentDef.layout.height || 48);
+                            }
+                        }
+                        if (index < content.children.length - 1) {
+                            totalContentHeight += gap; // gap between elements
+                        }
+                    });
+
+                    const totalHeight = totalContentHeight + padding.top + padding.bottom;
+
+                    // Center card content within bounds
+                    let currentY = layout.bounds.y + (layout.bounds.height - totalHeight) / 2 + padding.top;
+
+                    console.log(`🎯 ${component.name} content area: totalHeight:${totalHeight}, startY:${currentY}, w:${availableWidth}`);
+
+                    content.children.forEach((child, index) => {
+                        console.log(`👶 Processing child ${index}:`, child.type, child.name || 'text');
+
+                        if (child.type === 'text') {
+                            const textHeight = 30;
                             const textElement = this.convertTextElement(child, {
-                                x: layout.bounds.x,
+                                x: layout.bounds.x + padding.left,
                                 y: currentY,
-                                width: layout.bounds.width,
-                                height: 30
+                                width: availableWidth,
+                                height: textHeight
                             });
                             elements.push(textElement);
-                            currentY += 30 + gap;
+                            console.log(`📝 Text positioned at y:${currentY}`);
+                            currentY += textHeight + gap;
+
                         } else if (child.type === 'component') {
                             // For child components, create them with specific vertical positioning
                             const childComponentDef = this.getComponentDefinition(child.name);
                             if (childComponentDef) {
                                 const childHeight = this.tokenResolver.parseDimension(childComponentDef.layout.height || 48);
 
-                                // Create child component at specific Y position
+                                // Create child component at specific Y position within card
                                 const childLayout = {
                                     bounds: {
-                                        x: layout.bounds.x,
+                                        x: layout.bounds.x + padding.left,
                                         y: currentY,
-                                        width: layout.bounds.width,
+                                        width: availableWidth,
                                         height: childHeight
                                     }
                                 };
+
+                                console.log(`🔧 Creating ${child.name} at y:${currentY} with height:${childHeight}`);
 
                                 const childElements = this.createBackgroundElementForComponent(child, childLayout, childComponentDef, child.variant);
                                 const flattenedChild = this.flattenArray([childElements]);
@@ -923,7 +979,9 @@
         // Initialize
         async function initialize() {
             try {
-                const response = await fetch('login-screen-example.json');
+                // Add cache-busting parameter
+                const timestamp = Date.now();
+                const response = await fetch(`login-screen-example.json?t=${timestamp}`);
                 designJson = await response.json();
 
                 converter = new LayoutConverter();
