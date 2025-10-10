@@ -18,6 +18,33 @@ import { RememberMe as GeneratedRememberMe } from "@/components/forms/remember-m
 import { Login as GeneratedLogin } from "@/components/navigation/login"
 import { Image as GeneratedImage } from "@/components/display/image"
 
+// Generic fallback components for Angle and Check types
+const GeneratedAngle: React.FC<any> = ({ className, style, ...props }) =>
+  React.createElement('div', {
+    className,
+    style: { ...style, width: 24, height: 24 },
+    ...props
+  },
+    React.createElement('div', {
+      style: { fontSize: '12px', color: '#666' }
+    }, '⟨Angle⟩')
+  )
+
+const GeneratedAngle4 = GeneratedAngle
+const GeneratedAngle5 = GeneratedAngle
+const GeneratedAngle6 = GeneratedAngle
+const GeneratedAngle7 = GeneratedAngle
+
+const GeneratedCheck: React.FC<any> = ({ className, style, ...props }) =>
+  React.createElement('div', {
+    className,
+    style: { ...style, width: 16, height: 16 },
+    ...props
+  },
+    React.createElement('div', {
+      style: { fontSize: '10px', color: '#666' }
+    }, '✓')
+  )
 
 /**
  * Generated Component Registry Manager
@@ -25,12 +52,18 @@ import { Image as GeneratedImage } from "@/components/display/image"
 export class ComponentRegistryManager {
   private componentMap = new Map<string, React.ComponentType<any>>([
     ['Bg', GeneratedBg],
+    ['Angle', GeneratedAngle],
     ['Search', GeneratedSearch],
     ['ForgotPassword', GeneratedForgotPassword],
     ['Email', GeneratedEmail],
+    ['Angle4', GeneratedAngle4],
     ['Password', GeneratedPassword],
+    ['Angle5', GeneratedAngle5],
     ['Button', GeneratedButton],
+    ['Angle6', GeneratedAngle6],
     ['RememberMe', GeneratedRememberMe],
+    ['Check', GeneratedCheck],
+    ['Angle7', GeneratedAngle7],
     ['Login', GeneratedLogin],
     ['Image', GeneratedImage],
   ]);
