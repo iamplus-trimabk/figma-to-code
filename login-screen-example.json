@@ -1,0 +1,211 @@
+{
+  "version": "1.0.0",
+  "screenType": "mobile",
+  "designTokens": {
+    "colors": {
+      "primary": "#6257db",
+      "secondary": "#8b5cf6",
+      "text": {
+        "primary": "#111827",
+        "secondary": "#4b5563",
+        "tertiary": "#6b7280",
+        "inverse": "#ffffff"
+      },
+      "background": {
+        "primary": "#ffffff",
+        "secondary": "#f9fafb",
+        "inverse": "#111827"
+      },
+      "border": {
+        "medium": "#d1d5db",
+        "focus": "#6257db"
+      }
+    },
+    "typography": {
+      "fontFamily": {
+        "primary": "Inter, system-ui, sans-serif"
+      },
+      "fontSize": {
+        "base": "16px",
+        "lg": "18px",
+        "xl": "20px",
+        "2xl": "24px"
+      },
+      "fontWeight": {
+        "medium": "500",
+        "semibold": "600",
+        "bold": "700"
+      }
+    },
+    "fontFamily": {
+      "primary": "Inter, system-ui, sans-serif"
+    },
+    "fontSize": {
+      "base": "16px",
+      "lg": "18px",
+      "xl": "20px",
+      "2xl": "24px"
+    },
+    "fontWeight": {
+      "medium": "500",
+      "semibold": "600",
+      "bold": "700"
+    },
+    "spacing": {
+      "3": "12px",
+      "4": "16px",
+      "6": "24px",
+      "8": "32px"
+    },
+    "borderRadius": {
+      "md": "8px",
+      "lg": "12px"
+    },
+    "shadows": {
+      "md": "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)"
+    }
+  },
+  "components": {
+    "Button": {
+      "type": "component",
+      "category": "navigation",
+      "layout": {
+        "type": "auto-layout",
+        "width": "100%",
+        "height": "48px",
+        "padding": { "horizontal": "spacing.6", "vertical": "spacing.3" },
+        "justifyContent": "center",
+        "alignItems": "center"
+      },
+      "styles": {
+        "borderRadius": "borderRadius.md",
+        "fontSize": "fontSize.base",
+        "fontWeight": "fontWeight.medium"
+      },
+      "variants": [
+        {
+          "name": "primary",
+          "styles": {
+            "backgroundColor": "colors.primary",
+            "color": "colors.text.inverse"
+          }
+        }
+      ],
+      "content": {
+        "type": "text",
+        "properties": {
+          "value": "Button Text",
+          "align": "center",
+          "color": "colors.text.inverse"
+        }
+      }
+    },
+    "Input": {
+      "type": "component",
+      "category": "forms",
+      "layout": {
+        "type": "auto-layout",
+        "width": "100%",
+        "height": "48px",
+        "padding": { "horizontal": "spacing.4", "vertical": "spacing.3" }
+      },
+      "styles": {
+        "backgroundColor": "colors.background.primary",
+        "borderColor": "colors.border.medium",
+        "borderWidth": "1px",
+        "borderRadius": "borderRadius.md",
+        "fontSize": "fontSize.base"
+      },
+      "content": {
+        "type": "input",
+        "properties": {
+          "placeholder": "Enter text...",
+          "value": ""
+        }
+      }
+    },
+    "Card": {
+      "type": "component",
+      "category": "display",
+      "layout": {
+        "type": "auto-layout",
+        "direction": "column",
+        "width": "100%",
+        "padding": "spacing.6",
+        "gap": "spacing.4"
+      },
+      "styles": {
+        "backgroundColor": "colors.background.primary",
+        "borderRadius": "borderRadius.lg",
+        "shadow": "shadows.md"
+      }
+    }
+  },
+  "screens": {
+    "Login": {
+      "type": "screen",
+      "platform": "mobile",
+      "layout": {
+        "type": "auto-layout",
+        "direction": "column",
+        "width": "100%",
+        "height": "100vh",
+        "justifyContent": "center",
+        "alignItems": "center",
+        "padding": "spacing.6"
+      },
+      "styles": {
+        "backgroundColor": "colors.background.secondary"
+      },
+      "children": [
+        {
+          "type": "component",
+          "name": "Card",
+          "layout": {
+            "width": "90%",
+            "maxWidth": "400px"
+          },
+          "content": {
+            "type": "container",
+            "children": [
+              {
+                "type": "text",
+                "properties": {
+                  "value": "Welcome Back",
+                  "fontSize": "fontSize.2xl",
+                  "fontWeight": "fontWeight.bold",
+                  "align": "center",
+                  "marginBottom": "spacing.6"
+                }
+              },
+              {
+                "type": "component",
+                "name": "Input",
+                "properties": {
+                  "placeholder": "Email address",
+                  "marginBottom": "spacing.4"
+                }
+              },
+              {
+                "type": "component",
+                "name": "Input",
+                "properties": {
+                  "placeholder": "Password",
+                  "marginBottom": "spacing.6"
+                }
+              },
+              {
+                "type": "component",
+                "name": "Button",
+                "variant": "primary",
+                "properties": {
+                  "value": "Sign In"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

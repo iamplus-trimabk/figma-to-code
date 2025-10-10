@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SimFlo Design System Architecture</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: auto;
+        }
+
+        .header {
+            text-align: center;
+            padding: 2rem;
+            color: white;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .container {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .diagram {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            position: relative;
+            min-height: 600px;
+        }
+
+        .arch-container {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 3rem;
+            align-items: center;
+            min-height: 500px;
+        }
+
+        /* Central Hub */
+        .central-hub {
+            grid-column: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: scaleIn 0.8s ease-out 0.3s both;
+        }
+
+        .hub-container {
+            position: relative;
+            margin: 2rem 0;
+        }
+
+        .hub {
+            width: 220px;
+            height: 220px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 10;
+        }
+
+        .hub:hover {
+            transform: scale(1.05);
+            box-shadow: 0 20px 45px rgba(102, 126, 234, 0.5);
+        }
+
+        .hub-icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .hub h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .hub p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Converters */
+        .converters-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .arrow-indicator {
+            font-size: 1.5rem;
+            color: #667eea;
+        }
+
+        .converter-item {
+            background: white;
+            border-radius: 12px;
+            padding: 1.2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .converter-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s ease;
+        }
+
+        .converter-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+            border-color: #667eea;
+        }
+
+        .converter-item:hover::before {
+            width: 8px;
+        }
+
+        .converter-header {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .converter-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .input-converter .converter-icon {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .output-converter .converter-icon {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .converter-title {
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 1rem;
+        }
+
+        .converter-description {
+            color: #718096;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        /* Flow Arrows */
+        .flow-arrows {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .arrow {
+            position: absolute;
+            stroke: #667eea;
+            stroke-width: 2;
+            fill: none;
+            stroke-dasharray: 5, 5;
+            animation: flow 2s linear infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes flow {
+            0% { stroke-dashoffset: 0; }
+            100% { stroke-dashoffset: -10; }
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2d3748;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #718096;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background: #f7fafc;
+            color: #2d3748;
+        }
+
+        .modal-body {
+            color: #4a5568;
+            line-height: 1.6;
+        }
+
+        .modal-body h4 {
+            color: #2d3748;
+            margin: 1.5rem 0 0.5rem 0;
+            font-weight: 600;
+        }
+
+        .modal-body p {
+            margin-bottom: 1rem;
+        }
+
+        .modal-body ul {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal-body li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -45%);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .arch-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .central-hub {
+                grid-column: 1;
+                order: 2;
+            }
+
+            .converters-section {
+                order: 1;
+            }
+
+            .hub {
+                width: 180px;
+                height: 180px;
+            }
+
+            .diagram {
+                padding: 2rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .diagram {
+                padding: 1.5rem;
+            }
+
+            .hub {
+                width: 150px;
+                height: 150px;
+                padding: 1.5rem;
+            }
+
+            .hub h3 {
+                font-size: 0.9rem;
+            }
+
+            .hub p {
+                font-size: 0.8rem;
+            }
+
+            .converter-item {
+                padding: 1rem;
+            }
+        }
+
+        /* Legend */
+        .legend {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.9);
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #4a5568;
+            font-size: 0.9rem;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+
+        .legend-input {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .legend-hub {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .legend-output {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>SimFlo Design System Architecture</h1>
+        <p>A comprehensive design format conversion system that bridges multiple design and development ecosystems through a unified JSON schema</p>
+    </header>
+
+    <div class="container">
+        <div class="diagram">
+            <div class="arch-container">
+                <!-- Input Converters -->
+                <div class="converters-section">
+                    <div class="section-title">
+                        <span class="arrow-indicator">→</span>
+                        <span>Input Converters (TO Format)</span>
+                    </div>
+
+                    <div class="converter-item input-converter" onclick="showDetails('figma-parser')">
+                        <div class="converter-header">
+                            <div class="converter-icon">🎨</div>
+                            <div class="converter-title">Figma JSON Parser</div>
+                        </div>
+                        <div class="converter-description">
+                            Converts Figma design files and components to SimFlo Design Format
+                        </div>
+                    </div>
+
+                    <div class="converter-item input-converter" onclick="showDetails('html-parser')">
+                        <div class="converter-header">
+                            <div class="converter-icon">🌐</div>
+                            <div class="converter-title">HTML/CSS DOM Parser</div>
+                        </div>
+                        <div class="converter-description">
+                            Extracts design patterns from existing web pages using Playwright MCP
+                        </div>
+                    </div>
+
+                    <div class="converter-item input-converter" onclick="showDetails('react-native-parser')">
+                        <div class="converter-header">
+                            <div class="converter-icon">📱</div>
+                            <div class="converter-title">React Native Parser</div>
+                        </div>
+                        <div class="converter-description">
+                            Converts React Native components to SimFlo Design Format
+                        </div>
+                    </div>
+
+                    <div class="converter-item input-converter" onclick="showDetails('reactjs-parser')">
+                        <div class="converter-header">
+                            <div class="converter-icon">⚛️</div>
+                            <div class="converter-title">ReactJS/TSX Parser</div>
+                        </div>
+                        <div class="converter-description">
+                            Extracts design tokens from React/TypeScript components
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Central Hub -->
+                <div class="central-hub">
+                    <div class="hub-container">
+                        <svg class="flow-arrows" viewBox="0 0 800 600">
+                            <!-- Input arrows -->
+                            <path class="arrow" d="M 150 100 Q 300 100 400 200" />
+                            <path class="arrow" d="M 150 200 Q 300 200 400 250" />
+                            <path class="arrow" d="M 150 300 Q 300 300 400 350" />
+                            <path class="arrow" d="M 150 400 Q 300 400 400 400" />
+
+                            <!-- Output arrows -->
+                            <path class="arrow" d="M 400 300 Q 500 300 650 100" />
+                            <path class="arrow" d="M 400 350 Q 500 350 650 200" />
+                            <path class="arrow" d="M 400 400 Q 500 400 650 300" />
+                            <path class="arrow" d="M 400 450 Q 500 450 650 400" />
+                            <path class="arrow" d="M 400 500 Q 500 500 650 500" />
+                        </svg>
+
+                        <div class="hub" onclick="showDetails('simflo-hub')">
+                            <div class="hub-icon">🔄</div>
+                            <h3>SimFlo Design Format</h3>
+                            <p>JSON Schema</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Output Converters -->
+                <div class="converters-section">
+                    <div class="section-title">
+                        <span>Output Converters (FROM Format)</span>
+                        <span class="arrow-indicator">→</span>
+                    </div>
+
+                    <div class="converter-item output-converter" onclick="showDetails('react-generator')">
+                        <div class="converter-header">
+                            <div class="converter-icon">⚛️</div>
+                            <div class="converter-title">ReactJS/React Native Code Generator</div>
+                        </div>
+                        <div class="converter-description">
+                            Generates production-ready React components for web and mobile
+                        </div>
+                    </div>
+
+                    <div class="converter-item output-converter" onclick="showDetails('figma-generator')">
+                        <div class="converter-header">
+                            <div class="converter-icon">🎨</div>
+                            <div class="converter-title">Figma Generator</div>
+                        </div>
+                        <div class="converter-description">
+                            Creates Figma designs and components from SimFlo format
+                        </div>
+                    </div>
+
+                    <div class="converter-item output-converter" onclick="showDetails('dom-creator')">
+                        <div class="converter-header">
+                            <div class="converter-icon">🌐</div>
+                            <div class="converter-title">DOM Creator</div>
+                        </div>
+                        <div class="converter-description">
+                            Generates HTML/CSS DOM structures from design specifications
+                        </div>
+                    </div>
+
+                    <div class="converter-item output-converter" onclick="showDetails('canvas-renderer')">
+                        <div class="converter-header">
+                            <div class="converter-icon">🖼️</div>
+                            <div class="converter-title">HTML Canvas Renderer</div>
+                        </div>
+                        <div class="converter-description">
+                            Renders visual designs using HTML Canvas API
+                        </div>
+                    </div>
+
+                    <div class="converter-item output-converter" onclick="showDetails('media-creator')">
+                        <div class="converter-header">
+                            <div class="converter-icon">🎬</div>
+                            <div class="converter-title">Video/Image Creator</div>
+                        </div>
+                        <div class="converter-description">
+                            Generates visual media assets from design specifications
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Legend -->
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color legend-input"></div>
+                    <span>Input Converters</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color legend-hub"></div>
+                    <span>Central Hub</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color legend-output"></div>
+                    <span>Output Converters</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title" class="modal-title"></h3>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+            <div id="modal-body" class="modal-body"></div>
+        </div>
+    </div>
+
+    <script>
+        const details = {
+            'simflo-hub': {
+                title: 'SimFlo Design Format (JSON Schema)',
+                content: `
+                    <p>The <strong>SimFlo Design Format</strong> is the core of our design system architecture - a comprehensive JSON schema that serves as the universal intermediate format for all design conversions.</p>
+
+                    <h4>Key Features:</h4>
+                    <ul>
+                        <li><strong>Universal Compatibility:</strong> Bridges multiple design and development ecosystems</li>
+                        <li><strong>Comprehensive Schema:</strong> Captures all aspects of design including layout, styling, interactions, and animations</li>
+                        <li><strong>Type Safety:</strong> Full TypeScript support with strict validation</li>
+                        <li><strong>Version Control:</strong> Built-in versioning for schema evolution</li>
+                        <li><strong>Extensibility:</strong> Plugin architecture for custom properties and converters</li>
+                    </ul>
+
+                    <h4>Schema Structure:</h4>
+                    <p>The format includes detailed specifications for:</p>
+                    <ul>
+                        <li>Component hierarchies and relationships</li>
+                        <li>Design tokens (colors, typography, spacing)</li>
+                        <li>Layout constraints and responsive behavior</li>
+                        <li>Interaction states and animations</li>
+                        <li>Accessibility attributes</li>
+                        <li>Performance optimizations</li>
+                    </ul>
+
+                    <h4>Benefits:</h4>
+                    <p>By standardizing on this JSON schema, teams can freely move between different design tools and development platforms without losing design fidelity or requiring manual conversion work.</p>
+                `
+            },
+            'figma-parser': {
+                title: 'Figma JSON Parser',
+                content: `
+                    <p>The <strong>Figma JSON Parser</strong> converts Figma design files, components, and design systems into the SimFlo Design Format, enabling seamless integration with the broader ecosystem.</p>
+
+                    <h4>Core Capabilities:</h4>
+                    <ul>
+                        <li><strong>Figma API Integration:</strong> Direct connection to Figma's REST API and WebSocket endpoints</li>
+                        <li><strong>Component Extraction:</strong> Automatically identifies and extracts reusable components</li>
+                        <li><strong>Design Token Parsing:</strong> Converts Figma styles, variables, and design tokens</li>
+                        <li><strong>Layout Analysis:</strong> Understands Figma's auto-layout and constraint systems</li>
+                        <li><strong>Variant Detection:</strong> Recognizes component variants and property configurations</li>
+                    </ul>
+
+                    <h4>Supported Features:</h4>
+                    <ul>
+                        <li>Frames, groups, and component hierarchies</li>
+                        <li>Vector shapes, paths, and boolean operations</li>
+                        <li>Text properties and typography</li>
+                        <li>Images and embedded content</li>
+                        <li>Prototyping flows and interactions</li>
+                        <li>Component properties and variants</li>
+                        <li>Design system libraries and styles</li>
+                    </ul>
+
+                    <h4>Advanced Features:</h4>
+                    <p>The parser includes intelligent detection of design patterns, automatic component organization, and preservation of design intent through semantic naming and structure mapping.</p>
+                `
+            },
+            'html-parser': {
+                title: 'HTML/CSS DOM Parser',
+                content: `
+                    <p>The <strong>HTML/CSS DOM Parser</strong> leverages Playwright MCP to analyze existing web pages and extract design patterns, converting them into the SimFlo Design Format for reuse and optimization.</p>
+
+                    <h4>Technology Stack:</h4>
+                    <ul>
+                        <li><strong>Playwright MCP:</strong> Advanced browser automation for accurate DOM analysis</li>
+                        <li><strong>CSS Parsing Engine:</strong> Comprehensive stylesheet analysis and cascade resolution</li>
+                        <li><strong>Visual Analysis:</strong> Screenshot-based design pattern detection</li>
+                        <li><strong>Responsive Detection:</strong> Media query and breakpoint analysis</li>
+                    </ul>
+
+                    <h4>Extraction Capabilities:</h4>
+                    <ul>
+                        <li><strong>Component Detection:</strong> Identifies reusable UI components from DOM structure</li>
+                        <li><strong>Style Analysis:</strong> Extracts computed styles, CSS variables, and design tokens</li>
+                        <li><strong>Layout Patterns:</strong> Recognizes grid, flexbox, and other layout systems</li>
+                        <li><strong>Interactive Elements:</strong> Maps form controls, navigation, and dynamic content</li>
+                        <li><strong>Animation States:</strong> Captures CSS transitions and keyframe animations</li>
+                    </ul>
+
+                    <h4>Smart Features:</h4>
+                    <p>The parser includes machine learning algorithms for component recognition, automatic design system extraction, and intelligent grouping of related elements. It can handle complex SPAs, shadow DOM, and web components.</p>
+
+                    <h4>Use Cases:</h4>
+                    <ul>
+                        <li>Migrate existing websites to component-based architecture</li>
+                        <li>Create design systems from production applications</li>
+                        <li>Analyze competitor designs for inspiration</li>
+                        <li>Document existing UI patterns for team knowledge sharing</li>
+                    </ul>
+                `
+            },
+            'react-native-parser': {
+                title: 'React Native Parser',
+                content: `
+                    <p>The <strong>React Native Parser</strong> converts React Native components and design patterns into the SimFlo Design Format, enabling cross-platform design consistency and code sharing.</p>
+
+                    <h4>Parser Capabilities:</h4>
+                    <ul>
+                        <li><strong>Component Analysis:</strong> Deep analysis of React Native component structures</li>
+                        <li><strong>StyleSheet Parsing:</strong> Conversion of StyleSheet objects to design tokens</li>
+                        <li><strong>Native Module Detection:</strong> Identification of platform-specific components</li>
+                        <li><strong>Navigation Patterns:</strong> Analysis of navigation and routing structures</li>
+                        <li><strong>Animation Extraction:</strong> Conversion of Animated API usage to design specifications</li>
+                    </ul>
+
+                    <h4>Supported React Native Features:</h4>
+                    <ul>
+                        <li>Core components (View, Text, Image, ScrollView, etc.)</li>
+                        <li>StyleSheet objects and dynamic styling</li>
+                        <li>Flexbox layout properties and constraints</li>
+                        <li>Gesture handlers and touch interactions</li>
+                        <li>Platform-specific components and modules</li>
+                        <li>Third-party library components</li>
+                        <li>Custom component abstractions</li>
+                    </ul>
+
+                    <h4>Cross-Platform Benefits:</h4>
+                    <p>By converting React Native designs to the SimFlo format, teams can maintain design consistency across web, iOS, and Android platforms while enabling code sharing between React Native and ReactJS applications.</p>
+
+                    <h4>Advanced Features:</h4>
+                    <p>The parser includes detection of responsive design patterns, accessibility implementations, and performance optimizations. It can also handle complex animations and gesture systems.</p>
+                `
+            },
+            'reactjs-parser': {
+                title: 'ReactJS/TSX Parser',
+                content: `
+                    <p>The <strong>ReactJS/TSX Parser</strong> extracts design patterns and component specifications from React applications, converting them into the standardized SimFlo Design Format.</p>
+
+                    <h4>Core Features:</h4>
+                    <ul>
+                        <li><strong>TypeScript Support:</strong> Full parsing of TSX files with type analysis</li>
+                        <li><strong>Component Hierarchy:</strong> Deep analysis of component composition patterns</li>
+                        <li><strong>Style Extraction:</strong> CSS-in-JS, styled-components, and CSS modules parsing</li>
+                        <li><strong>Hook Analysis:</strong> Understanding of custom hooks and state patterns</li>
+                        <li><strong>Props Interface:</strong> Extraction of component APIs and configuration</li>
+                    </ul>
+
+                    <h4>Supported Technologies:</h4>
+                    <ul>
+                        <li>React functional components with hooks</li>
+                        <li>Class components and lifecycle methods</li>
+                        <li>TypeScript interfaces and generic types</li>
+                        <li>CSS-in-JS libraries (styled-components, emotion)</li>
+                        <li>CSS modules and scoped styles</li>
+                        <li>Tailwind CSS and utility classes</li>
+                        <li>Component libraries (Material-UI, Ant Design, etc.)</li>
+                    </ul>
+
+                    <h4>Intelligent Analysis:</h4>
+                    <p>The parser uses AST (Abstract Syntax Tree) analysis to understand component structure, prop types, and styling patterns. It can identify reusable design patterns and suggest component abstractions.</p>
+
+                    <h4>Output Specifications:</h4>
+                    <p>Generated SimFlo format includes complete component documentation, responsive design patterns, interaction states, and accessibility features extracted from the original React codebase.</p>
+                `
+            },
+            'react-generator': {
+                title: 'ReactJS/React Native Code Generator',
+                content: `
+                    <p>The <strong>ReactJS/React Native Code Generator</strong> converts SimFlo Design Format specifications into production-ready React components for both web and mobile platforms.</p>
+
+                    <h4>Generation Capabilities:</h4>
+                    <ul>
+                        <li><strong>TypeScript Components:</strong> Fully typed React components with comprehensive interfaces</li>
+                        <li><strong>Responsive Design:</strong> Mobile-first responsive layouts with breakpoint handling</li>
+                        <li><strong>Accessibility:</strong> ARIA attributes, keyboard navigation, and screen reader support</li>
+                        <li><strong>Performance Optimization:</strong> Memoization, lazy loading, and code splitting</li>
+                        <li><strong>Testing Support:</strong> Generated test files with comprehensive coverage</li>
+                    </ul>
+
+                    <h4>ReactJS Output Features:</h4>
+                    <ul>
+                        <li>Modern React patterns (hooks, suspense, concurrent features)</li>
+                        <li>CSS-in-JS or Tailwind CSS integration</li>
+                        <li>Component composition and prop forwarding</li>
+                        <li>Error boundaries and loading states</li>
+                        <li>Server-side rendering compatibility</li>
+                        <li>Storybook stories integration</li>
+                    </ul>
+
+                    <h4>React Native Output Features:</h4>
+                    <ul>
+                        <li>Platform-specific optimizations</li>
+                        <li>Native gesture handling</li>
+                        <li>Navigation integration (React Navigation)</li>
+                        <li>Performance optimizations (FlatList, image caching)</li>
+                        <li>Platform adapters for iOS/Android differences</li>
+                        <li>Native module integration patterns</li>
+                    </ul>
+
+                    <h4>Quality Assurance:</h4>
+                    <p>All generated code follows industry best practices, includes comprehensive TypeScript types, implements proper error handling, and is optimized for performance and maintainability.</p>
+                `
+            },
+            'figma-generator': {
+                title: 'Figma Generator',
+                content: `
+                    <p>The <strong>Figma Generator</strong> creates Figma designs, components, and design systems from SimFlo Design Format specifications, enabling reverse engineering and design synchronization.</p>
+
+                    <h4>Generation Features:</h4>
+                    <ul>
+                        <li><strong>Figma API Integration:</strong> Direct creation and modification of Figma files</li>
+                        <li><strong>Component Libraries:</strong> Automated creation of component sets and variants</li>
+                        <li><strong>Design Systems:</strong> Complete design system generation with styles and tokens</li>
+                        <li><strong>Layout Systems:</strong> Auto-layout and constraint-based positioning</li>
+                        <li><strong>Interactive Prototypes:</strong> Creation of user flow prototypes</li>
+                    </ul>
+
+                    <h4>Supported Figma Features:</h4>
+                    <ul>
+                        <li>Frames, groups, and component hierarchies</li>
+                        <li>Vector shapes and path operations</li>
+                        <li>Text styles and typography systems</li>
+                        <li>Color styles and design tokens</li>
+                        <li>Effect styles (shadows, blurs)</li>
+                        <li>Grid and layout guides</li>
+                        <li>Component properties and variants</li>
+                        <li>Interactive components and prototyping</li>
+                    </ul>
+
+                    <h4>Advanced Capabilities:</h4>
+                    <p>The generator includes intelligent layout optimization, automatic responsive design adaptation, and smart component organization. It can maintain design consistency across multiple files and synchronize changes automatically.</p>
+
+                    <h4>Use Cases:</h4>
+                    <ul>
+                        <li>Create design systems from code specifications</li>
+                        <li>Synchronize design changes across teams</li>
+                        <li>Generate design variations and themes</li>
+                        <li>Automate design documentation and handoff</li>
+                        <li>Create design templates and starter kits</li>
+                    </ul>
+                `
+            },
+            'dom-creator': {
+                title: 'DOM Creator',
+                content: `
+                    <p>The <strong>DOM Creator</strong> generates semantic HTML and optimized CSS from SimFlo Design Format specifications, creating production-ready web implementations.</p>
+
+                    <h4>HTML Generation Features:</h4>
+                    <ul>
+                        <li><strong>Semantic HTML5:</strong> Proper use of semantic elements and ARIA roles</li>
+                        <li><strong>Accessibility First:</strong> Comprehensive accessibility attributes and landmarks</li>
+                        <li><strong>SEO Optimized:</strong> Meta tags, structured data, and semantic markup</li>
+                        <li><strong>Progressive Enhancement:</strong> Graceful degradation and feature detection</li>
+                        <li><strong>Performance Focus:</strong> Minimal markup and optimized asset loading</li>
+                    </ul>
+
+                    <h4>CSS Generation Features:</h4>
+                    <ul>
+                        <li><strong>Modern CSS:</strong> CSS Grid, Flexbox, custom properties, and container queries</li>
+                        <li><strong>Responsive Design:</strong> Mobile-first approach with intelligent breakpoints</li>
+                        <li><strong>CSS Architecture:</strong> BEM methodology or custom naming conventions</li>
+                        <li><strong>Animation System:</strong> Keyframes, transitions, and micro-interactions</li>
+                        <li><strong>Performance Optimization:</strong> Critical CSS, minification, and purging</li>
+                    </ul>
+
+                    <h4>Advanced Features:</h4>
+                    <ul>
+                        <li><strong>CSS Framework Integration:</strong> Compatible with Tailwind, Bootstrap, or custom systems</li>
+                        <li><strong>Component Isolation:</strong> Scoped styles and CSS modules support</li>
+                        <li><strong>Theme System:</strong> CSS custom properties for dynamic theming</li>
+                        <li><strong>Print Optimization:</strong> Specialized print styles and media queries</li>
+                        <li><strong>Cross-browser Compatibility:</strong> Vendor prefixes and fallbacks</li>
+                    </ul>
+
+                    <h4>Output Quality:</h4>
+                    <p>Generated code follows web standards, achieves high Lighthouse scores, and is optimized for both performance and maintainability.</p>
+                `
+            },
+            'canvas-renderer': {
+                title: 'HTML Canvas Renderer',
+                content: `
+                    <p>The <strong>HTML Canvas Renderer</strong> converts SimFlo Design Format specifications into dynamic Canvas visualizations, enabling complex graphics, animations, and interactive visualizations.</p>
+
+                    <h4>Rendering Capabilities:</h4>
+                    <ul>
+                        <li><strong>Vector Graphics:</strong> Precise rendering of shapes, paths, and curves</li>
+                        <li><strong>Text Rendering:</strong> Advanced typography with custom fonts and effects</li>
+                        <li><strong>Image Processing:</strong> Image manipulation, filters, and compositing</li>
+                        <li><strong>Animation Engine:</strong> Smooth 60fps animations with easing functions</li>
+                        <li><strong>Interaction System:</strong> Mouse, touch, and keyboard event handling</li>
+                    </ul>
+
+                    <h4>Advanced Features:</h4>
+                    <ul>
+                        <li><strong>Particle Systems:</strong> Complex particle effects and simulations</li>
+                        <li><strong>3D Projections:</strong> Isometric and perspective rendering</li>
+                        <li><strong>Data Visualization:</strong> Charts, graphs, and interactive dashboards</li>
+                        <li><strong>Game Engine:</strong> Sprite management, collision detection, physics</li>
+                        <li><strong>Performance Optimization:</strong> Offscreen canvas, web workers, and GPU acceleration</li>
+                    </ul>
+
+                    <h4>Use Cases:</h4>
+                    <ul>
+                        <li>Interactive data visualizations and dashboards</li>
+                        <li>Custom charts and graphs</li>
+                        <li>Game interfaces and mini-games</li>
+                        <li>Interactive presentations and tutorials</li>
+                        <li>Artistic installations and creative coding</li>
+                        <li>Real-time monitoring systems</li>
+                    </ul>
+
+                    <h4>Technical Implementation:</h4>
+                    <p>The renderer uses advanced Canvas API features, WebGL for hardware acceleration, and includes fallback systems for older browsers. It supports both immediate and retained mode rendering for optimal performance.</p>
+                `
+            },
+            'media-creator': {
+                title: 'Video/Image Creator',
+                content: `
+                    <p>The <strong>Video/Image Creator</strong> generates static and dynamic visual media assets from SimFlo Design Format specifications, supporting various formats and quality settings.</p>
+
+                    <h4>Image Generation Features:</h4>
+                    <ul>
+                        <li><strong>Multiple Formats:</strong> PNG, JPEG, WebP, SVG, and AVIF support</li>
+                        <li><strong>Resolution Scaling:</strong> Generation of multiple resolutions for responsive design</li>
+                        <li><strong>Optimization:</strong> Automatic compression and quality optimization</li>
+                        <li><strong>Format Variants:</strong> Generation of dark mode, high contrast, and themed versions</li>
+                        <li><strong>Sprite Sheets:</strong> Automatic sprite sheet generation for game assets</li>
+                    </ul>
+
+                    <h4>Video Generation Features:</h4>
+                    <ul>
+                        <li><strong>Animation Export:</strong> MP4, WebM, and GIF format support</li>
+                        <li><strong>Timeline Control:</strong> Frame-by-frame animation editing</li>
+                        <li><strong>Transitions:</strong> Professional transitions and effects</li>
+                        <li><strong>Audio Integration:</strong> Background music and sound effect support</li>
+                        <li><strong>Resolution Options:</strong> 4K, 1080p, and mobile-optimized outputs</li>
+                    </ul>
+
+                    <h4>Advanced Capabilities:</h4>
+                    <ul>
+                        <li><strong>Batch Processing:</strong> Generation of entire asset libraries</li>
+                        <li><strong>Template System:</strong> Reusable templates for consistent branding</li>
+                        <li><strong>API Integration:</strong> Cloud storage and CDN deployment</li>
+                        <li><strong>Version Control:</strong> Asset versioning and rollback capabilities</li>
+                        <li><strong>Analytics:</strong> Asset usage tracking and optimization suggestions</li>
+                    </ul>
+
+                    <h4>Quality Assurance:</h4>
+                    <p>All generated media undergoes automatic quality checks, performance optimization, and accessibility compliance testing to ensure professional-grade output.</p>
+
+                    <h4>Integration Options:</h4>
+                    <p>The creator integrates with popular cloud storage solutions, CDN services, and asset management platforms for seamless workflow integration.</p>
+                `
+            }
+        };
+
+        function showDetails(componentId) {
+            const modal = document.getElementById('modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalBody = document.getElementById('modal-body');
+
+            const detail = details[componentId];
+            if (detail) {
+                modalTitle.textContent = detail.title;
+                modalBody.innerHTML = detail.content;
+                modal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('modal');
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('modal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Add interactive animations on load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate converters appearing one by one
+            const converters = document.querySelectorAll('.converter-item');
+            converters.forEach((converter, index) => {
+                converter.style.opacity = '0';
+                converter.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    converter.style.transition = 'all 0.5s ease-out';
+                    converter.style.opacity = '1';
+                    converter.style.transform = 'translateY(0)';
+                }, 100 * index + 500);
+            });
+        });
+    </script>
+</body>
+</html>
