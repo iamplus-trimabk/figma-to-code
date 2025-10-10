@@ -1,8 +1,8 @@
 /**
- * Page Assembler - Main page assembly engine
+ * Page Assembler - Generated from Stage 2 Automation Outputs
  *
- * This module handles the assembly of complete pages from Figma layouts
- * by combining layout parsing, component registry, and responsive design.
+ * Main page assembly engine that combines layout parsing and component registry
+ * to generate complete pages from Figma layouts.
  */
 
 import React from 'react'
@@ -24,14 +24,14 @@ export interface AssembledComponentProps {
 }
 
 /**
- * Page Assembler Class
+ * Generated Page Assembler Class
  */
 export class PageAssembler {
   private layoutParser: LayoutParser
   private componentRegistry: ComponentRegistryManager
 
-  constructor(screenLayoutsPath?: string) {
-    this.layoutParser = new LayoutParser(screenLayoutsPath || '/extracted_login_assets_api/screen_layouts.json')
+  constructor() {
+    this.layoutParser = new LayoutParser()
     this.componentRegistry = new ComponentRegistryManager()
   }
 
@@ -49,11 +49,11 @@ export class PageAssembler {
       styles.alignItems = 'stretch'
       styles.justifyContent = 'center'
       styles.minHeight = '100vh'
-      styles.backgroundColor = screenLayout?.background_color || '#f4f4f4'
+      styles.backgroundColor = screenLayout?.backgroundColor || '#f4f4f4'
       styles.padding = '2rem'
       styles.gap = '2rem'
     } else if (component.name === 'bg') {
-      // Handle the white background container - this should be a card container
+      // Handle the white background container
       styles.display = 'flex'
       styles.flexDirection = 'column'
       styles.alignItems = 'center'
@@ -63,9 +63,9 @@ export class PageAssembler {
       styles.padding = '2rem'
       styles.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)'
       styles.flex = '1'
-      styles.maxWidth = '400px' // More constrained to match Figma design
+      styles.maxWidth = '400px'
       styles.width = '100%'
-      styles.position = 'relative' // Allow proper positioning of child elements
+      styles.position = 'relative'
     } else if (component.name === 'Illustration') {
       // Handle the illustration area
       styles.display = 'flex'
@@ -86,23 +86,10 @@ export class PageAssembler {
   }
 
   /**
-   * Convert Figma size to CSS dimensions
+   * Extract style properties from Figma component
    */
-  private figmaSizeToCss(size: ComponentSize): Partial<LayoutStyle> {
-    return {
-      width: `${size.width}px`,
-      height: `${size.height}px`,
-    }
-  }
-
-  /**
-   * Extract style properties from Figma component (responsive version)
-   */
-  private extractStyles(component: ParsedComponent): Partial<LayoutStyle> {
-    const styles: Partial<LayoutStyle> = {}
-
-    // Use responsive sizing instead of fixed Figma dimensions
-    // Don't add absolute positioning - let flexbox handle layout
+  private extractStyles(component: ParsedComponent): React.CSSProperties {
+    const styles: React.CSSProperties = {}
 
     // Add background color if present
     if (component.style?.background_colors?.length > 0) {
@@ -111,7 +98,7 @@ export class PageAssembler {
 
     // Add border radius if present
     if (component.style?.border_radius) {
-      styles.borderRadius = `${Math.min(component.style.border_radius, 12)}px` // Cap border radius for mobile
+      styles.borderRadius = `${Math.min(component.style.border_radius, 12)}px`
     }
 
     // Add opacity if present
@@ -128,21 +115,21 @@ export class PageAssembler {
   }
 
   /**
-   * Assemble a single component (responsive version)
+   * Assemble a single component
    */
   private assembleComponent({ component, index, totalComponents }: AssembledComponentProps): React.ReactNode {
     const Component = this.componentRegistry.getComponent(component.name)
 
     // Create responsive container for all components
-    const responsiveContainer = {
+    const responsiveContainer: React.CSSProperties = {
       display: 'flex',
       flexDirection: 'column',
-      alignItems: 'stretch', // Changed from center to stretch for better alignment
+      alignItems: 'stretch',
       justifyContent: 'flex-start',
       margin: '0.5rem',
       padding: '0.5rem',
       width: '100%',
-      maxWidth: '100%', // Use full width within constraints
+      maxWidth: '100%',
     }
 
     // Handle text components with enhanced styling from Figma
@@ -150,10 +137,10 @@ export class PageAssembler {
       const textStyles: React.CSSProperties = {
         ...this.extractStyles(component),
         ...responsiveContainer,
-        textAlign: 'left', // Changed from center to left alignment
+        textAlign: 'left',
         fontSize: '1.25rem',
         fontWeight: 'normal',
-        alignSelf: 'flex-start', // Ensure left alignment within flex container
+        alignSelf: 'flex-start',
       }
 
       // Apply specific styling based on text component type
@@ -161,36 +148,35 @@ export class PageAssembler {
         case 'Welcome to Design School':
           textStyles.fontSize = '2rem'
           textStyles.fontWeight = 'bold'
-          ;(textStyles as any).color = component.style?.background_colors?.[0] || '#2e2e2e'
-          ;(textStyles as any).marginBottom = '1.5rem'
-          // Remove background color to show text properly
-          ;(textStyles as any).backgroundColor = 'transparent'
-          ;(textStyles as any).textAlign = 'left'
-          ;(textStyles as any).alignSelf = 'flex-start'
+          textStyles.color = component.style?.background_colors?.[0] || '#2e2e2e'
+          textStyles.marginBottom = '1.5rem'
+          textStyles.backgroundColor = 'transparent'
+          textStyles.textAlign = 'left'
+          textStyles.alignSelf = 'flex-start'
           break
 
         case 'or':
           textStyles.fontSize = '1rem'
-          ;(textStyles as any).color = '#6b7280'
+          textStyles.color = '#6b7280'
           textStyles.margin = '1rem 0'
-          ;(textStyles as any).position = 'relative'
-          ;(textStyles as any).backgroundColor = 'transparent'
-          ;(textStyles as any).textAlign = 'center' // Keep "or" centered
-          ;(textStyles as any).alignSelf = 'center'
+          textStyles.position = 'relative'
+          textStyles.backgroundColor = 'transparent'
+          textStyles.textAlign = 'center'
+          textStyles.alignSelf = 'center'
           break
 
         case "Don't have an account? Register":
           textStyles.fontSize = '0.875rem'
-          ;(textStyles as any).color = component.style?.background_colors?.[0] || '#000000'
-          ;(textStyles as any).marginTop = '1rem'
-          ;(textStyles as any).backgroundColor = 'transparent'
-          ;(textStyles as any).textAlign = 'left'
-          ;(textStyles as any).alignSelf = 'flex-start'
+          textStyles.color = component.style?.background_colors?.[0] || '#000000'
+          textStyles.marginTop = '1rem'
+          textStyles.backgroundColor = 'transparent'
+          textStyles.textAlign = 'left'
+          textStyles.alignSelf = 'flex-start'
           break
 
         default:
-          ;(textStyles as any).color = component.style?.background_colors?.[0] || '#374151'
-          ;(textStyles as any).backgroundColor = 'transparent'
+          textStyles.color = component.style?.background_colors?.[0] || '#374151'
+          textStyles.backgroundColor = 'transparent'
       }
 
       return React.createElement(
@@ -204,7 +190,7 @@ export class PageAssembler {
       )
     }
 
-    // Handle placeholder components (icons, illustrations)
+    // Handle placeholder components
     if (this.componentRegistry.isPlaceholderComponent(component.name)) {
       const placeholderStyles: React.CSSProperties = {
         ...this.extractStyles(component),
@@ -246,120 +232,110 @@ export class PageAssembler {
         case 'Login with Google':
           componentProps.children = 'Continue with Google'
           componentProps.variant = 'outline'
-          componentProps.className += ' google-btn'
-          // Apply Google button styling with border and proper colors
-          ;(styles as any).backgroundColor = '#ffffff'
-          ;(styles as any).color = '#000000'
-          ;(styles as any).border = '1px solid #dadce0'
-          ;(styles as any).borderRadius = '8px'
-          ;(styles as any).padding = '12px 16px'
-          ;(styles as any).fontSize = '16px'
-          ;(styles as any).fontWeight = '500'
-          ;(styles as any).display = 'flex'
-          ;(styles as any).alignItems = 'center'
-          ;(styles as any).justifyContent = 'center'
-          ;(styles as any).gap = '8px'
-          ;(styles as any).transition = 'all 0.2s ease'
-          ;(styles as any).cursor = 'pointer'
-          ;(styles as any).zIndex = '10'
+          Object.assign(styles, {
+            backgroundColor: '#ffffff',
+            color: '#000000',
+            border: '1px solid #dadce0',
+            borderRadius: '8px',
+            padding: '12px 16px',
+            fontSize: '16px',
+            fontWeight: '500',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+            transition: 'all 0.2s ease',
+            cursor: 'pointer',
+            zIndex: '10'
+          })
           break
 
         case 'Login with facebook':
           componentProps.children = 'Continue with Facebook'
           componentProps.variant = 'outline'
-          componentProps.className += ' facebook-btn'
-          // Apply Facebook button styling with border and proper colors
-          ;(styles as any).backgroundColor = '#1877f2'
-          ;(styles as any).color = '#ffffff'
-          ;(styles as any).border = '1px solid #1877f2'
-          ;(styles as any).borderRadius = '8px'
-          ;(styles as any).padding = '12px 16px'
-          ;(styles as any).fontSize = '16px'
-          ;(styles as any).fontWeight = '500'
-          ;(styles as any).display = 'flex'
-          ;(styles as any).alignItems = 'center'
-          ;(styles as any).justifyContent = 'center'
-          ;(styles as any).gap = '8px'
-          ;(styles as any).transition = 'all 0.2s ease'
-          ;(styles as any).cursor = 'pointer'
-          ;(styles as any).zIndex = '10'
+          Object.assign(styles, {
+            backgroundColor: '#1877f2',
+            color: '#ffffff',
+            border: '1px solid #1877f2',
+            borderRadius: '8px',
+            padding: '12px 16px',
+            fontSize: '16px',
+            fontWeight: '500',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+            transition: 'all 0.2s ease',
+            cursor: 'pointer',
+            zIndex: '10'
+          })
           break
 
         case 'button':
+        case 'Login':
           componentProps.children = 'Login'
           componentProps.variant = 'default'
           componentProps.type = 'submit'
-          componentProps.className += ' login-btn'
-          // Apply primary purple color for login button
-          ;(styles as any).backgroundColor = '#6257db' // Primary purple from design tokens
-          ;(styles as any).color = '#ffffff'
-          ;(styles as any).border = 'none'
-          ;(styles as any).fontWeight = '500'
-          ;(styles as any).fontSize = '16px'
-          ;(styles as any).padding = '12px 24px'
-          ;(styles as any).cursor = 'pointer'
-          ;(styles as any).transition = 'all 0.2s ease'
-          // Apply button styling from Figma
-          if (component.style?.border_radius) {
-            ;(styles as any).borderRadius = `${component.style.border_radius}px`
-          } else {
-            ;(styles as any).borderRadius = '8px'
-          }
+          Object.assign(styles, {
+            backgroundColor: '#6257db',
+            color: '#ffffff',
+            border: 'none',
+            fontWeight: '500',
+            fontSize: '16px',
+            padding: '12px 24px',
+            cursor: 'pointer',
+            transition: 'all 0.2s ease',
+            borderRadius: '8px'
+          })
           break
 
         case 'Email':
           componentProps.placeholder = 'Enter your email'
           componentProps.type = 'email'
-          componentProps.className += ' email-input'
-          // Apply input styling from Figma
-          ;(styles as any).width = '100%'
-          ;(styles as any).padding = '12px 16px'
-          ;(styles as any).border = '1px solid #d1d5db'
-          ;(styles as any).borderRadius = '6px'
+          Object.assign(styles, {
+            width: '100%',
+            padding: '12px 16px',
+            border: '1px solid #d1d5db',
+            borderRadius: '6px'
+          })
           break
 
         case 'Password':
           componentProps.placeholder = 'Enter your password'
           componentProps.type = 'password'
-          componentProps.className += ' password-input'
-          // Apply input styling from Figma
-          ;(styles as any).width = '100%'
-          ;(styles as any).padding = '12px 16px'
-          ;(styles as any).border = '1px solid #d1d5db'
-          ;(styles as any).borderRadius = '6px'
+          Object.assign(styles, {
+            width: '100%',
+            padding: '12px 16px',
+            border: '1px solid #d1d5db',
+            borderRadius: '6px'
+          })
           break
 
         case 'Remember me':
           componentProps.children = 'Remember me'
           componentProps.type = 'checkbox'
-          componentProps.className += ' remember-me-checkbox'
-          // Fix alignment - use flex with left alignment
-          ;(styles as any).display = 'flex'
-          ;(styles as any).alignItems = 'center'
-          ;(styles as any).justifyContent = 'flex-start'
-          ;(styles as any).textAlign = 'left'
-          ;(styles as any).alignSelf = 'flex-start'
-          ;(styles as any).width = '100%'
-          // Apply checkbox styling from Figma
-          if (component.style?.border_radius) {
-            ;(styles as any).borderRadius = `${component.style.border_radius}px`
-          }
+          Object.assign(styles, {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            textAlign: 'left',
+            alignSelf: 'flex-start',
+            width: '100%'
+          })
           break
 
         case 'Forgot Password?':
           componentProps.children = 'Forgot Password?'
           componentProps.variant = 'link'
-          componentProps.className += ' forgot-password-link'
-          // Apply link styling from Figma
-          if (component.style?.background_colors?.length > 0) {
-            ;(styles as any).color = component.style.background_colors[0]
-          }
-          ;(styles as any).textDecoration = 'underline'
-          ;(styles as any).cursor = 'pointer'
-          ;(styles as any).textAlign = 'right'
-          ;(styles as any).alignSelf = 'flex-end'
-          ;(styles as any).fontSize = '14px'
-          ;(styles as any).marginTop = '-1rem' // Position it properly next to Remember me
+          Object.assign(styles, {
+            color: component.style?.background_colors?.[0] || '#6257db',
+            textDecoration: 'underline',
+            cursor: 'pointer',
+            textAlign: 'right',
+            alignSelf: 'flex-end',
+            fontSize: '14px',
+            marginTop: '-1rem'
+          })
           break
 
         case 'Welcome to Design School':
@@ -367,15 +343,15 @@ export class PageAssembler {
           break
 
         case 'bg':
-          // Background component - apply proper styling from Figma
+          // Background component styling
           if (component.style?.background_colors?.length > 0) {
-            ;(styles as any).backgroundColor = component.style.background_colors[0]
+            styles.backgroundColor = component.style.background_colors[0]
           }
           if (component.style?.border_radius) {
-            ;(styles as any).borderRadius = `${component.style.border_radius}px`
+            styles.borderRadius = `${component.style.border_radius}px`
           }
-          ;(styles as any).minHeight = '400px' // Ensure background has proper height
-          ;(styles as any).padding = '2rem'
+          styles.minHeight = '400px'
+          styles.padding = '2rem'
           break
 
         default:
@@ -409,7 +385,7 @@ export class PageAssembler {
   }
 
   /**
-   * Assemble a complete screen (responsive version)
+   * Assemble a complete screen
    */
   public assembleScreen(screenName: string): React.ReactNode {
     const screen = this.layoutParser.parseScreen(screenName)
