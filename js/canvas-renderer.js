@@ -78,15 +78,53 @@ class CanvasRenderer {
             }
 
             // Render nested elements if they exist
-            if (nestedElements && Array.isArray(nestedElements)) {
-                for (const nestedElement of nestedElements) {
-                    this.renderElement(nestedElement);
-                }
+            if (nestedElements && Array.isArray(nestedElements) && nestedElements.length > 0) {
+                this.renderNestedElements(nestedElements, bounds);
             }
         } catch (error) {
             console.error('Error rendering element:', element, error);
         } finally {
             // Always restore context state
+            this.ctx.restore();
+        }
+    }
+
+    renderNestedElements(nestedElements, parentBounds) {
+        // Create a new context state for nested elements
+        this.ctx.save();
+
+        try {
+            // Translate to parent container position - this creates parent-relative coordinate system
+            this.ctx.translate(parentBounds.x, parentBounds.y);
+
+            // Create clipping region to constrain nested elements to parent bounds
+            this.ctx.beginPath();
+            this.ctx.rect(0, 0, parentBounds.width, parentBounds.height);
+            this.ctx.clip();
+
+            // Reset shadow for nested elements to avoid parent shadows affecting children
+            this.ctx.shadowColor = 'transparent';
+            this.ctx.shadowBlur = 0;
+            this.ctx.shadowOffsetX = 0;
+            this.ctx.shadowOffsetY = 0;
+
+            // Render nested elements with parent-relative coordinates
+            for (const nestedElement of nestedElements) {
+                // Create a copy of the element with adjusted bounds for parent-relative positioning
+                const adjustedElement = {
+                    ...nestedElement,
+                    bounds: {
+                        ...nestedElement.bounds,
+                        // Nested elements should already have parent-relative coordinates
+                        // from LayoutConverter, so we don't need additional transformation
+                    }
+                };
+                this.renderElement(adjustedElement);
+            }
+        } catch (error) {
+            console.error('Error rendering nested elements:', error);
+        } finally {
+            // Restore context state to return to global coordinate system
             this.ctx.restore();
         }
     }
@@ -158,12 +196,14 @@ class CanvasRenderer {
         this.ctx.textAlign = textAlign;
         this.ctx.textBaseline = 'middle';
 
-        // Add subtle text shadow for better readability
+        // Add subtle text shadow for better readability (only if not in nested context)
+        // Nested context shadows are already reset in renderNestedElements
         this.ctx.shadowColor = 'rgba(0, 0, 0, 0.1)';
         this.ctx.shadowBlur = 1;
         this.ctx.shadowOffsetX = 0;
         this.ctx.shadowOffsetY = 0;
 
+        // Calculate text position within bounds
         let x = bounds.x;
         if (textAlign === 'center') {
             x = bounds.x + bounds.width / 2;

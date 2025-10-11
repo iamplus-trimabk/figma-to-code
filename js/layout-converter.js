@@ -38,9 +38,10 @@ class LayoutConverter {
             styles: { backgroundColor }
         });
 
-        // Process screen children
+        // Process screen children with layout properties
         if (screen.children && screen.children.length > 0) {
-            const screenElements = this.processChildren(screen.children, viewport, components);
+            const screenLayout = screen.layout || {};
+            const screenElements = this.processChildren(screen.children, viewport, components, screenLayout);
             elements.push(...screenElements);
         }
 
@@ -56,31 +57,41 @@ class LayoutConverter {
         };
     }
 
-    processChildren(children, parentBounds, components) {
+    processChildren(children, parentBounds, components, layout = {}) {
         const elements = [];
 
-        // Calculate padding
-        const padding = this.tokenResolver.parseDimension('spacing.6'); // 24px
+        // Resolve layout properties
+        const justifyContent = this.resolveLayoutValue(layout.justifyContent, 'flex-start');
+        const alignItems = this.resolveLayoutValue(layout.alignItems, 'stretch');
+        const padding = this.tokenResolver.parseDimension(layout.padding || 'spacing.6');
+
+        // Calculate available space
         const availableWidth = parentBounds.width - (padding * 2);
         const availableHeight = parentBounds.height - (padding * 2);
 
-        let currentY = parentBounds.y + padding;
-
+        // First pass: create all elements to calculate total dimensions
+        const tempElements = [];
         for (const child of children) {
             const element = this.processChild(child, {
                 x: parentBounds.x + padding,
-                y: currentY,
+                y: parentBounds.y + padding,
                 width: availableWidth,
-                height: availableHeight - (currentY - parentBounds.y)
+                height: availableHeight
             }, components);
 
             if (element) {
-                elements.push(element);
-                currentY += element.bounds.height + this.tokenResolver.parseDimension('spacing.4'); // 16px gap
+                tempElements.push(element);
             }
         }
 
-        return elements;
+        // Calculate positions based on alignment
+        const positionedElements = this.applyAlignment(
+            tempElements,
+            { x: parentBounds.x + padding, y: parentBounds.y + padding, width: availableWidth, height: availableHeight },
+            { justifyContent, alignItems }
+        );
+
+        return positionedElements;
     }
 
     processChild(child, parentBounds, components) {
@@ -112,26 +123,13 @@ class LayoutConverter {
             calculatedHeight = this.calculateContainerHeight(content.children, width);
             const nestedBounds = { x: 0, y: 0, width, height: calculatedHeight };
             nestedElements = this.processNestedContent(content.children, nestedBounds, components);
-
-            // Adjust nested element coordinates to be relative to parent component's position
-            const parentX = parentBounds.x + (parentBounds.width - width) / 2;
-            const parentY = parentBounds.y;
-
-            nestedElements.forEach(nested => {
-                if (nested.bounds) {
-                    nested.bounds.x += parentX;
-                    nested.bounds.y += parentY;
-                }
-            });
         }
 
-        // Center horizontally
-        const x = parentBounds.x + (parentBounds.width - width) / 2;
-
+        // Position will be calculated by applyAlignment method
         return {
             id: `${child.name.toLowerCase()}-${Date.now()}`,
             type: this.getElementType(child.name),
-            bounds: { x, y: parentBounds.y, width, height: calculatedHeight },
+            bounds: { x: 0, y: 0, width, height: calculatedHeight },
             styles: this.resolveComponentStyles(componentDef, child.variant),
             content: content,
             nestedElements: nestedElements
@@ -146,8 +144,8 @@ class LayoutConverter {
             id: `text-${Date.now()}`,
             type: "text",
             bounds: {
-                x: parentBounds.x,
-                y: parentBounds.y,
+                x: 0,
+                y: 0,
                 width: parentBounds.width,
                 height: lineHeight
             },
@@ -232,36 +230,20 @@ class LayoutConverter {
     }
 
     processNestedContent(children, parentBounds, components) {
-        const elements = [];
-        const padding = this.tokenResolver.parseDimension('spacing.4'); // 16px
-        let currentY = parentBounds.y + padding;
+        // Create a parent-relative coordinate system for nested elements
+        // The parentBounds define the container space (0,0 to width,height)
+        const parentRelativeBounds = {
+            x: 0,
+            y: 0,
+            width: parentBounds.width,
+            height: parentBounds.height
+        };
 
-        for (const child of children) {
-            const childBounds = {
-                x: parentBounds.x + padding,
-                y: currentY,
-                width: parentBounds.width - (padding * 2),
-                height: this.calculateElementHeight(child)
-            };
+        // Process nested elements using the same alignment system but with parent-relative bounds
+        const nestedElements = this.processChildren(children, parentRelativeBounds, components);
 
-            let element;
-            if (child.type === 'text') {
-                element = this.processText(child, childBounds);
-            } else if (child.type === 'component') {
-                element = this.processComponent(child, childBounds, components);
-            }
-
-            if (element) {
-                // Make sure the element has proper bounds
-                if (!element.bounds) {
-                    element.bounds = childBounds;
-                }
-                elements.push(element);
-                currentY += element.bounds.height + this.tokenResolver.parseDimension('spacing.3'); // 12px gap
-            }
-        }
-
-        return elements;
+        // Elements are now positioned relative to parent container (0,0 origin)
+        return nestedElements;
     }
 
     calculateElementHeight(child) {
@@ -269,25 +251,161 @@ class LayoutConverter {
             const fontSize = this.tokenResolver.parseDimension(child.properties.fontSize || 'fontSize.base');
             return fontSize * 1.4; // Line height
         } else if (child.type === 'component') {
+            // Check if component has defined height in its definition
+            if (child.name === 'Button' || child.name === 'Input') {
+                return 48; // Standard button/input height from design system
+            }
             return 48; // Default component height
         }
         return 48; // Default fallback
     }
 
     calculateContainerHeight(children, containerWidth) {
-        const padding = this.tokenResolver.parseDimension('spacing.4') * 2; // Top and bottom padding
-        const spacing = this.tokenResolver.parseDimension('spacing.3'); // Gap between elements
-        let totalHeight = padding;
+        // Use Card component padding from design tokens: "spacing.6" = 24px
+        const cardPadding = this.tokenResolver.parseDimension('spacing.6');
+        const totalPadding = cardPadding * 2; // Top and bottom padding: 24px + 24px = 48px
 
-        for (const child of children) {
+        let totalHeight = totalPadding;
+
+        // Calculate actual heights and spacing based on the login screen structure
+        for (let i = 0; i < children.length; i++) {
+            const child = children[i];
             totalHeight += this.calculateElementHeight(child);
-            totalHeight += spacing; // Add gap after each element
+
+            // Add spacing based on child properties, but don't add spacing after last element
+            if (i < children.length - 1) {
+                if (child.properties && child.properties.marginBottom) {
+                    const marginBottom = this.tokenResolver.parseDimension(child.properties.marginBottom);
+                    totalHeight += marginBottom;
+                } else {
+                    // Use Card gap as default: "spacing.4" = 16px
+                    const defaultGap = this.tokenResolver.parseDimension('spacing.4');
+                    totalHeight += defaultGap;
+                }
+            }
         }
 
-        // Remove the last gap
-        totalHeight -= spacing;
+        // Calculate expected height for debugging:
+        // Welcome Back text: 24px * 1.4 = 33.6px
+        // + margin 24px = 57.6px
+        // Email Input: 48px + margin 16px = 64px
+        // Password Input: 48px + margin 24px = 72px
+        // Sign In Button: 48px
+        // + padding 48px = 241.6px total
 
         return Math.max(totalHeight, 48); // Minimum height
+    }
+
+    // =========================
+    // ALIGNMENT METHODS
+    // =========================
+
+    resolveLayoutValue(value, defaultValue) {
+        if (!value) return defaultValue;
+        return value;
+    }
+
+    applyAlignment(elements, containerBounds, layout) {
+        const { justifyContent, alignItems } = layout;
+
+        // Calculate total content height
+        const totalContentHeight = this.calculateTotalContentHeight(elements);
+        const spacing = this.tokenResolver.parseDimension('spacing.4'); // 16px gap
+
+        // Apply vertical alignment
+        const verticallyPositionedElements = this.applyVerticalAlignment(
+            elements,
+            containerBounds,
+            totalContentHeight,
+            justifyContent,
+            spacing
+        );
+
+        // Apply horizontal alignment to each element
+        const horizontallyPositionedElements = verticallyPositionedElements.map(element => {
+            const x = this.calculateHorizontalAlignment(
+                element,
+                containerBounds,
+                element.alignSelf || alignItems
+            );
+
+            return {
+                ...element,
+                bounds: {
+                    ...element.bounds,
+                    x
+                }
+            };
+        });
+
+        return horizontallyPositionedElements;
+    }
+
+    calculateTotalContentHeight(elements) {
+        const spacing = this.tokenResolver.parseDimension('spacing.4');
+        return elements.reduce((total, element, index) => {
+            return total + element.bounds.height + (index > 0 ? spacing : 0);
+        }, 0);
+    }
+
+    applyVerticalAlignment(elements, containerBounds, totalContentHeight, justifyContent, spacing) {
+        let currentY = containerBounds.y;
+
+        switch (justifyContent) {
+            case 'center':
+                currentY = containerBounds.y + (containerBounds.height - totalContentHeight) / 2;
+                break;
+            case 'flex-end':
+                currentY = containerBounds.y + containerBounds.height - totalContentHeight;
+                break;
+            case 'space-between':
+                if (elements.length > 1) {
+                    const availableSpace = containerBounds.height - totalContentHeight;
+                    spacing = availableSpace / (elements.length - 1);
+                }
+                currentY = containerBounds.y;
+                break;
+            case 'space-around':
+                if (elements.length > 0) {
+                    const availableSpace = containerBounds.height - totalContentHeight;
+                    spacing = availableSpace / elements.length;
+                    currentY = containerBounds.y + spacing;
+                }
+                break;
+            case 'flex-start':
+            default:
+                currentY = containerBounds.y;
+                break;
+        }
+
+        return elements.map((element, index) => {
+            const y = currentY;
+            currentY += element.bounds.height + spacing;
+
+            return {
+                ...element,
+                bounds: {
+                    ...element.bounds,
+                    y
+                }
+            };
+        });
+    }
+
+    calculateHorizontalAlignment(element, containerBounds, alignItems) {
+        const elementWidth = element.bounds.width;
+
+        switch (alignItems) {
+            case 'center':
+                return containerBounds.x + (containerBounds.width - elementWidth) / 2;
+            case 'flex-end':
+                return containerBounds.x + containerBounds.width - elementWidth;
+            case 'stretch':
+                return containerBounds.x;
+            case 'flex-start':
+            default:
+                return containerBounds.x;
+        }
     }
 }
 

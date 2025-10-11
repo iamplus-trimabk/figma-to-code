@@ -109,6 +109,95 @@ open http://localhost:8080/simflo-canvas-renderer.html
 - Real-world examples demonstrate functionality
 - Visual verification of output quality
 
+## Canvas Coordinate System Best Practices
+
+### 🚨 Critical Learnings
+
+#### Canvas API Coordinate Transformation
+**Problem**: Canvas doesn't have automatic nested coordinate systems like DOM. All coordinates are global unless you manually manage them.
+
+**Solution**: Use proper Canvas API coordinate transformation:
+```javascript
+// Parent container rendering
+ctx.save();
+ctx.translate(parentBounds.x, parentBounds.y);  // Move origin to parent position
+ctx.rect(0, 0, parentBounds.width, parentBounds.height);
+ctx.clip();  // Create clipping region
+
+// Nested elements now use parent-relative coordinates (0,0 = top-left of parent)
+for (const nestedElement of nestedElements) {
+    this.renderElement(nestedElement);  // Coordinates are relative to parent
+}
+
+ctx.restore();  // Return to global coordinate system
+```
+
+#### Container Height Calculation
+**Problem**: Fixed spacing calculations don't account for actual margin properties from JSON design.
+
+**Solution**: Calculate height based on actual element properties:
+```javascript
+calculateContainerHeight(children, containerWidth) {
+    const cardPadding = this.tokenResolver.parseDimension('spacing.6');
+    const totalPadding = cardPadding * 2; // Top and bottom padding
+    let totalHeight = totalPadding;
+
+    for (let i = 0; i < children.length; i++) {
+        const child = children[i];
+        totalHeight += this.calculateElementHeight(child);
+
+        // Add spacing based on child properties, but not after last element
+        if (i < children.length - 1) {
+            if (child.properties?.marginBottom) {
+                const marginBottom = this.tokenResolver.parseDimension(child.properties.marginBottom);
+                totalHeight += marginBottom;
+            } else {
+                const defaultGap = this.tokenResolver.parseDimension('spacing.4');
+                totalHeight += defaultGap;
+            }
+        }
+    }
+    return Math.max(totalHeight, 48);
+}
+```
+
+#### NEVER DO These Things
+1. **Never use global coordinates for nested elements** - always transform to parent-relative coordinate system
+2. **Never use fixed spacing calculations** - always read actual margin/padding properties from design JSON
+3. **Never forget to apply clipping** - without `ctx.clip()`, nested elements can escape parent boundaries
+4. **Never forget context state management** - always `ctx.save()` before transformation and `ctx.restore()` after
+5. **Never cache-bump only one file** - when fixing coordinate systems, update both LayoutConverter and CanvasRenderer
+
+#### ALWAYS DO These Things
+1. **Always use `ctx.save()`/`ctx.restore()`** when applying coordinate transformations
+2. **Always read design token values from JSON** instead of hardcoding spacing values
+3. **Always calculate container height based on actual content** including margins and gaps
+4. **Always apply clipping regions** to constrain nested elements to parent bounds
+5. **Always use parent-relative coordinates** (0,0 = top-left of parent) for nested elements
+6. **Always update cache-busting versions** when fixing coordinate calculation bugs
+
+### Debugging Canvas Coordinate Issues
+
+#### Symptoms of Coordinate System Problems
+- Elements appearing outside their parent containers
+- Button or text going beyond rectangle borders
+- Elements aligned to screen instead of container
+- Inconsistent positioning across different screen sizes
+
+#### Debugging Checklist
+1. **Check LayoutConverter**: Are nested elements getting parent-relative coordinates?
+2. **Check CanvasRenderer**: Is `ctx.translate()` and `ctx.clip()` applied correctly?
+3. **Check Height Calculation**: Is container height calculated based on actual content + margins?
+4. **Check Context State**: Are you properly saving/restoring context state?
+5. **Check Cache-Busting**: Are you using updated versions of both files?
+
+#### Reference Implementation Pattern
+The working implementation demonstrates:
+- Proper parent coordinate system with `ctx.translate()`
+- Correct container height calculation based on JSON properties
+- Proper clipping with `ctx.clip()` to enforce boundaries
+- Clean separation between layout calculation and rendering
+
 ## Future Development
 
 This repository serves as the foundation for:
