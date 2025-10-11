@@ -183,6 +183,16 @@ class CanvasRendererApp {
         document.querySelectorAll('.tree-item').forEach(item => {
             item.addEventListener('click', (e) => {
                 const screenName = e.currentTarget.dataset.screen;
+
+                // Check if screen is unavailable
+                if (e.currentTarget.classList.contains('unavailable')) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.updatePipelineStatus('Screen not available', 'error');
+                    this.addErrorLogEntry(`Screen "${screenName}" is not available in the current design data.`);
+                    return;
+                }
+
                 if (screenName) {
                     this.selectScreen(screenName);
                 }
@@ -284,8 +294,40 @@ class CanvasRendererApp {
     }
 
     async loadDesignJson(screenName) {
-        const response = await fetch('login-screen-example.json');
-        return await response.json();
+        try {
+            const response = await fetch('login-screen-example.json');
+            const designJson = await response.json();
+
+            // Check if the requested screen exists in the design JSON
+            if (!designJson.screens || !designJson.screens[screenName]) {
+                throw new Error(`Screen "${screenName}" not found in design data. Available screens: ${Object.keys(designJson.screens || {}).join(', ')}`);
+            }
+
+            // Update screen availability in UI
+            this.updateScreenAvailability(designJson.screens || {});
+
+            return designJson;
+        } catch (error) {
+            console.error('Error loading design JSON:', error);
+            throw error;
+        }
+    }
+
+    updateScreenAvailability(availableScreens) {
+        // Get all screen items in the sidebar
+        const screenItems = document.querySelectorAll('.tree-item[data-screen]');
+
+        screenItems.forEach(item => {
+            const screenName = item.dataset.screen;
+
+            if (availableScreens[screenName]) {
+                // Screen is available - remove unavailable class
+                item.classList.remove('unavailable');
+            } else {
+                // Screen is not available - add unavailable class
+                item.classList.add('unavailable');
+            }
+        });
     }
 
     async convertToRenderJson(designJson) {

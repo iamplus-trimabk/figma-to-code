@@ -531,6 +531,25 @@ body {
     color: white;
 }
 
+/* Unavailable screen styles */
+.tree-item.unavailable .tree-item-content {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.tree-item.unavailable:hover .tree-item-content {
+    background: transparent;
+}
+
+.tree-item.unavailable .tree-item-label {
+    color: var(--text-tertiary);
+}
+
+.tree-item.unavailable .tree-item-badge {
+    background: var(--error-bg);
+    color: var(--error-color);
+}
+
 /* Main Content Area */
 .main-content {
     grid-area: main;
