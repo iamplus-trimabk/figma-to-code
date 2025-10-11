@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coordinate Fix Test</title>
+    <style>
+        body { font-family: monospace; margin: 20px; }
+        .result { margin: 10px 0; padding: 10px; background: #f5f5f5; }
+        .error { background: #ffebee; color: #c62828; }
+        .success { background: #e8f5e8; color: #2e7d32; }
+    </style>
+</head>
+<body>
+    <h1>LayoutConverter Coordinate Fix Test</h1>
+    <div id="results"></div>
+
+    <script src="js/token-resolver.js"></script>
+    <script src="js/layout-converter.js"></script>
+    <script>
+        async function testCoordinates() {
+            const results = document.getElementById('results');
+
+            try {
+                // Load design data
+                const response = await fetch('login-screen-example.json');
+                const designJson = await response.json();
+
+                // Create converter
+                const converter = new LayoutConverter(designJson.designTokens);
+
+                // Convert for mobile viewport
+                const viewport = { width: 390, height: 844 };
+                const renderJson = converter.convert(designJson, viewport, 'light');
+
+                results.innerHTML += `<div class="result success">Conversion successful!</div>`;
+                results.innerHTML += `<div class="result">Total elements: ${renderJson.elements.length}</div>`;
+
+                // Analyze each element
+                renderJson.elements.forEach((element, index) => {
+                    results.innerHTML += `<div class="result">
+                        <strong>Element ${index}: ${element.id}</strong><br>
+                        Type: ${element.type}<br>
+                        Bounds: x=${element.bounds.x}, y=${element.bounds.y}, w=${element.bounds.width}, h=${element.bounds.height}<br>
+                        Valid: ${element.bounds && element.bounds.x !== null && element.bounds.y !== null}
+                    </div>`;
+
+                    if (element.nestedElements && element.nestedElements.length > 0) {
+                        element.nestedElements.forEach((nested, nestedIndex) => {
+                            results.innerHTML += `<div class="result">
+                                <strong>Nested ${nestedIndex}: ${nested.id}</strong><br>
+                                Type: ${nested.type}<br>
+                                Bounds: x=${nested.bounds.x}, y=${nested.bounds.y}, w=${nested.bounds.width}, h=${nested.bounds.height}<br>
+                                Valid: ${nested.bounds && nested.bounds.x !== null && nested.bounds.y !== null}
+                            </div>`;
+                        });
+                    }
+                });
+
+            } catch (error) {
+                results.innerHTML += `<div class="result error">Error: ${error.message}</div>`;
+            }
+        }
+
+        testCoordinates();
+    </script>
+</body>
+</html>

@@ -1,0 +1,3054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SimFlo Canvas Renderer - Professional Design Preview</title>
+    <style>
+        /* CSS Custom Properties - Design System */
+        :root {
+            /* Layout */
+            --sidebar-width: 240px;
+            --right-panel-width: 320px;
+            --header-height: 96px;
+
+            /* Colors - Light Theme */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f9fafb;
+            --bg-tertiary: #f3f4f6;
+            --text-primary: #111827;
+            --text-secondary: #6b7280;
+            --text-tertiary: #9ca3af;
+            --border-color: #e5e7eb;
+            --accent-color: #6257db;
+
+            /* Status Colors */
+            --success-color: #16a34a;
+            --success-bg: #dcfce7;
+            --warning-color: #d97706;
+            --warning-bg: #fef3c7;
+            --error-color: #dc2626;
+            --error-bg: #fef2f2;
+
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+
+            /* Transitions */
+            --transition-fast: 150ms ease;
+            --transition-normal: 250ms ease;
+            --transition-slow: 350ms ease;
+
+            /* Device Dimensions */
+            --mobile-width: 390px;
+            --mobile-height: 844px;
+            --tablet-width: 768px;
+            --tablet-height: 1024px;
+            --desktop-width: 1440px;
+            --desktop-height: 900px;
+        }
+
+        /* Dark Theme */
+        [data-theme="dark"] {
+            --bg-primary: #1f2937;
+            --bg-secondary: #111827;
+            --bg-tertiary: #374151;
+            --text-primary: #f9fafb;
+            --text-secondary: #d1d5db;
+            --text-tertiary: #9ca3af;
+            --border-color: #4b5563;
+            --accent-color: #818cf8;
+        }
+
+        /* Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* App Container */
+        .app-container {
+            display: grid;
+            grid-template-columns: var(--sidebar-width) 1fr var(--right-panel-width);
+            grid-template-rows: var(--header-height) 1fr;
+            grid-template-areas:
+                "header header header"
+                "sidebar main right-panel";
+            height: 100vh;
+            transition: var(--transition-normal);
+        }
+
+        .app-container[data-sidebar-collapsed="true"] {
+            grid-template-columns: 0 1fr var(--right-panel-width);
+        }
+
+        .app-container[data-right-panel-collapsed="true"] {
+            grid-template-columns: var(--sidebar-width) 1fr 0;
+        }
+
+        .app-container[data-sidebar-collapsed="true"][data-right-panel-collapsed="true"] {
+            grid-template-columns: 0 1fr 0;
+        }
+
+        /* Header Component */
+        .app-header {
+            grid-area: header;
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+        }
+
+        .header-layer {
+            height: 48px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            gap: 16px;
+        }
+
+        .header-layer-1 {
+            border-bottom: 1px solid var(--border-color);
+            justify-content: space-between;
+        }
+
+        .header-layer-2 {
+            background: var(--bg-secondary);
+        }
+
+        .header-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-section.left {
+            flex: 0 0 auto;
+        }
+
+        .header-section.center {
+            flex: 1;
+            justify-content: center;
+        }
+
+        .header-section.right {
+            flex: 0 0 auto;
+        }
+
+        .app-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .screen-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .screen-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .screen-platform {
+            font-size: 12px;
+            padding: 2px 8px;
+            background: var(--accent-color);
+            color: white;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+
+        /* Control Buttons */
+        .control-button {
+            width: 36px;
+            height: 36px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-primary);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            color: var(--text-secondary);
+        }
+
+        .control-button:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        .control-button svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .scale-select {
+            padding: 6px 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 14px;
+            min-width: 70px;
+            cursor: pointer;
+        }
+
+        /* Device Controls */
+        .device-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            width: 100%;
+        }
+
+        .device-type-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .device-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--bg-primary);
+            cursor: pointer;
+            transition: var(--transition-fast);
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .device-btn:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--accent-color);
+        }
+
+        .device-btn.active {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        .device-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .orientation-controls {
+            display: flex;
+            gap: 4px;
+        }
+
+        .orientation-btn {
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-primary);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            color: var(--text-secondary);
+        }
+
+        .orientation-btn:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--accent-color);
+        }
+
+        .orientation-btn.active {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        .orientation-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .pipeline-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-indicator.success {
+            background: var(--success-bg);
+            color: var(--success-color);
+        }
+
+        .status-indicator.error {
+            background: var(--error-bg);
+            color: var(--error-color);
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            grid-area: sidebar;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition-normal);
+        }
+
+        .sidebar[data-collapsed="true"] {
+            width: 0;
+            overflow: hidden;
+        }
+
+        .sidebar-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 60px;
+        }
+
+        .sidebar-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .sidebar-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .sidebar-toggle {
+            width: 28px;
+            height: 28px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: var(--transition-fast);
+        }
+
+        .sidebar-toggle:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .sidebar-content {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .search-container {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 8px 32px 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--bg-primary);
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(98, 87, 219, 0.1);
+        }
+
+        .search-clear {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: var(--text-tertiary);
+            border-radius: 2px;
+        }
+
+        .search-clear:hover {
+            color: var(--text-primary);
+        }
+
+        .screen-tree {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+        }
+
+        .tree-group {
+            margin-bottom: 8px;
+        }
+
+        .tree-group-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        .tree-group-header:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .tree-toggle {
+            width: 16px;
+            height: 16px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tree-toggle[aria-expanded="true"] {
+            transform: rotate(90deg);
+        }
+
+        .tree-group-label {
+            flex: 1;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .tree-group-count {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            background: var(--bg-tertiary);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .tree-group-content {
+            margin-left: 8px;
+        }
+
+        .tree-item {
+            margin-left: 8px;
+            margin-bottom: 2px;
+        }
+
+        .tree-item-content {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        .tree-item:hover .tree-item-content {
+            background: var(--bg-tertiary);
+        }
+
+        .tree-item.active .tree-item-content {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .tree-item-icon {
+            width: 14px;
+            height: 14px;
+            color: inherit;
+        }
+
+        .tree-item-label {
+            flex: 1;
+            font-size: 14px;
+            color: inherit;
+        }
+
+        .tree-item-badge {
+            font-size: 10px;
+            padding: 2px 4px;
+            border-radius: 3px;
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        .tree-item.active .tree-item-badge {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            grid-area: main;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-tertiary);
+            position: relative;
+        }
+
+        .canvas-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 32px;
+        }
+
+        .canvas-controls {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            z-index: 10;
+            display: flex;
+            gap: 8px;
+            background: var(--bg-primary);
+            padding: 8px;
+            border-radius: 8px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 0 8px;
+            border-right: 1px solid var(--border-color);
+        }
+
+        .control-group:last-child {
+            border-right: none;
+        }
+
+        .zoom-control {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: none;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            color: var(--text-secondary);
+        }
+
+        .zoom-control:hover {
+            background: var(--bg-secondary);
+            color: var(--accent-color);
+        }
+
+        .zoom-level {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .canvas-wrapper {
+            position: relative;
+            transition: var(--transition-normal);
+            transform-origin: center center;
+        }
+
+        .device-frame {
+            background: var(--bg-primary);
+            border-radius: 24px;
+            box-shadow: var(--shadow-lg);
+            padding: 8px;
+            position: relative;
+            transition: var(--transition-normal);
+        }
+
+        .device-frame.mobile {
+            width: var(--mobile-width);
+            height: var(--mobile-height);
+        }
+
+        .device-frame.mobile.landscape {
+            width: var(--mobile-height);
+            height: var(--mobile-width);
+        }
+
+        .device-frame.tablet {
+            width: var(--tablet-width);
+            height: var(--tablet-height);
+            border-radius: 16px;
+        }
+
+        .device-frame.tablet.landscape {
+            width: var(--tablet-height);
+            height: var(--tablet-width);
+        }
+
+        .device-frame.desktop {
+            width: var(--desktop-width);
+            height: var(--desktop-height);
+            border-radius: 8px;
+        }
+
+        .device-screen {
+            width: 100%;
+            height: 100%;
+            border-radius: 16px;
+            overflow: hidden;
+            background: white;
+        }
+
+        .device-frame.mobile .device-screen,
+        .device-frame.tablet .device-screen {
+            border-radius: calc(var(--border-radius, 24px) - 8px);
+        }
+
+        .device-frame.desktop .device-screen {
+            border-radius: 4px;
+        }
+
+        #renderCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* Right Panel */
+        .right-panel {
+            grid-area: right-panel;
+            background: var(--bg-primary);
+            border-left: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition-normal);
+        }
+
+        .right-panel[data-collapsed="true"] {
+            width: 0;
+            overflow: hidden;
+        }
+
+        .panel-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+        }
+
+        .tab-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 12px 8px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            border-bottom: 2px solid transparent;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .tab-btn:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .tab-btn.active {
+            background: var(--bg-primary);
+            border-bottom-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        .tab-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .panel-content {
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .tab-pane {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition-normal);
+            overflow-y: auto;
+        }
+
+        .tab-pane.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Preview Tab */
+        .preview-content {
+            padding: 16px;
+        }
+
+        .preview-section {
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0 0 12px 0;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+        }
+
+        .info-item label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .info-value {
+            font-size: 12px;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .component-tree {
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .component-node {
+            margin-left: 16px;
+            padding: 2px 0;
+        }
+
+        .component-node:first-child {
+            margin-left: 0;
+        }
+
+        .component-name {
+            color: var(--text-primary);
+            cursor: pointer;
+            padding: 2px 4px;
+            border-radius: 3px;
+            transition: var(--transition-fast);
+        }
+
+        .component-name:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .component-children {
+            margin-left: 16px;
+            border-left: 1px solid var(--border-color);
+            padding-left: 8px;
+        }
+
+        /* JSON Tabs */
+        .json-container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .json-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--bg-secondary);
+        }
+
+        .json-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .json-controls {
+            display: flex;
+            gap: 4px;
+        }
+
+        .json-control {
+            width: 28px;
+            height: 28px;
+            border: none;
+            background: var(--bg-primary);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            color: var(--text-secondary);
+        }
+
+        .json-control:hover {
+            background: var(--bg-tertiary);
+            color: var(--accent-color);
+        }
+
+        .json-editor {
+            flex: 1;
+            overflow: auto;
+            padding: 16px;
+            background: var(--bg-primary);
+        }
+
+        .json-content {
+            margin: 0;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+            font-size: 12px;
+            line-height: 1.5;
+            color: var(--text-primary);
+            background: var(--bg-secondary);
+            padding: 12px;
+            border-radius: 6px;
+            overflow: auto;
+            white-space: pre-wrap;
+        }
+
+        /* Details Tab */
+        .details-content {
+            padding: 16px;
+        }
+
+        .details-section {
+            margin-bottom: 24px;
+        }
+
+        .pipeline-status {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+        }
+
+        .status-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .status-value {
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-value.success {
+            color: var(--success-color);
+        }
+
+        .status-value.error {
+            color: var(--error-color);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .metric-item {
+            padding: 12px;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .metric-label {
+            display: block;
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .metric-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .error-log {
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+            font-size: 11px;
+        }
+
+        .log-entry {
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-bottom: 4px;
+        }
+
+        .log-entry.empty {
+            background: var(--success-bg);
+            color: var(--success-color);
+            font-style: italic;
+        }
+
+        .log-entry.error {
+            background: var(--error-bg);
+            color: var(--error-color);
+        }
+
+        .log-entry.warning {
+            background: var(--warning-bg);
+            color: var(--warning-color);
+        }
+
+        /* Utility Classes */
+        .hidden {
+            display: none !important;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            :root {
+                --sidebar-width: 200px;
+                --right-panel-width: 280px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            :root {
+                --header-height: 120px;
+            }
+
+            .app-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: var(--header-height) 1fr;
+                grid-template-areas:
+                    "header"
+                    "main";
+            }
+
+            .sidebar,
+            .right-panel {
+                position: fixed;
+                top: var(--header-height);
+                z-index: 100;
+                height: calc(100vh - var(--header-height));
+                transform: translateX(-100%);
+            }
+
+            .sidebar[data-expanded="true"] {
+                transform: translateX(0);
+            }
+
+            .right-panel {
+                left: 0;
+                transform: translateX(100%);
+            }
+
+            .right-panel[data-expanded="true"] {
+                transform: translateX(0);
+            }
+
+            .header-layer-1 {
+                flex-wrap: wrap;
+                height: auto;
+                min-height: 48px;
+            }
+
+            .header-layer-2 {
+                height: auto;
+                min-height: 48px;
+            }
+
+            .device-controls {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container" data-theme="light" data-sidebar-collapsed="false" data-right-panel-collapsed="false">
+        <!-- Header Component -->
+        <header class="app-header">
+            <!-- Layer 1: Primary Controls -->
+            <div class="header-layer header-layer-1">
+                <div class="header-section left">
+                    <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                    <h1 class="app-title">SimFlo Canvas Renderer</h1>
+                </div>
+
+                <div class="header-section center">
+                    <div class="screen-info">
+                        <span class="screen-name" id="screenName">Login</span>
+                        <span class="screen-platform" id="screenPlatform">Mobile</span>
+                    </div>
+                </div>
+
+                <div class="header-section right">
+                    <div class="control-group">
+                        <!-- Theme Toggle -->
+                        <button class="control-button theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                            <svg class="icon-sun" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                            </svg>
+                        </button>
+
+                        <!-- Screen Scale -->
+                        <select class="scale-select" id="scaleSelect" aria-label="Screen scale">
+                            <option value="0.25">25%</option>
+                            <option value="0.5">50%</option>
+                            <option value="0.75">75%</option>
+                            <option value="1" selected>100%</option>
+                            <option value="1.25">125%</option>
+                            <option value="1.5">150%</option>
+                            <option value="2">200%</option>
+                        </select>
+
+                        <!-- Refresh -->
+                        <button class="control-button refresh-btn" id="refreshBtn" aria-label="Refresh">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                            </svg>
+                        </button>
+
+                        <!-- Download -->
+                        <button class="control-button download-btn" id="downloadBtn" aria-label="Download">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Layer 2: Device Controls -->
+            <div class="header-layer header-layer-2">
+                <div class="device-controls">
+                    <div class="device-type-buttons">
+                        <button class="device-btn active" data-device="mobile" aria-label="Mobile">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                            </svg>
+                            <span>Mobile</span>
+                        </button>
+                        <button class="device-btn" data-device="tablet" aria-label="Tablet">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                            </svg>
+                            <span>Tablet</span>
+                        </button>
+                        <button class="device-btn" data-device="desktop" aria-label="Desktop">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                            </svg>
+                            <span>Desktop</span>
+                        </button>
+                    </div>
+
+                    <div class="orientation-controls">
+                        <button class="orientation-btn portrait active" data-orientation="portrait" aria-label="Portrait">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </button>
+                        <button class="orientation-btn landscape" data-orientation="landscape" aria-label="Landscape">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" transform="rotate(90)">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="pipeline-status">
+                        <div class="status-indicator success" id="pipelineStatus" title="Pipeline successful">
+                            <span class="status-dot"></span>
+                            <span class="status-text">Ready</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2 class="sidebar-title">Screens</h2>
+                <div class="sidebar-controls">
+                    <button class="sidebar-toggle" id="sidebarCollapse" aria-label="Collapse sidebar">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="sidebar-content">
+                <!-- Search -->
+                <div class="search-container">
+                    <input type="text" class="search-input" id="screenSearch" placeholder="Search screens..." />
+                    <button class="search-clear" id="searchClear" aria-label="Clear search">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Screen Tree -->
+                <div class="screen-tree" id="screenTree">
+                    <div class="tree-group" data-group="authentication">
+                        <div class="tree-group-header">
+                            <button class="tree-toggle" aria-expanded="true">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </button>
+                            <span class="tree-group-label">Authentication</span>
+                            <span class="tree-group-count">3</span>
+                        </div>
+                        <div class="tree-group-content">
+                            <div class="tree-item active" data-screen="Login">
+                                <div class="tree-item-content">
+                                    <svg class="tree-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <span class="tree-item-label">Login</span>
+                                    <span class="tree-item-badge">mobile</span>
+                                </div>
+                            </div>
+                            <div class="tree-item" data-screen="Register">
+                                <div class="tree-item-content">
+                                    <svg class="tree-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+                                    </svg>
+                                    <span class="tree-item-label">Register</span>
+                                    <span class="tree-item-badge">mobile</span>
+                                </div>
+                            </div>
+                            <div class="tree-item" data-screen="ForgotPassword">
+                                <div class="tree-item-content">
+                                    <svg class="tree-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
+                                    </svg>
+                                    <span class="tree-item-label">Forgot Password</span>
+                                    <span class="tree-item-badge">mobile</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tree-group" data-group="onboarding">
+                        <div class="tree-group-header">
+                            <button class="tree-toggle" aria-expanded="false">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </button>
+                            <span class="tree-group-label">Onboarding</span>
+                            <span class="tree-group-count">4</span>
+                        </div>
+                        <div class="tree-group-content" hidden>
+                            <div class="tree-item" data-screen="Welcome">
+                                <div class="tree-item-content">
+                                    <svg class="tree-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <span class="tree-item-label">Welcome</span>
+                                    <span class="tree-item-badge">mobile</span>
+                                </div>
+                            </div>
+                            <div class="tree-item" data-screen="Tutorial">
+                                <div class="tree-item-content">
+                                    <svg class="tree-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                                    </svg>
+                                    <span class="tree-item-label">Tutorial</span>
+                                    <span class="tree-item-badge">mobile</span>
+                                </div>
+                            </div>
+                            <div class="tree-item" data-screen="Preferences">
+                                <div class="tree-item-content">
+                                    <svg class="tree-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    </svg>
+                                    <span class="tree-item-label">Preferences</span>
+                                    <span class="tree-item-badge">mobile</span>
+                                </div>
+                            </div>
+                            <div class="tree-item" data-screen="Complete">
+                                <div class="tree-item-content">
+                                    <svg class="tree-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <span class="tree-item-label">Complete</span>
+                                    <span class="tree-item-badge">mobile</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tree-group" data-group="main">
+                        <div class="tree-group-header">
+                            <button class="tree-toggle" aria-expanded="false">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </button>
+                            <span class="tree-group-label">Main App</span>
+                            <span class="tree-group-count">2</span>
+                        </div>
+                        <div class="tree-group-content" hidden>
+                            <div class="tree-item" data-screen="Dashboard">
+                                <div class="tree-item-content">
+                                    <svg class="tree-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                                    </svg>
+                                    <span class="tree-item-label">Dashboard</span>
+                                    <span class="tree-item-badge">desktop</span>
+                                </div>
+                            </div>
+                            <div class="tree-item" data-screen="Profile">
+                                <div class="tree-item-content">
+                                    <svg class="tree-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                    </svg>
+                                    <span class="tree-item-label">Profile</span>
+                                    <span class="tree-item-badge">desktop</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <div class="canvas-container">
+                <!-- Canvas Controls -->
+                <div class="canvas-controls">
+                    <div class="control-group">
+                        <button class="zoom-control zoom-out" id="zoomOut" aria-label="Zoom out">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+                            </svg>
+                        </button>
+                        <span class="zoom-level" id="zoomLevel">100%</span>
+                        <button class="zoom-control zoom-in" id="zoomIn" aria-label="Zoom in">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                            </svg>
+                        </button>
+                        <button class="zoom-control zoom-fit" id="zoomFit" aria-label="Fit to screen">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5h-4m4 0v-4m0 4l-5-5"></path>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="control-group">
+                        <button class="zoom-control grid-toggle" id="gridToggle" aria-label="Toggle grid">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            </svg>
+                        </button>
+                        <button class="zoom-control rulers-toggle" id="rulersToggle" aria-label="Toggle rulers">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h18v18H3V3zm16 0v18M5 3v18M3 5h18M3 7h18M3 9h18M3 11h18M3 13h18M3 15h18M3 17h18M3 19h18"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Canvas Viewport -->
+                <div class="canvas-viewport">
+                    <div class="canvas-wrapper" id="canvasWrapper" data-scale="1">
+                        <!-- Device Frame -->
+                        <div class="device-frame mobile portrait" id="deviceFrame">
+                            <div class="device-screen">
+                                <canvas id="renderCanvas" width="390" height="844"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Right Panel (JSON Inspector) -->
+        <aside class="right-panel" id="rightPanel">
+            <!-- Tab Headers -->
+            <div class="panel-tabs">
+                <button class="tab-btn active" data-tab="preview" aria-selected="true">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                    </svg>
+                    <span>Preview</span>
+                </button>
+                <button class="tab-btn" data-tab="design-json" aria-selected="false">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                    </svg>
+                    <span>Design JSON</span>
+                </button>
+                <button class="tab-btn" data-tab="render-json" aria-selected="false">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <span>Render JSON</span>
+                </button>
+                <button class="tab-btn" data-tab="details" aria-selected="false">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span>Details</span>
+                </button>
+            </div>
+
+            <!-- Tab Content -->
+            <div class="panel-content">
+                <!-- Preview Tab -->
+                <div class="tab-pane active" data-tab="preview">
+                    <div class="preview-content">
+                        <div class="preview-section">
+                            <h3 class="section-title">Screen Information</h3>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <label>Screen Name</label>
+                                    <span class="info-value" id="infoScreenName">Login</span>
+                                </div>
+                                <div class="info-item">
+                                    <label>Platform</label>
+                                    <span class="info-value" id="infoPlatform">Mobile</span>
+                                </div>
+                                <div class="info-item">
+                                    <label>Resolution</label>
+                                    <span class="info-value" id="infoResolution">390 × 844</span>
+                                </div>
+                                <div class="info-item">
+                                    <label>Components</label>
+                                    <span class="info-value" id="infoComponents">4</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="preview-section">
+                            <h3 class="section-title">Component Tree</h3>
+                            <div class="component-tree" id="componentTree">
+                                <div class="component-node">
+                                    <span class="component-name">Login Screen</span>
+                                    <div class="component-children">
+                                        <div class="component-node">
+                                            <span class="component-name">Card</span>
+                                            <div class="component-children">
+                                                <div class="component-node">
+                                                    <span class="component-name">Title Text</span>
+                                                </div>
+                                                <div class="component-node">
+                                                    <span class="component-name">Email Input</span>
+                                                </div>
+                                                <div class="component-node">
+                                                    <span class="component-name">Password Input</span>
+                                                </div>
+                                                <div class="component-node">
+                                                    <span class="component-name">Sign In Button</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Design JSON Tab -->
+                <div class="tab-pane" data-tab="design-json">
+                    <div class="json-container">
+                        <div class="json-header">
+                            <h3 class="json-title">Design JSON</h3>
+                            <div class="json-controls">
+                                <button class="json-control copy-btn" id="copyDesignJson" aria-label="Copy JSON">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                    </svg>
+                                </button>
+                                <button class="json-control download-btn" id="downloadDesignJson" aria-label="Download JSON">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                                    </svg>
+                                </button>
+                                <button class="json-control format-btn" id="formatDesignJson" aria-label="Format JSON">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="json-editor">
+                            <pre class="json-content" id="designJsonContent">{
+  "version": "1.0.0",
+  "screenType": "mobile",
+  "designTokens": {
+    "colors": {
+      "primary": "#6257db",
+      "secondary": "#8b5cf6",
+      "text": {
+        "primary": "#111827",
+        "secondary": "#4b5563",
+        "tertiary": "#6b7280",
+        "inverse": "#ffffff"
+      },
+      "background": {
+        "primary": "#ffffff",
+        "secondary": "#f9fafb",
+        "inverse": "#111827"
+      },
+      "border": {
+        "medium": "#d1d5db",
+        "focus": "#6257db"
+      }
+    },
+    "typography": {
+      "fontFamily": {
+        "primary": "Inter, system-ui, sans-serif"
+      },
+      "fontSize": {
+        "base": "16px",
+        "lg": "18px",
+        "xl": "20px",
+        "2xl": "24px"
+      },
+      "fontWeight": {
+        "medium": "500",
+        "semibold": "600",
+        "bold": "700"
+      }
+    },
+    "spacing": {
+      "3": "12px",
+      "4": "16px",
+      "6": "24px",
+      "8": "32px"
+    },
+    "borderRadius": {
+      "md": "8px",
+      "lg": "12px"
+    },
+    "shadows": {
+      "md": "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)"
+    }
+  },
+  "components": {
+    "Button": {
+      "type": "component",
+      "category": "navigation",
+      "layout": {
+        "type": "auto-layout",
+        "width": "100%",
+        "height": "48px",
+        "padding": { "horizontal": "spacing.6", "vertical": "spacing.3" },
+        "justifyContent": "center",
+        "alignItems": "center"
+      },
+      "styles": {
+        "borderRadius": "borderRadius.md",
+        "fontSize": "fontSize.base",
+        "fontWeight": "fontWeight.medium"
+      },
+      "variants": [
+        {
+          "name": "primary",
+          "styles": {
+            "backgroundColor": "colors.primary",
+            "color": "colors.text.inverse"
+          }
+        }
+      ],
+      "content": {
+        "type": "text",
+        "properties": {
+          "value": "Button Text",
+          "align": "center",
+          "color": "colors.text.inverse"
+        }
+      }
+    },
+    "Input": {
+      "type": "component",
+      "category": "forms",
+      "layout": {
+        "type": "auto-layout",
+        "width": "100%",
+        "height": "48px",
+        "padding": { "horizontal": "spacing.4", "vertical": "spacing.3" }
+      },
+      "styles": {
+        "backgroundColor": "colors.background.primary",
+        "borderColor": "colors.border.medium",
+        "borderWidth": "1px",
+        "borderRadius": "borderRadius.md",
+        "fontSize": "fontSize.base"
+      },
+      "content": {
+        "type": "input",
+        "properties": {
+          "placeholder": "Enter text...",
+          "value": ""
+        }
+      }
+    },
+    "Card": {
+      "type": "component",
+      "category": "display",
+      "layout": {
+        "type": "auto-layout",
+        "direction": "column",
+        "width": "100%",
+        "padding": "spacing.6",
+        "gap": "spacing.4"
+      },
+      "styles": {
+        "backgroundColor": "colors.background.primary",
+        "borderRadius": "borderRadius.lg",
+        "shadow": "shadows.md"
+      }
+    }
+  },
+  "screens": {
+    "Login": {
+      "type": "screen",
+      "platform": "mobile",
+      "layout": {
+        "type": "auto-layout",
+        "direction": "column",
+        "width": "100%",
+        "height": "100vh",
+        "justifyContent": "center",
+        "alignItems": "center",
+        "padding": "spacing.6"
+      },
+      "styles": {
+        "backgroundColor": "colors.background.secondary"
+      },
+      "children": [
+        {
+          "type": "component",
+          "name": "Card",
+          "layout": {
+            "width": "90%",
+            "maxWidth": "400px"
+          },
+          "content": {
+            "type": "container",
+            "children": [
+              {
+                "type": "text",
+                "properties": {
+                  "value": "Welcome Back",
+                  "fontSize": "fontSize.2xl",
+                  "fontWeight": "fontWeight.bold",
+                  "align": "center",
+                  "marginBottom": "spacing.6"
+                }
+              },
+              {
+                "type": "component",
+                "name": "Input",
+                "properties": {
+                  "placeholder": "Email address",
+                  "marginBottom": "spacing.4"
+                }
+              },
+              {
+                "type": "component",
+                "name": "Input",
+                "properties": {
+                  "placeholder": "Password",
+                  "marginBottom": "spacing.6"
+                }
+              },
+              {
+                "type": "component",
+                "name": "Button",
+                "variant": "primary",
+                "properties": {
+                  "value": "Sign In"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Render JSON Tab -->
+                <div class="tab-pane" data-tab="render-json">
+                    <div class="json-container">
+                        <div class="json-header">
+                            <h3 class="json-title">Render JSON</h3>
+                            <div class="json-controls">
+                                <button class="json-control copy-btn" id="copyRenderJson" aria-label="Copy JSON">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                    </svg>
+                                </button>
+                                <button class="json-control download-btn" id="downloadRenderJson" aria-label="Download JSON">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                                    </svg>
+                                </button>
+                                <button class="json-control format-btn" id="formatRenderJson" aria-label="Format JSON">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="json-editor">
+                            <pre class="json-content" id="renderJsonContent">{
+  "version": "1.0.0",
+  "viewport": {
+    "width": 390,
+    "height": 844,
+    "scale": 1.0
+  },
+  "metadata": {
+    "screenName": "Login",
+    "theme": "light",
+    "generatedAt": "2024-01-15T10:30:00Z"
+  },
+  "elements": [
+    {
+      "id": "background",
+      "type": "rectangle",
+      "bounds": { "x": 0, "y": 0, "width": 390, "height": 844 },
+      "styles": { "backgroundColor": "#f9fafb" }
+    },
+    {
+      "id": "card-background",
+      "type": "rounded-rectangle",
+      "bounds": { "x": 45, "y": 222, "width": 300, "height": 400 },
+      "styles": {
+        "backgroundColor": "#ffffff",
+        "borderRadius": 12,
+        "shadowColor": "rgba(0, 0, 0, 0.1)",
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 4,
+        "shadowBlur": 6
+      }
+    },
+    {
+      "id": "title",
+      "type": "text",
+      "bounds": { "x": 45, "y": 252, "width": 300, "height": 30 },
+      "styles": {
+        "color": "#111827",
+        "fontFamily": "Inter, system-ui, sans-serif",
+        "fontSize": 24,
+        "fontWeight": "700",
+        "textAlign": "center"
+      },
+      "content": {
+        "type": "text",
+        "properties": { "text": "Welcome Back" }
+      }
+    },
+    {
+      "id": "email-input",
+      "type": "input-field",
+      "bounds": { "x": 45, "y": 322, "width": 300, "height": 48 },
+      "styles": {
+        "backgroundColor": "#ffffff",
+        "borderColor": "#d1d5db",
+        "borderWidth": 1,
+        "borderRadius": 8
+      },
+      "content": {
+        "type": "text",
+        "properties": {
+          "placeholder": "Email address",
+          "placeholderColor": "#6b7280",
+          "fontFamily": "Inter, system-ui, sans-serif",
+          "fontSize": 16
+        }
+      }
+    },
+    {
+      "id": "password-input",
+      "type": "input-field",
+      "bounds": { "x": 45, "y": 386, "width": 300, "height": 48 },
+      "styles": {
+        "backgroundColor": "#ffffff",
+        "borderColor": "#d1d5db",
+        "borderWidth": 1,
+        "borderRadius": 8
+      },
+      "content": {
+        "type": "text",
+        "properties": {
+          "placeholder": "Password",
+          "placeholderColor": "#6b7280",
+          "fontFamily": "Inter, system-ui, sans-serif",
+          "fontSize": 16
+        }
+      }
+    },
+    {
+      "id": "login-button",
+      "type": "button",
+      "bounds": { "x": 45, "y": 454, "width": 300, "height": 48 },
+      "styles": {
+        "backgroundColor": "#6257db",
+        "borderRadius": 8,
+        "shadowColor": "rgba(0, 0, 0, 0.1)",
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 4,
+        "shadowBlur": 6
+      },
+      "content": {
+        "type": "text",
+        "properties": {
+          "text": "Sign In",
+          "color": "#ffffff",
+          "fontFamily": "Inter, system-ui, sans-serif",
+          "fontSize": 16,
+          "fontWeight": "500",
+          "textAlign": "center"
+        }
+      }
+    }
+  ]
+}</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Details Tab -->
+                <div class="tab-pane" data-tab="details">
+                    <div class="details-content">
+                        <div class="details-section">
+                            <h3 class="section-title">Pipeline Information</h3>
+                            <div class="pipeline-status">
+                                <div class="status-item">
+                                    <span class="status-label">Layout Conversion</span>
+                                    <span class="status-value success">✓ Success</span>
+                                </div>
+                                <div class="status-item">
+                                    <span class="status-label">Token Resolution</span>
+                                    <span class="status-value success">✓ Success</span>
+                                </div>
+                                <div class="status-item">
+                                    <span class="status-label">Element Generation</span>
+                                    <span class="status-value success">✓ Success</span>
+                                </div>
+                                <div class="status-item">
+                                    <span class="status-label">Canvas Rendering</span>
+                                    <span class="status-value success" id="renderStatus">✓ Success</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="details-section">
+                            <h3 class="section-title">Performance Metrics</h3>
+                            <div class="metrics-grid">
+                                <div class="metric-item">
+                                    <span class="metric-label">Render Time</span>
+                                    <span class="metric-value" id="renderTime">12ms</span>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="metric-label">Elements</span>
+                                    <span class="metric-value" id="elementCount">6</span>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="metric-label">Tokens Resolved</span>
+                                    <span class="metric-value" id="tokensResolved">24</span>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="metric-label">Memory Usage</span>
+                                    <span class="metric-value" id="memoryUsage">2.1MB</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="details-section">
+                            <h3 class="section-title">Error Log</h3>
+                            <div class="error-log" id="errorLog">
+                                <div class="log-entry empty">
+                                    <span class="log-message">No errors or warnings</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <script>
+        // =========================
+        // APPLICATION STATE
+        // =========================
+        class AppState {
+            constructor() {
+                this.currentScreen = 'Login';
+                this.currentDevice = 'mobile';
+                this.currentOrientation = 'portrait';
+                this.currentScale = 1;
+                this.theme = 'light';
+                this.activeTab = 'preview';
+                this.sidebarExpanded = true;
+                this.rightPanelExpanded = true;
+                this.gridVisible = false;
+                this.rulersVisible = false;
+            }
+
+            update(updates) {
+                Object.assign(this, updates);
+                this.notifySubscribers();
+            }
+
+            subscribe(callback) {
+                this.subscribers = this.subscribers || [];
+                this.subscribers.push(callback);
+            }
+
+            notifySubscribers() {
+                if (this.subscribers) {
+                    this.subscribers.forEach(callback => callback(this));
+                }
+            }
+        }
+
+        // =========================
+        // MAIN APPLICATION
+        // =========================
+        class CanvasRendererApp {
+            constructor() {
+                this.state = new AppState();
+                this.components = {};
+                this.currentDesignJson = null;
+                this.currentRenderJson = null;
+                this.layoutConverter = null;
+                this.canvasRenderer = null;
+
+                this.init();
+            }
+
+            init() {
+                this.initComponents();
+                this.setupEventListeners();
+                this.loadInitialScreen();
+                this.state.subscribe(this.render.bind(this));
+            }
+
+            initComponents() {
+                // Initialize layout converter
+                this.layoutConverter = new LayoutConverter(null); // Will be updated with actual tokens when converting
+
+                // Initialize canvas renderer
+                const canvas = document.getElementById('renderCanvas');
+                this.canvasRenderer = new CanvasRenderer(canvas);
+
+                // Store UI components
+                this.components = {
+                    sidebar: document.getElementById('sidebar'),
+                    rightPanel: document.getElementById('rightPanel'),
+                    deviceFrame: document.getElementById('deviceFrame'),
+                    canvasWrapper: document.getElementById('canvasWrapper'),
+                    tabButtons: document.querySelectorAll('.tab-btn'),
+                    tabPanes: document.querySelectorAll('.tab-pane')
+                };
+            }
+
+            setupEventListeners() {
+                // Sidebar toggle
+                document.getElementById('sidebarToggle').addEventListener('click', () => {
+                    this.toggleSidebar();
+                });
+
+                document.getElementById('sidebarCollapse').addEventListener('click', () => {
+                    this.toggleSidebar();
+                });
+
+                // Right panel toggle (not implemented in UI yet)
+                // You can add a toggle button if needed
+
+                // Theme toggle
+                document.getElementById('themeToggle').addEventListener('click', () => {
+                    this.toggleTheme();
+                });
+
+                // Screen scale
+                document.getElementById('scaleSelect').addEventListener('change', (e) => {
+                    this.setScale(parseFloat(e.target.value));
+                });
+
+                // Refresh
+                document.getElementById('refreshBtn').addEventListener('click', () => {
+                    this.refreshCurrentScreen();
+                });
+
+                // Download
+                document.getElementById('downloadBtn').addEventListener('click', () => {
+                    this.downloadCanvas();
+                });
+
+                // Device controls
+                document.querySelectorAll('.device-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        this.setDevice(e.currentTarget.dataset.device);
+                    });
+                });
+
+                // Orientation controls
+                document.querySelectorAll('.orientation-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        this.setOrientation(e.currentTarget.dataset.orientation);
+                    });
+                });
+
+                // Zoom controls
+                document.getElementById('zoomIn').addEventListener('click', () => {
+                    this.zoom(0.1);
+                });
+
+                document.getElementById('zoomOut').addEventListener('click', () => {
+                    this.zoom(-0.1);
+                });
+
+                document.getElementById('zoomFit').addEventListener('click', () => {
+                    this.zoomToFit();
+                });
+
+                // Grid and rulers toggle
+                document.getElementById('gridToggle').addEventListener('click', () => {
+                    this.toggleGrid();
+                });
+
+                document.getElementById('rulersToggle').addEventListener('click', () => {
+                    this.toggleRulers();
+                });
+
+                // Screen navigation
+                document.querySelectorAll('.tree-item').forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        const screenName = e.currentTarget.dataset.screen;
+                        if (screenName) {
+                            this.selectScreen(screenName);
+                        }
+                    });
+                });
+
+                // Tree group toggles
+                document.querySelectorAll('.tree-toggle').forEach(toggle => {
+                    toggle.addEventListener('click', (e) => {
+                        const header = e.currentTarget.closest('.tree-group-header');
+                        const content = header.nextElementSibling;
+                        const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+
+                        toggle.setAttribute('aria-expanded', !isExpanded);
+                        content.hidden = isExpanded;
+                    });
+                });
+
+                // Tab navigation
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const tabName = e.currentTarget.dataset.tab;
+                        this.setActiveTab(tabName);
+                    });
+                });
+
+                // JSON controls
+                document.getElementById('copyDesignJson').addEventListener('click', () => {
+                    this.copyJsonToClipboard('designJsonContent');
+                });
+
+                document.getElementById('copyRenderJson').addEventListener('click', () => {
+                    this.copyJsonToClipboard('renderJsonContent');
+                });
+
+                document.getElementById('downloadDesignJson').addEventListener('click', () => {
+                    this.downloadJson('design', this.currentDesignJson);
+                });
+
+                document.getElementById('downloadRenderJson').addEventListener('click', () => {
+                    this.downloadJson('render', this.currentRenderJson);
+                });
+
+                // Search functionality
+                const searchInput = document.getElementById('screenSearch');
+                const searchClear = document.getElementById('searchClear');
+
+                searchInput.addEventListener('input', (e) => {
+                    this.filterScreens(e.target.value);
+                });
+
+                searchClear.addEventListener('click', () => {
+                    searchInput.value = '';
+                    this.filterScreens('');
+                });
+
+                // Keyboard shortcuts
+                document.addEventListener('keydown', (e) => {
+                    this.handleKeyboardShortcut(e);
+                });
+            }
+
+            async loadInitialScreen() {
+                await this.loadScreen('Login');
+            }
+
+            async loadScreen(screenName) {
+                try {
+                    // Update pipeline status
+                    this.updatePipelineStatus('Loading...', 'loading');
+
+                    // Load design JSON (in a real app, this would be fetched)
+                    const designJson = await this.loadDesignJson(screenName);
+                    this.currentDesignJson = designJson;
+
+                    // Convert to render JSON
+                    const renderJson = await this.convertToRenderJson(designJson);
+                    this.currentRenderJson = renderJson;
+
+                    // Render to canvas
+                    await this.renderToCanvas(renderJson);
+
+                    // Update UI
+                    this.updateJsonViewers(designJson, renderJson);
+                    this.updateScreenInfo(screenName, designJson);
+                    this.updateComponentTree(renderJson);
+
+                    // Update pipeline status
+                    this.updatePipelineStatus('Ready', 'success');
+
+                    // Update performance metrics
+                    this.updateMetrics();
+
+                } catch (error) {
+                    console.error('Error loading screen:', error);
+                    this.updatePipelineStatus('Error', 'error');
+                    this.addErrorLogEntry(error.message);
+                }
+            }
+
+            async loadDesignJson(screenName) {
+                // In a real implementation, this would fetch from an API
+                // For now, return the example JSON
+                const response = await fetch('login-screen-example.json');
+                return await response.json();
+            }
+
+            async convertToRenderJson(designJson) {
+                // Use the layout converter to transform design JSON to render JSON
+                const screen = designJson.screens[this.state.currentScreen];
+                const viewport = this.getViewportForCurrentDevice();
+
+                return this.layoutConverter.convert(designJson, viewport, this.state.theme);
+            }
+
+            async renderToCanvas(renderJson) {
+                const startTime = performance.now();
+
+                // Clear canvas
+                this.canvasRenderer.clear();
+
+                // Render elements
+                for (const element of renderJson.elements) {
+                    this.canvasRenderer.renderElement(element);
+                }
+
+                const endTime = performance.now();
+                return endTime - startTime;
+            }
+
+            getViewportForCurrentDevice() {
+                const { currentDevice, currentOrientation } = this.state;
+
+                if (currentDevice === 'mobile') {
+                    return currentOrientation === 'portrait'
+                        ? { width: 390, height: 844 }
+                        : { width: 844, height: 390 };
+                } else if (currentDevice === 'tablet') {
+                    return currentOrientation === 'portrait'
+                        ? { width: 768, height: 1024 }
+                        : { width: 1024, height: 768 };
+                } else { // desktop
+                    return { width: 1440, height: 900 };
+                }
+            }
+
+            // =========================
+            // UI STATE MANAGEMENT
+            // =========================
+
+            selectScreen(screenName) {
+                // Update active state in sidebar
+                document.querySelectorAll('.tree-item').forEach(item => {
+                    item.classList.toggle('active', item.dataset.screen === screenName);
+                });
+
+                // Update screen and reload
+                this.state.update({ currentScreen: screenName });
+                this.loadScreen(screenName);
+            }
+
+            setDevice(device) {
+                // Update active device button
+                document.querySelectorAll('.device-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.device === device);
+                });
+
+                // Update device frame
+                const deviceFrame = this.components.deviceFrame;
+                deviceFrame.className = `device-frame ${device} ${this.state.currentOrientation}`;
+
+                // Update canvas size
+                const canvas = document.getElementById('renderCanvas');
+                const viewport = this.getViewportForCurrentDevice();
+                canvas.width = viewport.width;
+                canvas.height = viewport.height;
+
+                // Update state and reload
+                this.state.update({ currentDevice: device });
+                this.loadScreen(this.state.currentScreen);
+            }
+
+            setOrientation(orientation) {
+                // Update active orientation button
+                document.querySelectorAll('.orientation-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.orientation === orientation);
+                });
+
+                // Update device frame
+                const deviceFrame = this.components.deviceFrame;
+                deviceFrame.className = `device-frame ${this.state.currentDevice} ${orientation}`;
+
+                // Update canvas size
+                const canvas = document.getElementById('renderCanvas');
+                const viewport = this.getViewportForCurrentDevice();
+                canvas.width = viewport.width;
+                canvas.height = viewport.height;
+
+                // Update state and reload
+                this.state.update({ currentOrientation: orientation });
+                this.loadScreen(this.state.currentScreen);
+            }
+
+            setScale(scale) {
+                this.state.update({ currentScale: scale });
+                this.components.canvasWrapper.style.transform = `scale(${scale})`;
+                document.getElementById('zoomLevel').textContent = `${Math.round(scale * 100)}%`;
+                document.getElementById('scaleSelect').value = scale;
+            }
+
+            zoom(delta) {
+                const newScale = Math.max(0.25, Math.min(2, this.state.currentScale + delta));
+                this.setScale(newScale);
+            }
+
+            zoomToFit() {
+                // Calculate scale to fit the device frame in the viewport
+                const container = this.components.canvasWrapper.parentElement;
+                const deviceFrame = this.components.deviceFrame;
+
+                const containerRect = container.getBoundingClientRect();
+                const frameRect = deviceFrame.getBoundingClientRect();
+
+                const scaleX = (containerRect.width - 64) / frameRect.width; // 64px for padding
+                const scaleY = (containerRect.height - 64) / frameRect.height;
+                const scale = Math.min(scaleX, scaleY, 1); // Don't scale up beyond 100%
+
+                this.setScale(scale);
+            }
+
+            toggleSidebar() {
+                const isExpanded = !this.state.sidebarExpanded;
+                this.state.update({ sidebarExpanded: isExpanded });
+
+                const container = document.querySelector('.app-container');
+                container.setAttribute('data-sidebar-collapsed', !isExpanded);
+            }
+
+            toggleTheme() {
+                const newTheme = this.state.theme === 'light' ? 'dark' : 'light';
+                this.state.update({ theme: newTheme });
+
+                const container = document.querySelector('.app-container');
+                container.setAttribute('data-theme', newTheme);
+
+                // Update theme icon
+                const themeToggle = document.getElementById('themeToggle');
+                const icon = newTheme === 'light'
+                    ? '<svg class="icon-sun" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>'
+                    : '<svg class="icon-moon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>';
+                themeToggle.innerHTML = icon;
+            }
+
+            setActiveTab(tabName) {
+                // Update active tab button
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    const isActive = btn.dataset.tab === tabName;
+                    btn.classList.toggle('active', isActive);
+                    btn.setAttribute('aria-selected', isActive);
+                });
+
+                // Update active tab pane
+                document.querySelectorAll('.tab-pane').forEach(pane => {
+                    const isActive = pane.dataset.tab === tabName;
+                    pane.classList.toggle('active', isActive);
+                });
+
+                this.state.update({ activeTab: tabName });
+            }
+
+            toggleGrid() {
+                this.state.gridVisible = !this.state.gridVisible;
+                // Grid overlay implementation would go here
+                const gridToggle = document.getElementById('gridToggle');
+                gridToggle.style.color = this.state.gridVisible ? 'var(--accent-color)' : 'var(--text-secondary)';
+            }
+
+            toggleRulers() {
+                this.state.rulersVisible = !this.state.rulersVisible;
+                // Rulers implementation would go here
+                const rulersToggle = document.getElementById('rulersToggle');
+                rulersToggle.style.color = this.state.rulersVisible ? 'var(--accent-color)' : 'var(--text-secondary)';
+            }
+
+            // =========================
+            // UTILITY METHODS
+            // =========================
+
+            refreshCurrentScreen() {
+                this.loadScreen(this.state.currentScreen);
+            }
+
+            downloadCanvas() {
+                const canvas = document.getElementById('renderCanvas');
+                const link = document.createElement('a');
+                link.download = `${this.state.currentScreen}-rendered.png`;
+                link.href = canvas.toDataURL();
+                link.click();
+            }
+
+            copyJsonToClipboard(elementId) {
+                const content = document.getElementById(elementId).textContent;
+                navigator.clipboard.writeText(content).then(() => {
+                    // Show success feedback
+                    this.showTemporaryMessage('Copied to clipboard!');
+                });
+            }
+
+            downloadJson(type, jsonData) {
+                const dataStr = JSON.stringify(jsonData, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(dataBlob);
+
+                const link = document.createElement('a');
+                link.download = `${this.state.currentScreen}-${type}.json`;
+                link.href = url;
+                link.click();
+
+                URL.revokeObjectURL(url);
+            }
+
+            filterScreens(searchTerm) {
+                const term = searchTerm.toLowerCase();
+                document.querySelectorAll('.tree-item').forEach(item => {
+                    const label = item.querySelector('.tree-item-label');
+                    const shouldShow = !term || label.textContent.toLowerCase().includes(term);
+                    item.style.display = shouldShow ? 'block' : 'none';
+                });
+
+                // Update clear button visibility
+                document.getElementById('searchClear').style.display =
+                    searchTerm ? 'block' : 'none';
+            }
+
+            updatePipelineStatus(message, type) {
+                const statusElement = document.getElementById('pipelineStatus');
+                const statusText = statusElement.querySelector('.status-text');
+                const statusDot = statusElement.querySelector('.status-dot');
+
+                statusText.textContent = message;
+                statusElement.className = `status-indicator ${type}`;
+            }
+
+            updateScreenInfo(screenName, designJson) {
+                document.getElementById('screenName').textContent = screenName;
+                document.getElementById('screenPlatform').textContent =
+                    designJson.screenType.charAt(0).toUpperCase() + designJson.screenType.slice(1);
+
+                document.getElementById('infoScreenName').textContent = screenName;
+                document.getElementById('infoPlatform').textContent = designJson.screenType;
+
+                const viewport = this.getViewportForCurrentDevice();
+                document.getElementById('infoResolution').textContent =
+                    `${viewport.width} × ${viewport.height}`;
+            }
+
+            updateJsonViewers(designJson, renderJson) {
+                // Update JSON content with proper formatting
+                document.getElementById('designJsonContent').textContent =
+                    JSON.stringify(designJson, null, 2);
+                document.getElementById('renderJsonContent').textContent =
+                    JSON.stringify(renderJson, null, 2);
+            }
+
+            updateComponentTree(renderJson) {
+                // Build component tree from render JSON
+                const treeElement = document.getElementById('componentTree');
+                const componentCount = renderJson.elements.length;
+
+                document.getElementById('infoComponents').textContent = componentCount;
+                document.getElementById('elementCount').textContent = componentCount;
+
+                // For now, use the static component tree
+                // In a real implementation, you'd build this from renderJson.elements
+            }
+
+            updateMetrics() {
+                // Update performance metrics
+                const renderTime = Math.random() * 20 + 5; // Mock render time
+                const memoryUsage = (Math.random() * 2 + 1).toFixed(1);
+
+                document.getElementById('renderTime').textContent = `${renderTime.toFixed(1)}ms`;
+                document.getElementById('memoryUsage').textContent = `${memoryUsage}MB`;
+                document.getElementById('tokensResolved').textContent = '24';
+            }
+
+            addErrorLogEntry(message) {
+                const errorLog = document.getElementById('errorLog');
+                const entry = document.createElement('div');
+                entry.className = 'log-entry error';
+                entry.innerHTML = `<span class="log-message">${message}</span>`;
+                errorLog.appendChild(entry);
+            }
+
+            showTemporaryMessage(message) {
+                // Create a temporary toast notification
+                const toast = document.createElement('div');
+                toast.textContent = message;
+                toast.style.cssText = `
+                    position: fixed;
+                    bottom: 20px;
+                    right: 20px;
+                    background: var(--accent-color);
+                    color: white;
+                    padding: 12px 16px;
+                    border-radius: 6px;
+                    box-shadow: var(--shadow-md);
+                    z-index: 1000;
+                    animation: slideIn 0.3s ease;
+                `;
+
+                document.body.appendChild(toast);
+
+                setTimeout(() => {
+                    toast.remove();
+                }, 3000);
+            }
+
+            handleKeyboardShortcut(e) {
+                // Keyboard shortcuts
+                if (e.ctrlKey || e.metaKey) {
+                    switch (e.key) {
+                        case 'r':
+                            e.preventDefault();
+                            this.refreshCurrentScreen();
+                            break;
+                        case 's':
+                            e.preventDefault();
+                            this.downloadCanvas();
+                            break;
+                        case '=':
+                        case '+':
+                            e.preventDefault();
+                            this.zoom(0.1);
+                            break;
+                        case '-':
+                            e.preventDefault();
+                            this.zoom(-0.1);
+                            break;
+                        case '0':
+                            e.preventDefault();
+                            this.zoomToFit();
+                            break;
+                    }
+                }
+
+                switch (e.key) {
+                    case 'Escape':
+                        // Reset zoom or close panels
+                        this.zoomToFit();
+                        break;
+                    case 'ArrowLeft':
+                    case 'ArrowRight':
+                        // Navigate between screens
+                        if (!e.target.matches('input, select, textarea')) {
+                            e.preventDefault();
+                            this.navigateScreen(e.key === 'ArrowRight' ? 1 : -1);
+                        }
+                        break;
+                }
+            }
+
+            navigateScreen(direction) {
+                const allScreens = Array.from(document.querySelectorAll('.tree-item[data-screen]'));
+                const currentIndex = allScreens.findIndex(item =>
+                    item.dataset.screen === this.state.currentScreen);
+
+                const newIndex = Math.max(0, Math.min(allScreens.length - 1, currentIndex + direction));
+                const newScreen = allScreens[newIndex].dataset.screen;
+
+                if (newScreen !== this.state.currentScreen) {
+                    this.selectScreen(newScreen);
+                }
+            }
+
+            render(state) {
+                // React to state changes
+                // This is called whenever the state is updated
+            }
+        }
+
+        // =========================
+        // TOKEN RESOLVER
+        // =========================
+        class TokenResolver {
+            constructor(designTokens, theme = 'light') {
+                this.tokens = designTokens || {};
+                this.theme = theme;
+                this.cache = new Map();
+                this.initializeCommonValues();
+            }
+
+            initializeCommonValues() {
+                // Pre-resolve common values for performance
+                this.commonValues = {
+                    spacing: {
+                        '3': 12,  // 12px
+                        '4': 16,  // 16px
+                        '6': 24,  // 24px
+                        '8': 32   // 32px
+                    },
+                    fontSize: {
+                        'base': 16,   // 16px
+                        'lg': 18,     // 18px
+                        'xl': 20,     // 20px
+                        '2xl': 24     // 24px
+                    },
+                    borderRadius: {
+                        'md': 8,     // 8px
+                        'lg': 12     // 12px
+                    }
+                };
+            }
+
+            resolve(tokenPath) {
+                // Check cache first
+                if (this.cache.has(tokenPath)) {
+                    return this.cache.get(tokenPath);
+                }
+
+                const resolved = this.resolveTokenPath(tokenPath);
+
+                // Cache the result
+                this.cache.set(tokenPath, resolved);
+                return resolved;
+            }
+
+            resolveTokenPath(tokenPath) {
+                const parts = tokenPath.split('.');
+                let current = this.tokens;
+
+                for (const part of parts) {
+                    if (current && typeof current === 'object' && part in current) {
+                        current = current[part];
+                    } else {
+                        // Try common values fallback
+                        if (parts[0] === 'spacing' && this.commonValues.spacing[parts[1]]) {
+                            return `${this.commonValues.spacing[parts[1]]}px`;
+                        }
+                        if (parts[0] === 'fontSize' && this.commonValues.fontSize[parts[1]]) {
+                            return `${this.commonValues.fontSize[parts[1]]}px`;
+                        }
+                        if (parts[0] === 'borderRadius' && this.commonValues.borderRadius[parts[1]]) {
+                            return `${this.commonValues.borderRadius[parts[1]]}px`;
+                        }
+
+                        console.warn(`Token not found: ${tokenPath}`);
+                        return tokenPath; // Return the original path as fallback
+                    }
+                }
+
+                return current;
+            }
+
+            parseDimension(value, parentDimension = 0) {
+                if (typeof value === 'number') {
+                    return value;
+                }
+
+                if (typeof value === 'string') {
+                    // Handle pixel values
+                    if (value.endsWith('px')) {
+                        return parseFloat(value);
+                    }
+
+                    // Handle percentage values
+                    if (value.endsWith('%')) {
+                        const percentage = parseFloat(value) / 100;
+                        return parentDimension * percentage;
+                    }
+
+                    // Handle token references
+                    if (value.startsWith('spacing.') || value.startsWith('fontSize.') || value.startsWith('borderRadius.')) {
+                        const resolved = this.resolve(value);
+                        return this.parseDimension(resolved, parentDimension);
+                    }
+
+                    // Handle plain numbers (assume pixels)
+                    const numericValue = parseFloat(value);
+                    if (!isNaN(numericValue)) {
+                        return numericValue;
+                    }
+                }
+
+                console.warn(`Unable to parse dimension: ${value}`);
+                return 0;
+            }
+
+            resolveColor(colorPath) {
+                const color = this.resolve(colorPath);
+
+                // Ensure color is in a usable format
+                if (typeof color === 'string' && color.startsWith('#')) {
+                    return color;
+                }
+
+                // Fallback colors
+                const fallbackColors = {
+                    'primary': '#6257db',
+                    'secondary': '#8b5cf6',
+                    'background': '#ffffff',
+                    'text': '#111827',
+                    'border': '#d1d5db'
+                };
+
+                return fallbackColors[color] || color || '#000000';
+            }
+
+            clearCache() {
+                this.cache.clear();
+            }
+        }
+
+        // =========================
+        // LAYOUT CONVERTER
+        // =========================
+        class LayoutConverter {
+            constructor(designTokens) {
+                this.tokenResolver = new TokenResolver(designTokens);
+            }
+
+            convert(designJson, viewport, theme = 'light') {
+                // Real implementation with token resolution:
+                // 1. Resolve design tokens using TokenResolver
+                // 2. Calculate layouts with proper dimensions
+                // 3. Convert components to renderable elements
+                // 4. Handle responsive behavior
+
+                // Extract the actual screen data from the input
+                const screen = designJson.screen || designJson;
+                const components = designJson.components || {};
+                const designTokens = designJson.designTokens || {};
+
+                // Update token resolver with current design tokens
+                this.tokenResolver = new TokenResolver(designTokens, theme);
+
+                return this.convertScreen(screen, viewport, components);
+            }
+
+            convertScreen(screen, viewport, components) {
+                const elements = [];
+
+                // Add background
+                const backgroundColor = this.tokenResolver.resolveColor('colors.background.secondary');
+                elements.push({
+                    id: "background",
+                    type: "rectangle",
+                    bounds: { x: 0, y: 0, width: viewport.width, height: viewport.height },
+                    styles: { backgroundColor }
+                });
+
+                // Process screen children
+                if (screen.children && screen.children.length > 0) {
+                    const screenElements = this.processChildren(screen.children, viewport, components);
+                    elements.push(...screenElements);
+                }
+
+                return {
+                    version: "1.0.0",
+                    viewport,
+                    metadata: {
+                        screenName: screen.name || "Unknown",
+                        theme: this.tokenResolver.theme,
+                        generatedAt: new Date().toISOString()
+                    },
+                    elements
+                };
+            }
+
+            processChildren(children, parentBounds, components) {
+                const elements = [];
+
+                // Calculate padding
+                const padding = this.tokenResolver.parseDimension('spacing.6'); // 24px
+                const availableWidth = parentBounds.width - (padding * 2);
+                const availableHeight = parentBounds.height - (padding * 2);
+
+                let currentY = parentBounds.y + padding;
+
+                for (const child of children) {
+                    const element = this.processChild(child, {
+                        x: parentBounds.x + padding,
+                        y: currentY,
+                        width: availableWidth,
+                        height: availableHeight - (currentY - parentBounds.y)
+                    }, components);
+
+                    if (element) {
+                        elements.push(element);
+                        currentY += element.bounds.height + this.tokenResolver.parseDimension('spacing.4'); // 16px gap
+                    }
+                }
+
+                return elements;
+            }
+
+            processChild(child, parentBounds, components) {
+                if (child.type === 'component') {
+                    return this.processComponent(child, parentBounds, components);
+                } else if (child.type === 'text') {
+                    return this.processText(child, parentBounds);
+                }
+                return null;
+            }
+
+            processComponent(child, parentBounds, components) {
+                const componentDef = components[child.name];
+                if (!componentDef) {
+                    console.warn(`Component not found: ${child.name}`);
+                    return null;
+                }
+
+                // Calculate dimensions
+                const width = this.calculateComponentWidth(child, componentDef, parentBounds.width);
+                const height = this.calculateComponentHeight(child, componentDef);
+
+                // Center horizontally
+                const x = parentBounds.x + (parentBounds.width - width) / 2;
+
+                return {
+                    id: `${child.name.toLowerCase()}-${Date.now()}`,
+                    type: this.getElementType(child.name),
+                    bounds: { x, y: parentBounds.y, width, height },
+                    styles: this.resolveComponentStyles(componentDef, child.variant),
+                    content: this.resolveComponentContent(componentDef, child)
+                };
+            }
+
+            processText(child, parentBounds) {
+                const fontSize = this.tokenResolver.parseDimension(child.properties.fontSize || 'fontSize.base');
+                const lineHeight = fontSize * 1.4;
+
+                return {
+                    id: `text-${Date.now()}`,
+                    type: "text",
+                    bounds: {
+                        x: parentBounds.x,
+                        y: parentBounds.y,
+                        width: parentBounds.width,
+                        height: lineHeight
+                    },
+                    styles: {
+                        color: this.tokenResolver.resolveColor(child.properties.color || 'colors.text.primary'),
+                        fontSize: `${fontSize}px`,
+                        fontFamily: this.tokenResolver.resolve('fontFamily.primary') || 'Inter, system-ui, sans-serif',
+                        fontWeight: this.tokenResolver.resolve(child.properties.fontWeight) || 'normal',
+                        textAlign: child.properties.align || 'left'
+                    },
+                    content: {
+                        type: 'text',
+                        properties: {
+                            text: child.properties.value || '',
+                            maxLines: child.properties.maxLines || 1
+                        }
+                    }
+                };
+            }
+
+            calculateComponentWidth(child, componentDef, parentWidth) {
+                const layout = { ...componentDef.layout, ...child.layout };
+
+                if (layout.width === '100%') {
+                    return parentWidth;
+                }
+
+                if (typeof layout.width === 'string' && layout.width.endsWith('%')) {
+                    return parentWidth * (parseFloat(layout.width) / 100);
+                }
+
+                if (layout.maxWidth) {
+                    const maxWidth = this.tokenResolver.parseDimension(layout.maxWidth, parentWidth);
+                    return Math.min(parentWidth, maxWidth);
+                }
+
+                return this.tokenResolver.parseDimension(layout.width, parentWidth) || parentWidth;
+            }
+
+            calculateComponentHeight(child, componentDef) {
+                const layout = { ...componentDef.layout, ...child.layout };
+                return this.tokenResolver.parseDimension(layout.height) || 48; // Default height
+            }
+
+            getElementType(componentName) {
+                if (componentName === 'Button') return 'button';
+                if (componentName === 'Input') return 'input-field';
+                return 'rounded-rectangle';
+            }
+
+            resolveComponentStyles(componentDef, variant = 'default') {
+                const styles = { ...componentDef.styles };
+
+                // Apply variant styles
+                if (componentDef.variants) {
+                    const variantDef = componentDef.variants.find(v => v.name === variant);
+                    if (variantDef) {
+                        Object.assign(styles, variantDef.styles);
+                    }
+                }
+
+                // Resolve tokens
+                const resolvedStyles = {};
+                for (const [key, value] of Object.entries(styles)) {
+                    if (key.includes('Color')) {
+                        resolvedStyles[key] = this.tokenResolver.resolveColor(value);
+                    } else if (key.includes('Radius') || key.includes('Width') || key.includes('Blur')) {
+                        resolvedStyles[key] = this.tokenResolver.parseDimension(value);
+                    } else {
+                        resolvedStyles[key] = this.tokenResolver.resolve(value) || value;
+                    }
+                }
+
+                return resolvedStyles;
+            }
+
+            resolveComponentContent(componentDef, child) {
+                if (child.content) {
+                    return child.content;
+                }
+                return componentDef.content;
+            }
+        }
+
+        // =========================
+        // CANVAS RENDERER
+        // =========================
+
+        // =========================
+        // CANVAS RENDERER
+        // =========================
+        class CanvasRenderer {
+            constructor(canvas) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d');
+            }
+
+            clear() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            }
+
+            renderElement(element) {
+                const { type, bounds, styles, content } = element;
+
+                this.ctx.save();
+
+                // Apply common styles
+                this.applyStyles(styles);
+
+                // Draw element based on type
+                switch (type) {
+                    case 'rectangle':
+                        this.drawRectangle(bounds);
+                        break;
+                    case 'rounded-rectangle':
+                        this.drawRoundedRectangle(bounds, styles.borderRadius || 0);
+                        break;
+                    case 'text':
+                        this.drawText(bounds, content);
+                        break;
+                    case 'input-field':
+                        this.drawInputField(bounds, styles, content);
+                        break;
+                    case 'button':
+                        this.drawButton(bounds, styles, content);
+                        break;
+                }
+
+                this.ctx.restore();
+            }
+
+            applyStyles(styles) {
+                // Apply background
+                if (styles.backgroundColor) {
+                    this.ctx.fillStyle = styles.backgroundColor;
+                }
+
+                // Apply shadow
+                if (styles.shadowColor) {
+                    this.ctx.shadowColor = styles.shadowColor;
+                    this.ctx.shadowOffsetX = styles.shadowOffsetX || 0;
+                    this.ctx.shadowOffsetY = styles.shadowOffsetY || 0;
+                    this.ctx.shadowBlur = styles.shadowBlur || 0;
+                }
+            }
+
+            drawRectangle(bounds) {
+                this.ctx.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+            }
+
+            drawRoundedRectangle(bounds, radius) {
+                const x = bounds.x;
+                const y = bounds.y;
+                const width = bounds.width;
+                const height = bounds.height;
+
+                this.ctx.beginPath();
+                this.ctx.moveTo(x + radius, y);
+                this.ctx.lineTo(x + width - radius, y);
+                this.ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+                this.ctx.lineTo(x + width, y + height - radius);
+                this.ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+                this.ctx.lineTo(x + radius, y + height);
+                this.ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+                this.ctx.lineTo(x, y + radius);
+                this.ctx.quadraticCurveTo(x, y, x + radius, y);
+                this.ctx.closePath();
+                this.ctx.fill();
+
+                // Reset shadow for border
+                this.ctx.shadowColor = 'transparent';
+
+                // Draw border if needed
+                if (this.ctx.strokeStyle && this.ctx.lineWidth > 0) {
+                    this.ctx.stroke();
+                }
+            }
+
+            drawText(bounds, content) {
+                if (!content || !content.properties) return;
+
+                const text = content.properties.text || '';
+                const fontSize = content.properties.fontSize || 16;
+                const fontFamily = content.properties.fontFamily || 'Inter, system-ui, sans-serif';
+                const fontWeight = content.properties.fontWeight || '400';
+                const textAlign = content.properties.textAlign || 'left';
+                const color = content.properties.color || '#000000';
+
+                this.ctx.font = `${fontWeight} ${fontSize}px ${fontFamily}`;
+                this.ctx.fillStyle = color;
+                this.ctx.textAlign = textAlign;
+                this.ctx.textBaseline = 'middle';
+
+                let x = bounds.x;
+                if (textAlign === 'center') {
+                    x = bounds.x + bounds.width / 2;
+                } else if (textAlign === 'right') {
+                    x = bounds.x + bounds.width;
+                }
+
+                const y = bounds.y + bounds.height / 2;
+                this.ctx.fillText(text, x, y);
+            }
+
+            drawInputField(bounds, styles, content) {
+                // Draw background
+                this.drawRectangle(bounds);
+
+                // Draw border
+                this.ctx.strokeStyle = styles.borderColor || '#d1d5db';
+                this.ctx.lineWidth = styles.borderWidth || 1;
+                this.ctx.strokeRect(bounds.x, bounds.y, bounds.width, bounds.height);
+
+                // Draw placeholder text if no content
+                if (content && content.properties && content.properties.placeholder) {
+                    const placeholderText = content.properties.placeholder;
+                    const fontSize = content.properties.fontSize || 16;
+                    const fontFamily = content.properties.fontFamily || 'Inter, system-ui, sans-serif';
+                    const placeholderColor = content.properties.placeholderColor || '#6b7280';
+
+                    this.ctx.font = `${fontSize}px ${fontFamily}`;
+                    this.ctx.fillStyle = placeholderColor;
+                    this.ctx.textAlign = 'left';
+                    this.ctx.textBaseline = 'middle';
+
+                    this.ctx.fillText(
+                        placeholderText,
+                        bounds.x + 12,
+                        bounds.y + bounds.height / 2
+                    );
+                }
+            }
+
+            drawButton(bounds, styles, content) {
+                // Draw button background
+                this.drawRoundedRectangle(bounds, styles.borderRadius || 8);
+
+                // Draw text
+                if (content && content.properties) {
+                    const text = content.properties.text || '';
+                    const fontSize = content.properties.fontSize || 16;
+                    const fontFamily = content.properties.fontFamily || 'Inter, system-ui, sans-serif';
+                    const fontWeight = content.properties.fontWeight || '500';
+                    const color = content.properties.color || '#ffffff';
+
+                    this.ctx.font = `${fontWeight} ${fontSize}px ${fontFamily}`;
+                    this.ctx.fillStyle = color;
+                    this.ctx.textAlign = 'center';
+                    this.ctx.textBaseline = 'middle';
+
+                    this.ctx.fillText(
+                        text,
+                        bounds.x + bounds.width / 2,
+                        bounds.y + bounds.height / 2
+                    );
+                }
+            }
+        }
+
+        // =========================
+        // INITIALIZATION
+        // =========================
+        document.addEventListener('DOMContentLoaded', () => {
+            const app = new CanvasRendererApp();
+
+            // Make app globally available for debugging
+            window.canvasApp = app;
+
+            console.log('SimFlo Canvas Renderer initialized');
+        });
+    </script>
+</body>
+</html>
