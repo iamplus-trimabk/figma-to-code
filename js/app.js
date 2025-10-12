@@ -443,8 +443,6 @@ class CanvasRendererApp {
             ctx.scale(dpr, dpr);
 
             // Calculate scaling factor from design size to actual canvas size
-            const designWidth = renderJson.viewport.width;
-            const designHeight = renderJson.viewport.height;
             const scaleX = containerRect.width / designWidth;
             const scaleY = containerRect.height / designHeight;
             const scale = Math.min(scaleX, scaleY); // Use uniform scaling to maintain aspect ratio
