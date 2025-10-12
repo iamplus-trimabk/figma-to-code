@@ -18,6 +18,8 @@ class AppState {
         this.rightPanelExpanded = true;
         this.gridVisible = false;
         this.rulersVisible = false;
+        this.isDeviceSwitching = false;
+        this.deviceSwitchPromise = null;
     }
 
     update(updates) {
@@ -268,8 +270,8 @@ class CanvasRendererApp {
             const designJson = await this.loadDesignJson(screenName);
             this.currentDesignJson = designJson;
 
-            // Auto-switch device based on screen platform
-            this.autoSwitchDeviceForScreen(designJson, screenName);
+            // Auto-switch device based on screen platform and wait for completion
+            await this.autoSwitchDeviceForScreen(designJson, screenName);
 
             // Convert to render JSON
             const renderJson = await this.convertToRenderJson(designJson);
@@ -316,7 +318,7 @@ class CanvasRendererApp {
         }
     }
 
-    autoSwitchDeviceForScreen(designJson, screenName) {
+    async autoSwitchDeviceForScreen(designJson, screenName) {
         // Get the screen definition
         const screen = designJson.screens[screenName];
         if (!screen || !screen.platform) {
@@ -342,7 +344,20 @@ class CanvasRendererApp {
         // Only switch if different from current device
         if (targetDevice !== this.state.currentDevice) {
             console.log(`Auto-switching to ${targetDevice} for ${screenName} screen (platform: ${screen.platform})`);
-            this.setDevice(targetDevice);
+
+            // If already switching, wait for existing switch to complete
+            if (this.state.isDeviceSwitching && this.state.deviceSwitchPromise) {
+                await this.state.deviceSwitchPromise;
+
+                // Check if still need to switch after waiting
+                if (targetDevice === this.state.currentDevice) {
+                    console.log(`Device already switched to ${targetDevice}, continuing...`);
+                    return;
+                }
+            }
+
+            // Perform device switch and wait for completion
+            await this.setDeviceAsync(targetDevice);
         }
     }
 
@@ -394,10 +409,24 @@ class CanvasRendererApp {
             const canvas = document.getElementById('renderCanvas');
             const containerRect = canvas.parentElement.getBoundingClientRect();
 
-            // Validate dimensions
+            // Enhanced dimension validation
             if (containerRect.width <= 0 || containerRect.height <= 0) {
-                console.warn('Invalid container dimensions:', containerRect);
-                return 0;
+                console.error('Invalid container dimensions:', containerRect);
+                throw new Error(`Container too small: ${containerRect.width}x${containerRect.height}`);
+            }
+
+            // Validate render JSON and viewport
+            if (!renderJson || !renderJson.viewport) {
+                console.error('Invalid render JSON or missing viewport:', renderJson);
+                throw new Error('Invalid render JSON: missing viewport information');
+            }
+
+            const designWidth = renderJson.viewport.width;
+            const designHeight = renderJson.viewport.height;
+
+            if (designWidth <= 0 || designHeight <= 0) {
+                console.error('Invalid design viewport:', renderJson.viewport);
+                throw new Error(`Invalid design viewport: ${designWidth}x${designHeight}`);
             }
 
             // Update canvas size to match container
@@ -492,7 +521,7 @@ class CanvasRendererApp {
         this.loadScreen(screenName);
     }
 
-    setDevice(device) {
+    setDevice(device, shouldReload = true) {
         // Clear any pending renders
         this.clearPendingRenders();
 
@@ -505,13 +534,72 @@ class CanvasRendererApp {
         const deviceFrame = this.components.deviceFrame;
         deviceFrame.className = `device-frame ${device} ${this.state.currentOrientation}`;
 
+        // Update canvas container for desktop mode
+        const canvasContainer = this.components.canvasWrapper;
+        if (device === 'desktop') {
+            canvasContainer.classList.add('desktop-mode');
+        } else {
+            canvasContainer.classList.remove('desktop-mode');
+        }
+
         // Update state and reload
         this.state.update({ currentDevice: device });
 
         // Delay render slightly to allow CSS transitions
-        setTimeout(() => {
-            this.loadScreen(this.state.currentScreen);
-        }, 50);
+        if (shouldReload) {
+            setTimeout(() => {
+                this.loadScreen(this.state.currentScreen);
+            }, 50);
+        }
+    }
+
+    async setDeviceAsync(device) {
+        // Prevent concurrent device switches
+        if (this.state.isDeviceSwitching) {
+            if (this.state.deviceSwitchPromise) {
+                return this.state.deviceSwitchPromise;
+            }
+        }
+
+        // Set switching state
+        this.state.update({ isDeviceSwitching: true });
+
+        const switchPromise = new Promise((resolve) => {
+            // Clear any pending renders
+            this.clearPendingRenders();
+
+            // Update active device button
+            document.querySelectorAll('.device-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.device === device);
+            });
+
+            // Update device frame
+            const deviceFrame = this.components.deviceFrame;
+            deviceFrame.className = `device-frame ${device} ${this.state.currentOrientation}`;
+
+            // Update canvas container for desktop mode
+            const canvasContainer = this.components.canvasWrapper;
+            if (device === 'desktop') {
+                canvasContainer.classList.add('desktop-mode');
+            } else {
+                canvasContainer.classList.remove('desktop-mode');
+            }
+
+            // Update state
+            this.state.update({ currentDevice: device });
+
+            // Wait for CSS transitions to complete
+            setTimeout(() => {
+                // Clear switching state
+                this.state.update({ isDeviceSwitching: false, deviceSwitchPromise: null });
+                resolve();
+            }, 100); // Slightly longer than CSS transition
+        });
+
+        // Store promise for concurrent calls
+        this.state.update({ deviceSwitchPromise: switchPromise });
+
+        return switchPromise;
     }
 
     setOrientation(orientation) {
