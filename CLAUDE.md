@@ -398,3 +398,54 @@ This repository serves as the foundation for:
 - Visual design validation tools
 
 The clean architecture and comprehensive specifications provide a solid base for building sophisticated design system conversion tools.
+
+## File Structure & Purpose
+
+### 📄 Application Files
+
+#### simflo-canvas-renderer.html
+**Main application file** - Complete working canvas renderer with professional UI for testing SimFlo design format JSON files with multi-device support.
+
+#### js/app.js
+**Application controller** - Main application logic with state management, device switching, screen loading, and canvas rendering orchestration.
+
+#### js/canvas-renderer.js
+**Canvas rendering engine** - Handles pixel-perfect rendering of design elements to HTML5 canvas with coordinate transformation and proper context management.
+
+#### js/layout-converter.js
+**Layout calculation engine** - Converts semantic design JSON to pixel-perfect render JSON with token resolution and responsive layout calculations.
+
+#### js/token-resolver.js
+**Design token system** - Centralized token resolution with fallback handling for missing or undefined design tokens.
+
+#### css/styles.css
+**Application styling** - Professional UI styles with responsive design, device frames, and component theming.
+
+#### login-screen-example.json
+**Example design data** - Complete example design following SimFlo format with multiple screens (Login, Signup, Dashboard, Profile, Settings).
+
+### 📚 Documentation Files
+
+#### CLAUDE.md
+**Development guide** - Comprehensive project documentation with best practices, critical learnings, and debugging guidance for canvas rendering and multi-device support.
+
+#### README.md
+**Project overview** - High-level project description and setup instructions.
+
+#### SIMFLO_DESIGN_FORMAT.md
+**Format specification** - Main SimFlo design format overview and architectural philosophy.
+
+#### SIMFLO_DESIGN_TOKENS_SPEC.md
+**Tokens specification** - Complete design tokens system specification and usage patterns.
+
+#### SIMFLO_COMPONENTS_SPEC.md
+**Components specification** - Component structure, variant definitions, and usage guidelines.
+
+#### SIMFLO_SCREENS_SPEC.md
+**Screens specification** - Screen layout patterns, composition rules, and responsive design guidelines.
+
+#### SIMFLO_LAYOUT_CONVERTER.md
+**Layout converter architecture** - Detailed explanation of the layout conversion engine and coordinate transformation patterns.
+
+#### SIMFLO_RENDER_JSON_SPEC.md
+**Rendering format specification** - Pixel-perfect rendering instruction format for canvas output.
