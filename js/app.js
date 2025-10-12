@@ -268,6 +268,9 @@ class CanvasRendererApp {
             const designJson = await this.loadDesignJson(screenName);
             this.currentDesignJson = designJson;
 
+            // Auto-switch device based on screen platform
+            this.autoSwitchDeviceForScreen(designJson, screenName);
+
             // Convert to render JSON
             const renderJson = await this.convertToRenderJson(designJson);
             this.currentRenderJson = renderJson;
@@ -310,6 +313,36 @@ class CanvasRendererApp {
         } catch (error) {
             console.error('Error loading design JSON:', error);
             throw error;
+        }
+    }
+
+    autoSwitchDeviceForScreen(designJson, screenName) {
+        // Get the screen definition
+        const screen = designJson.screens[screenName];
+        if (!screen || !screen.platform) {
+            // No platform specified, keep current device
+            return;
+        }
+
+        // Map platform to device
+        let targetDevice;
+        switch (screen.platform) {
+            case 'desktop':
+                targetDevice = 'desktop';
+                break;
+            case 'tablet':
+                targetDevice = 'tablet';
+                break;
+            case 'mobile':
+            default:
+                targetDevice = 'mobile';
+                break;
+        }
+
+        // Only switch if different from current device
+        if (targetDevice !== this.state.currentDevice) {
+            console.log(`Auto-switching to ${targetDevice} for ${screenName} screen (platform: ${screen.platform})`);
+            this.setDevice(targetDevice);
         }
     }
 
