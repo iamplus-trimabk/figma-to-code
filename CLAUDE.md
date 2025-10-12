@@ -176,6 +176,197 @@ calculateContainerHeight(children, containerWidth) {
 5. **Always use parent-relative coordinates** (0,0 = top-left of parent) for nested elements
 6. **Always update cache-busting versions** when fixing coordinate calculation bugs
 
+## Multi-Device Platform Switching Best Practices
+
+### 🚨 Critical Learnings
+
+#### Race Condition Prevention in Device Switching
+**Problem**: When switching screens that require different platforms (e.g., Dashboard needs desktop), multiple render calls execute simultaneously, causing component artifacts from previous screens.
+
+**Solution**: Implement async device switching with proper state management:
+```javascript
+async autoSwitchDeviceForScreen(designJson, screenName) {
+    const screen = designJson.screens[screenName];
+    if (!screen?.platform) return;
+
+    // Map platform to device
+    const targetDevice = screen.platform === 'desktop' ? 'desktop' :
+                        screen.platform === 'tablet' ? 'tablet' : 'mobile';
+
+    if (targetDevice !== this.state.currentDevice) {
+        // Wait for existing device switching if in progress
+        if (this.state.isDeviceSwitching && this.state.deviceSwitchPromise) {
+            await this.state.deviceSwitchPromise;
+        }
+
+        // Perform async device switch
+        await this.setDeviceAsync(targetDevice);
+    }
+}
+
+async setDeviceAsync(device) {
+    const switchPromise = new Promise((resolve) => {
+        // Update UI and state
+        this.updateDeviceUI(device);
+        this.state.update({ currentDevice: device });
+
+        // Wait for CSS transitions
+        setTimeout(() => {
+            this.state.update({ isDeviceSwitching: false, deviceSwitchPromise: null });
+            resolve();
+        }, 100);
+    });
+
+    this.state.update({ isDeviceSwitching: true, deviceSwitchPromise: switchPromise });
+    return switchPromise;
+}
+```
+
+#### Canvas Container Sizing for Different Devices
+**Problem**: Desktop frames (1440x900) don't fit properly in containers designed for mobile layouts, causing tiny canvas rendering.
+
+**Solution**: Implement responsive container sizing with CSS classes:
+```css
+/* Default mobile container */
+.canvas-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 32px;
+}
+
+/* Desktop mode needs more space */
+.canvas-container.desktop-mode {
+    padding: 16px;
+}
+
+/* Allow device frame to scale down if needed but maintain aspect ratio */
+.device-frame.desktop {
+    max-width: calc(100vw - var(--sidebar-width) - var(--right-panel-width) - 32px);
+    max-height: calc(100vh - var(--header-height) - 32px);
+    width: var(--desktop-width);
+    height: var(--desktop-height);
+}
+```
+
+#### JavaScript Class Management
+```javascript
+setDevice(device, shouldReload = true) {
+    // Update device frame
+    const deviceFrame = this.components.deviceFrame;
+    deviceFrame.className = `device-frame ${device} ${this.state.currentOrientation}`;
+
+    // Update canvas container for desktop mode
+    const canvasContainer = this.components.canvasWrapper;
+    if (device === 'desktop') {
+        canvasContainer.classList.add('desktop-mode');
+    } else {
+        canvasContainer.classList.remove('desktop-mode');
+    }
+
+    // Update state and reload
+    this.state.update({ currentDevice: device });
+    if (shouldReload) {
+        setTimeout(() => this.loadScreen(this.state.currentScreen), 50);
+    }
+}
+```
+
+#### Token Resolution Error Handling
+**Problem**: Undefined token paths cause `TypeError: undefined is not an object (evaluating 'tokenPath.split')`.
+
+**Solution**: Add input validation in token resolver:
+```javascript
+resolve(tokenPath) {
+    // Handle undefined or null token paths
+    if (!tokenPath) {
+        console.warn('Token path is undefined or null, returning fallback value');
+        return '16px'; // Default fallback value
+    }
+
+    // Check cache first
+    if (this.cache.has(tokenPath)) {
+        return this.cache.get(tokenPath);
+    }
+
+    const resolved = this.resolveTokenPath(tokenPath);
+    this.cache.set(tokenPath, resolved);
+    return resolved;
+}
+
+resolveTokenPath(tokenPath) {
+    // Additional safety check
+    if (!tokenPath) {
+        console.warn('Token path is undefined in resolveTokenPath, returning fallback');
+        return '16px';
+    }
+
+    const parts = tokenPath.split('.');
+    // ... rest of resolution logic
+}
+```
+
+#### Enhanced Canvas Rendering Validation
+**Problem**: Canvas rendering fails silently when dimensions are invalid or JSON structure is malformed.
+
+**Solution**: Add comprehensive validation:
+```javascript
+async renderToCanvas(renderJson) {
+    // Enhanced dimension validation
+    const containerRect = canvas.parentElement.getBoundingClientRect();
+    if (containerRect.width <= 0 || containerRect.height <= 0) {
+        throw new Error(`Container too small: ${containerRect.width}x${containerRect.height}`);
+    }
+
+    // Validate render JSON and viewport
+    if (!renderJson || !renderJson.viewport) {
+        throw new Error('Invalid render JSON: missing viewport information');
+    }
+
+    const designWidth = renderJson.viewport.width;
+    const designHeight = renderJson.viewport.height;
+    if (designWidth <= 0 || designHeight <= 0) {
+        throw new Error(`Invalid design viewport: ${designWidth}x${designHeight}`);
+    }
+
+    // ... continue with rendering
+}
+```
+
+#### NEVER DO These Things
+1. **Never allow concurrent device switches** - always prevent race conditions with proper state management
+2. **Never use fixed container padding** - adapt padding based on device requirements (16px for desktop vs 32px for mobile)
+3. **Never ignore undefined token paths** - always validate inputs and provide sensible fallbacks
+4. **Never skip JSON structure validation** - always validate render JSON before processing
+5. **Never use synchronous device switching** - always wait for transitions to complete before rendering
+
+#### ALWAYS DO These Things
+1. **Always use async device switching** with Promise-based state management
+2. **Always add CSS classes dynamically** based on device type (desktop-mode, mobile-mode, etc.)
+3. **Always validate token paths** before attempting to split or process them
+4. **Always implement comprehensive dimension validation** before canvas rendering
+5. **Always use cache-busting version updates** when fixing race conditions or device switching logic
+6. **Always update both JavaScript and CSS** when fixing device-specific rendering issues
+7. **Always provide fallback values** for undefined or invalid design tokens
+
+### Debugging Multi-Device Issues
+
+#### Symptoms of Device Switching Problems
+- Components from previous screen persist after switching
+- Canvas appears tiny in desktop mode
+- JavaScript errors with undefined token paths
+- Invalid container dimension errors
+- Race conditions between concurrent render calls
+
+#### Debugging Checklist
+1. **Check Race Conditions**: Are device switches properly serialized with async/await?
+2. **Check Container CSS**: Does desktop mode have appropriate container sizing?
+3. **Check Token Resolution**: Are undefined token paths handled gracefully?
+4. **Check Canvas Validation**: Are dimensions and JSON structure validated before rendering?
+5. **Check CSS Classes**: Are device-specific classes (desktop-mode) being applied correctly?
+
 ### Debugging Canvas Coordinate Issues
 
 #### Symptoms of Coordinate System Problems
