@@ -33,6 +33,12 @@ class TokenResolver {
     }
 
     resolve(tokenPath) {
+        // Handle undefined or null token paths
+        if (!tokenPath) {
+            console.warn('Token path is undefined or null, returning fallback value');
+            return '16px'; // Default fallback value
+        }
+
         // Check cache first
         if (this.cache.has(tokenPath)) {
             return this.cache.get(tokenPath);
@@ -46,6 +52,12 @@ class TokenResolver {
     }
 
     resolveTokenPath(tokenPath) {
+        // Additional safety check
+        if (!tokenPath) {
+            console.warn('Token path is undefined in resolveTokenPath, returning fallback');
+            return '16px';
+        }
+
         const parts = tokenPath.split('.');
         let current = this.tokens;
 
